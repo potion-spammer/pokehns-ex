@@ -22,4 +22,14 @@ u32 GetCurrentLevelCap(void);
 u32 GetSoftLevelCapExpValue(u32 level, u32 expValue);
 u32 GetCurrentEVCap(void);
 
+#if IS_HNS
+// Hoenn (Emerald) trainers and wild Pokemon keep Emerald's fixed levels, which only make sense for a
+// player who has just entered Hoenn. These raise them so they track the player's TOTAL badges
+// (Johto + Kanto + Hoenn), and give Hoenn trainers a smarter AI as the badge count climbs.
+u32 ScaleHoennLevel(u32 level);
+u32 GetHoennTotalBadges(void); // Johto + Kanto + Hoenn badges held
+bool32 IsInHoennMap(void); // current map belongs to a Hoenn map section
+u64 GetHoennBadgeAiFlags(void);
+#endif
+
 #endif /* GUARD_CAPS_H */

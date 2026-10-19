@@ -282,3 +282,156 @@ CinnabarIsland_Gym_SetGymTrainers_hns::
 
 ViridianCity_Gym_SetGymTrainers_hns::
 	return
+
+@ Gym leaders hand out a Mega Stone themed to their GYM along with the badge.
+@ Caller sets VAR_0x8004 to the stone's item id. If the bag has no room the stone is skipped, so
+@ the badge flow that follows is never interrupted.
+Common_EventScript_GiveGymMegaStone::
+	checkitemspace VAR_0x8004
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_GiveGymMegaStone_NoRoom
+	msgbox Common_Text_GymMegaStone, MSGBOX_DEFAULT
+	call Common_EventScript_MarkMegaStoneReceived
+	giveitem VAR_0x8004
+	msgbox Common_Text_GymMegaStoneAfter, MSGBOX_DEFAULT
+	return
+
+Common_EventScript_GiveGymMegaStone_NoRoom::
+	msgbox Common_Text_GymMegaStoneNoRoom, MSGBOX_DEFAULT
+	return
+
+Common_Text_GymMegaStone:
+	.string "One more thing, {PLAYER}.\p"
+	.string "This stone has been kept in the\n"
+	.string "care of this GYM.\p"
+	.string "I think it belongs with you.$"
+
+Common_Text_GymMegaStoneAfter:
+	.string "It carries the spirit of this\n"
+	.string "GYM. With a MEGA RING, it may\l"
+	.string "answer your bond with a POKéMON.$"
+
+Common_Text_GymMegaStoneNoRoom:
+	.string "I wanted to give you a special\n"
+	.string "stone, but your BAG is full…\p"
+	.string "The assistant at PROF.ELM's LAB\n"
+	.string "can give it to you later.$"
+
+@ Sets the 'received' flag for the stone whose item id is in VAR_0x8004.
+Common_EventScript_MarkMegaStoneReceived::
+	call_if_eq VAR_0x8004, ITEM_PIDGEOTITE, Common_EventScript_MegaStoneFlag_PIDGEOTITE
+	call_if_eq VAR_0x8004, ITEM_SCIZORITE, Common_EventScript_MegaStoneFlag_SCIZORITE
+	call_if_eq VAR_0x8004, ITEM_KANGASKHANITE, Common_EventScript_MegaStoneFlag_KANGASKHANITE
+	call_if_eq VAR_0x8004, ITEM_GENGARITE, Common_EventScript_MegaStoneFlag_GENGARITE
+	call_if_eq VAR_0x8004, ITEM_LUCARIONITE, Common_EventScript_MegaStoneFlag_LUCARIONITE
+	call_if_eq VAR_0x8004, ITEM_STEELIXITE, Common_EventScript_MegaStoneFlag_STEELIXITE
+	call_if_eq VAR_0x8004, ITEM_ABOMASITE, Common_EventScript_MegaStoneFlag_ABOMASITE
+	call_if_eq VAR_0x8004, ITEM_AERODACTYLITE, Common_EventScript_MegaStoneFlag_AERODACTYLITE
+	call_if_eq VAR_0x8004, ITEM_BLASTOISINITE, Common_EventScript_MegaStoneFlag_BLASTOISINITE
+	call_if_eq VAR_0x8004, ITEM_AMPHAROSITE, Common_EventScript_MegaStoneFlag_AMPHAROSITE
+	call_if_eq VAR_0x8004, ITEM_VENUSAURITE, Common_EventScript_MegaStoneFlag_VENUSAURITE
+	call_if_eq VAR_0x8004, ITEM_ALAKAZITE, Common_EventScript_MegaStoneFlag_ALAKAZITE
+	call_if_eq VAR_0x8004, ITEM_BEEDRILLITE, Common_EventScript_MegaStoneFlag_BEEDRILLITE
+	call_if_eq VAR_0x8004, ITEM_CHARIZARDITE_Y, Common_EventScript_MegaStoneFlag_CHARIZARDITE_Y
+	call_if_eq VAR_0x8004, ITEM_GARCHOMPITE, Common_EventScript_MegaStoneFlag_GARCHOMPITE
+	call_if_eq VAR_0x8004, ITEM_TYRANITARITE, Common_EventScript_MegaStoneFlag_TYRANITARITE
+	call_if_eq VAR_0x8004, ITEM_MEDICHAMITE, Common_EventScript_MegaStoneFlag_MEDICHAMITE
+	call_if_eq VAR_0x8004, ITEM_MANECTITE, Common_EventScript_MegaStoneFlag_MANECTITE
+	call_if_eq VAR_0x8004, ITEM_CAMERUPTITE, Common_EventScript_MegaStoneFlag_CAMERUPTITE
+	call_if_eq VAR_0x8004, ITEM_AUDINITE, Common_EventScript_MegaStoneFlag_AUDINITE
+	call_if_eq VAR_0x8004, ITEM_ALTARIANITE, Common_EventScript_MegaStoneFlag_ALTARIANITE
+	call_if_eq VAR_0x8004, ITEM_GARDEVOIRITE, Common_EventScript_MegaStoneFlag_GARDEVOIRITE
+	call_if_eq VAR_0x8004, ITEM_SWAMPERTITE, Common_EventScript_MegaStoneFlag_SWAMPERTITE
+	return
+
+Common_EventScript_MegaStoneFlag_PIDGEOTITE::
+	setflag FLAG_MEGA_STONE_PIDGEOTITE
+	return
+
+Common_EventScript_MegaStoneFlag_SCIZORITE::
+	setflag FLAG_MEGA_STONE_SCIZORITE
+	return
+
+Common_EventScript_MegaStoneFlag_KANGASKHANITE::
+	setflag FLAG_MEGA_STONE_KANGASKHANITE
+	return
+
+Common_EventScript_MegaStoneFlag_GENGARITE::
+	setflag FLAG_MEGA_STONE_GENGARITE
+	return
+
+Common_EventScript_MegaStoneFlag_LUCARIONITE::
+	setflag FLAG_MEGA_STONE_LUCARIONITE
+	return
+
+Common_EventScript_MegaStoneFlag_STEELIXITE::
+	setflag FLAG_MEGA_STONE_STEELIXITE
+	return
+
+Common_EventScript_MegaStoneFlag_ABOMASITE::
+	setflag FLAG_MEGA_STONE_ABOMASITE
+	return
+
+Common_EventScript_MegaStoneFlag_AERODACTYLITE::
+	setflag FLAG_MEGA_STONE_AERODACTYLITE
+	return
+
+Common_EventScript_MegaStoneFlag_BLASTOISINITE::
+	setflag FLAG_MEGA_STONE_BLASTOISINITE
+	return
+
+Common_EventScript_MegaStoneFlag_AMPHAROSITE::
+	setflag FLAG_MEGA_STONE_AMPHAROSITE
+	return
+
+Common_EventScript_MegaStoneFlag_VENUSAURITE::
+	setflag FLAG_MEGA_STONE_VENUSAURITE
+	return
+
+Common_EventScript_MegaStoneFlag_ALAKAZITE::
+	setflag FLAG_MEGA_STONE_ALAKAZITE
+	return
+
+Common_EventScript_MegaStoneFlag_BEEDRILLITE::
+	setflag FLAG_MEGA_STONE_BEEDRILLITE
+	return
+
+Common_EventScript_MegaStoneFlag_CHARIZARDITE_Y::
+	setflag FLAG_MEGA_STONE_CHARIZARDITE_Y
+	return
+
+Common_EventScript_MegaStoneFlag_GARCHOMPITE::
+	setflag FLAG_MEGA_STONE_GARCHOMPITE
+	return
+
+Common_EventScript_MegaStoneFlag_TYRANITARITE::
+	setflag FLAG_MEGA_STONE_TYRANITARITE
+	return
+
+Common_EventScript_MegaStoneFlag_MEDICHAMITE::
+	setflag FLAG_MEGA_STONE_MEDICHAMITE
+	return
+
+Common_EventScript_MegaStoneFlag_MANECTITE::
+	setflag FLAG_MEGA_STONE_MANECTITE
+	return
+
+Common_EventScript_MegaStoneFlag_CAMERUPTITE::
+	setflag FLAG_MEGA_STONE_CAMERUPTITE
+	return
+
+Common_EventScript_MegaStoneFlag_AUDINITE::
+	setflag FLAG_MEGA_STONE_AUDINITE
+	return
+
+Common_EventScript_MegaStoneFlag_ALTARIANITE::
+	setflag FLAG_MEGA_STONE_ALTARIANITE
+	return
+
+Common_EventScript_MegaStoneFlag_GARDEVOIRITE::
+	setflag FLAG_MEGA_STONE_GARDEVOIRITE
+	return
+
+Common_EventScript_MegaStoneFlag_SWAMPERTITE::
+	setflag FLAG_MEGA_STONE_SWAMPERTITE
+	return
+

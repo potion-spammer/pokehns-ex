@@ -1253,6 +1253,42 @@
 #define FLAG_BADGE16_GET                            (SYS_FLAGS + 0x2F)
 #define NUM_BADGES                                  16
 
+// Hoenn badges. These sit in their own run of free system-flag slots (SYS_FLAGS + 0x10..0x17)
+// instead of extending the Johto/Kanto run above, because many systems (trainer card, main menu,
+// rematch ceiling, shops, ...) loop over FLAG_BADGE01_GET + NUM_BADGES and expect exactly 16 flags.
+// Hoenn gyms award these in the same order as vanilla Emerald:
+// Stone, Knuckle, Dynamo, Heat, Balance, Feather, Mind, Rain.
+#define FLAG_BADGE17_GET                            (SYS_FLAGS + 0x10)
+#define FLAG_BADGE18_GET                            (SYS_FLAGS + 0x11)
+#define FLAG_BADGE19_GET                            (SYS_FLAGS + 0x12)
+#define FLAG_BADGE20_GET                            (SYS_FLAGS + 0x13)
+#define FLAG_BADGE21_GET                            (SYS_FLAGS + 0x14)
+#define FLAG_BADGE22_GET                            (SYS_FLAGS + 0x15)
+#define FLAG_BADGE23_GET                            (SYS_FLAGS + 0x16)
+#define FLAG_BADGE24_GET                            (SYS_FLAGS + 0x17)
+#define FLAG_BADGE_HOENN_START                      FLAG_BADGE17_GET
+#define NUM_BADGES_HOENN                            8
+#define NUM_BADGES_TOTAL                            (NUM_BADGES + NUM_BADGES_HOENN)
+
+// Hoenn flag bank. The Hoenn story/NPC/item flags were stubbed to 0 in this fork to free flag space
+// (FlagGet(0) is always FALSE and FlagSet(0) does nothing), which left Hoenn's events inert. They now
+// live in a separate bank stored in SaveBlock3 (see struct SaveBlock3 in global.h and GetFlagPointer
+// in event_data.c). SaveBlock3 sits outside the sector checksum, so adding the bank does not
+// invalidate existing saves. IDs must stay a multiple of 8 so that (id & 7) selects the bit.
+// Bank addresses are APPEND-ONLY: never renumber or reuse an assigned flag, or saves made earlier will
+// read the wrong bits. New flags take the next free number (currently 771 of 1024 are assigned).
+#define HOENN_FLAGS_START                           0x1000
+#define HOENN_FLAGS_COUNT                           1024
+#define HOENN_FLAGS_BYTES                           (HOENN_FLAGS_COUNT / 8)
+#define HOENN_FLAG_BANK_MAGIC                       0x48E2
+
+// Hoenn trainer-defeated flags: one bit per Hoenn trainer id (ids HNS_HOENN_TRAINER_ID_BASE and up).
+// A second, separate bank so Hoenn trainers do not need space in the ordinary trainer flag range.
+// See GetTrainerFlagId() in battle_setup.c.
+#define HOENN_TRAINER_FLAGS_START                   (HOENN_FLAGS_START + HOENN_FLAGS_COUNT)
+#define HOENN_TRAINER_FLAGS_COUNT                   1024
+#define HOENN_TRAINER_FLAGS_BYTES                   (HOENN_TRAINER_FLAGS_COUNT / 8)
+
 // Core system
 #define FLAG_SYS_POKEMON_GET                        (SYS_FLAGS + 0x30)
 #define FLAG_SYS_POKEDEX_GET                        (SYS_FLAGS + 0x31)
@@ -1357,241 +1393,250 @@
 // Emerald/FRLG stubs (unused in HnS, required by shared engine code)
 
 // Emerald story / script flags
-#define FLAG_RESCUED_BIRCH                          0
-#define FLAG_LEGENDARIES_IN_SOOTOPOLIS              0
-#define FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL     0
-#define FLAG_MET_RIVAL_MOM                          0
-#define FLAG_BIRCH_AIDE_MET                         0
-#define FLAG_DECLINED_BIKE                          0
-#define FLAG_WATTSON_REMATCH_AVAILABLE              0
-#define FLAG_RECEIVED_WAILMER_PAIL                  0
-#define FLAG_RECEIVED_POKEBLOCK_CASE                0
-#define FLAG_RECEIVED_SECRET_POWER                  0
-#define FLAG_MET_TEAM_AQUA_HARBOR                   0
-#define FLAG_TV_EXPLAINED                           0
-#define FLAG_MAUVILLE_GYM_BARRIERS_STATE            0
-#define FLAG_MOSSDEEP_GYM_SWITCH_1                  0
-#define FLAG_MOSSDEEP_GYM_SWITCH_2                  0
-#define FLAG_MOSSDEEP_GYM_SWITCH_3                  0
-#define FLAG_MOSSDEEP_GYM_SWITCH_4                  0
+#define FLAG_RESCUED_BIRCH                          (HOENN_FLAGS_START + 0)
+#define FLAG_LEGENDARIES_IN_SOOTOPOLIS              (HOENN_FLAGS_START + 1)
+#define FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL     (HOENN_FLAGS_START + 2)
+#define FLAG_MET_RIVAL_MOM                          (HOENN_FLAGS_START + 3)
+#define FLAG_BIRCH_AIDE_MET                         (HOENN_FLAGS_START + 4)
+#define FLAG_DECLINED_BIKE                          (HOENN_FLAGS_START + 5)
+#define FLAG_WATTSON_REMATCH_AVAILABLE              (HOENN_FLAGS_START + 6)
+#define FLAG_RECEIVED_WAILMER_PAIL                  (HOENN_FLAGS_START + 7)
+#define FLAG_RECEIVED_POKEBLOCK_CASE                (HOENN_FLAGS_START + 8)
+#define FLAG_RECEIVED_SECRET_POWER                  (HOENN_FLAGS_START + 9)
+#define FLAG_MET_TEAM_AQUA_HARBOR                   (HOENN_FLAGS_START + 10)
+#define FLAG_TV_EXPLAINED                           (HOENN_FLAGS_START + 11)
+#define FLAG_MAUVILLE_GYM_BARRIERS_STATE            (HOENN_FLAGS_START + 12)
+#define FLAG_MOSSDEEP_GYM_SWITCH_1                  (HOENN_FLAGS_START + 13)
+#define FLAG_MOSSDEEP_GYM_SWITCH_2                  (HOENN_FLAGS_START + 14)
+#define FLAG_MOSSDEEP_GYM_SWITCH_3                  (HOENN_FLAGS_START + 15)
+#define FLAG_MOSSDEEP_GYM_SWITCH_4                  (HOENN_FLAGS_START + 16)
 #define FLAG_OCEANIC_MUSEUM_MET_REPORTER            0
-#define FLAG_RECEIVED_HM_FLY                        0
-#define FLAG_RECEIVED_HM_DIVE                       0
-#define FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT         0
-#define FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE         0
-#define FLAG_UNUSED_RS_LEGENDARY_BATTLE_DONE        0
-#define FLAG_SCOTT_CALL_BATTLE_FRONTIER             0
-#define FLAG_RECEIVED_METEORITE                     0
-#define FLAG_DEFEATED_MAGMA_SPACE_CENTER            0
-#define FLAG_MET_HIDDEN_POWER_GIVER                 0
-#define FLAG_LANDMARK_MIRAGE_TOWER                  0
-#define FLAG_RECEIVED_TM_BRICK_BREAK                0
-#define FLAG_DEFEATED_RIVAL_ROUTE_104               0
-#define FLAG_DEFEATED_WALLY_VICTORY_ROAD            0
-#define FLAG_MET_PRETTY_PETAL_SHOP_OWNER            0
-#define FLAG_ENABLE_ROXANNE_FIRST_CALL              0
-#define FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN         0
-#define FLAG_DEFEATED_RIVAL_ROUTE103                0
-#define FLAG_RECEIVED_DOLL_LANETTE                  0
-#define FLAG_RECEIVED_POTION_OLDALE                 0
+#define FLAG_RECEIVED_HM_FLY                        (HOENN_FLAGS_START + 17)
+#define FLAG_RECEIVED_HM_DIVE                       (HOENN_FLAGS_START + 18)
+#define FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT         (HOENN_FLAGS_START + 19)
+#define FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE         (HOENN_FLAGS_START + 20)
+#define FLAG_UNUSED_RS_LEGENDARY_BATTLE_DONE        (HOENN_FLAGS_START + 21)
+#define FLAG_SCOTT_CALL_BATTLE_FRONTIER             (HOENN_FLAGS_START + 22)
+#define FLAG_RECEIVED_METEORITE                     (HOENN_FLAGS_START + 23)
+#define FLAG_DEFEATED_MAGMA_SPACE_CENTER            (HOENN_FLAGS_START + 24)
+#define FLAG_MET_HIDDEN_POWER_GIVER                 (HOENN_FLAGS_START + 25)
+#define FLAG_LANDMARK_MIRAGE_TOWER                  (HOENN_FLAGS_START + 26)
+#define FLAG_RECEIVED_TM_BRICK_BREAK                (HOENN_FLAGS_START + 27)
+#define FLAG_DEFEATED_RIVAL_ROUTE_104               (HOENN_FLAGS_START + 28)
+#define FLAG_DEFEATED_WALLY_VICTORY_ROAD            (HOENN_FLAGS_START + 29)
+#define FLAG_MET_PRETTY_PETAL_SHOP_OWNER            (HOENN_FLAGS_START + 30)
+#define FLAG_ENABLE_ROXANNE_FIRST_CALL              (HOENN_FLAGS_START + 31)
+#define FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN         (HOENN_FLAGS_START + 32)
+#define FLAG_DEFEATED_RIVAL_ROUTE103                (HOENN_FLAGS_START + 33)
+#define FLAG_RECEIVED_DOLL_LANETTE                  (HOENN_FLAGS_START + 34)
+#define FLAG_RECEIVED_POTION_OLDALE                 (HOENN_FLAGS_START + 35)
 #define FLAG_RECEIVED_AMULET_COIN                   0
-#define FLAG_THANKED_FOR_PLAYING_WITH_WALLY         0
-#define FLAG_ENABLE_FIRST_WALLY_POKENAV_CALL        0
-#define FLAG_SCOTT_CALL_FORTREE_GYM                 0
-#define FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY          0
-#define FLAG_RECEIVED_6_SODA_POP                    0
-#define FLAG_DEFEATED_SEASHORE_HOUSE                0
-#define FLAG_DEVON_GOODS_STOLEN                     0
-#define FLAG_RECOVERED_DEVON_GOODS                  0
-#define FLAG_RETURNED_DEVON_GOODS                   0
-#define FLAG_MR_BRINEY_SAILING_INTRO                0
-#define FLAG_DOCK_REJECTED_DEVON_GOODS              0
-#define FLAG_DELIVERED_DEVON_GOODS                  0
+#define FLAG_THANKED_FOR_PLAYING_WITH_WALLY         (HOENN_FLAGS_START + 36)
+#define FLAG_ENABLE_FIRST_WALLY_POKENAV_CALL        (HOENN_FLAGS_START + 37)
+#define FLAG_SCOTT_CALL_FORTREE_GYM                 (HOENN_FLAGS_START + 38)
+#define FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY          (HOENN_FLAGS_START + 39)
+#define FLAG_RECEIVED_6_SODA_POP                    (HOENN_FLAGS_START + 40)
+#define FLAG_DEFEATED_SEASHORE_HOUSE                (HOENN_FLAGS_START + 41)
+#define FLAG_DEVON_GOODS_STOLEN                     (HOENN_FLAGS_START + 42)
+#define FLAG_RECOVERED_DEVON_GOODS                  (HOENN_FLAGS_START + 43)
+#define FLAG_RETURNED_DEVON_GOODS                   (HOENN_FLAGS_START + 44)
+#define FLAG_MR_BRINEY_SAILING_INTRO                (HOENN_FLAGS_START + 45)
+#define FLAG_DOCK_REJECTED_DEVON_GOODS              (HOENN_FLAGS_START + 46)
+#define FLAG_DELIVERED_DEVON_GOODS                  (HOENN_FLAGS_START + 47)
 #define FLAG_RECEIVED_CONTEST_PASS                  0
-#define FLAG_RECEIVED_CASTFORM                      0
-#define FLAG_RECEIVED_SUPER_ROD                     0
-#define FLAG_RUSTBORO_NPC_TRADE_COMPLETED           0
-#define FLAG_PACIFIDLOG_NPC_TRADE_COMPLETED         0
-#define FLAG_FORTREE_NPC_TRADE_COMPLETED            0
-#define FLAG_FORCE_MIRAGE_TOWER_VISIBLE             0
-#define FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE          0
-#define FLAG_INTERACTED_WITH_DEVON_EMPLOYEE_GOODS_STOLEN 0
-#define FLAG_COOL_PAINTING_MADE                     0
-#define FLAG_BEAUTY_PAINTING_MADE                   0
-#define FLAG_CUTE_PAINTING_MADE                     0
-#define FLAG_SMART_PAINTING_MADE                    0
-#define FLAG_TOUGH_PAINTING_MADE                    0
-#define FLAG_RECEIVED_TM_ROCK_TOMB                  0
-#define FLAG_RECEIVED_TM_BULK_UP                    0
-#define FLAG_RECEIVED_TM_SHOCK_WAVE                 0
-#define FLAG_RECEIVED_TM_OVERHEAT                   0
-#define FLAG_RECEIVED_TM_FACADE                     0
-#define FLAG_RECEIVED_TM_AERIAL_ACE                 0
-#define FLAG_RECEIVED_TM_CALM_MIND                  0
-#define FLAG_RECEIVED_TM_WATER_PULSE                0
-#define FLAG_HIDE_SECRET_BASE_TRAINER               0
-#define FLAG_HIDE_CONTEST_POKE_BALL                 0
-#define FLAG_DELIVERED_STEVEN_LETTER                0
-#define FLAG_DEFEATED_WALLY_MAUVILLE               0
-#define FLAG_DEFEATED_GRUNT_SPACE_CENTER_1F         0
-#define FLAG_RECEIVED_SUN_STONE_MOSSDEEP            0
-#define FLAG_WALLY_SPEECH                           0
-#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_1          0
-#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_2          0
-#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_3          0
-#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_4          0
-#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_5          0
-#define FLAG_RUSTURF_TUNNEL_OPENED                  0
-#define FLAG_RECEIVED_RED_SCARF                     0
-#define FLAG_RECEIVED_BLUE_SCARF                    0
-#define FLAG_RECEIVED_PINK_SCARF                    0
-#define FLAG_RECEIVED_GREEN_SCARF                   0
-#define FLAG_RECEIVED_YELLOW_SCARF                  0
-#define FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTER    0
-#define FLAG_ENCOUNTERED_LATIAS_OR_LATIOS           0
-#define FLAG_MET_ARCHIE_METEOR_FALLS                0
-#define FLAG_GOT_BASEMENT_KEY_FROM_WATTSON          0
-#define FLAG_GOT_TM_THUNDERBOLT_FROM_WATTSON        0
-#define FLAG_FAN_CLUB_STRENGTH_SHARED               0
-#define FLAG_DEFEATED_RIVAL_RUSTBORO                0
-#define FLAG_RECEIVED_RED_OR_BLUE_ORB               0
-#define FLAG_RECEIVED_PREMIER_BALL_RUSTBORO         0
-#define FLAG_ENABLE_WALLY_MATCH_CALL                0
-#define FLAG_ENABLE_SCOTT_MATCH_CALL                0
-#define FLAG_ENABLE_MOM_MATCH_CALL                  0
-#define FLAG_MET_DIVING_TREASURE_HUNTER             0
-#define FLAG_MET_WAILMER_TRAINER                    0
-#define FLAG_EVIL_LEADER_PLEASE_STOP                0
+#define FLAG_RECEIVED_CASTFORM                      (HOENN_FLAGS_START + 48)
+#define FLAG_RECEIVED_SUPER_ROD                     (HOENN_FLAGS_START + 49)
+#define FLAG_RUSTBORO_NPC_TRADE_COMPLETED           (HOENN_FLAGS_START + 50)
+#define FLAG_PACIFIDLOG_NPC_TRADE_COMPLETED         (HOENN_FLAGS_START + 51)
+#define FLAG_FORTREE_NPC_TRADE_COMPLETED            (HOENN_FLAGS_START + 52)
+#define FLAG_FORCE_MIRAGE_TOWER_VISIBLE             (HOENN_FLAGS_START + 53)
+#define FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE          (HOENN_FLAGS_START + 54)
+#define FLAG_INTERACTED_WITH_DEVON_EMPLOYEE_GOODS_STOLEN (HOENN_FLAGS_START + 55)
+#define FLAG_COOL_PAINTING_MADE                     (HOENN_FLAGS_START + 56)
+#define FLAG_BEAUTY_PAINTING_MADE                   (HOENN_FLAGS_START + 57)
+#define FLAG_CUTE_PAINTING_MADE                     (HOENN_FLAGS_START + 58)
+#define FLAG_SMART_PAINTING_MADE                    (HOENN_FLAGS_START + 59)
+#define FLAG_TOUGH_PAINTING_MADE                    (HOENN_FLAGS_START + 60)
+#define FLAG_RECEIVED_TM_ROCK_TOMB                  (HOENN_FLAGS_START + 61)
+#define FLAG_RECEIVED_TM_BULK_UP                    (HOENN_FLAGS_START + 62)
+#define FLAG_RECEIVED_TM_SHOCK_WAVE                 (HOENN_FLAGS_START + 63)
+#define FLAG_RECEIVED_TM_OVERHEAT                   (HOENN_FLAGS_START + 64)
+#define FLAG_RECEIVED_TM_FACADE                     (HOENN_FLAGS_START + 65)
+#define FLAG_RECEIVED_TM_AERIAL_ACE                 (HOENN_FLAGS_START + 66)
+#define FLAG_RECEIVED_TM_CALM_MIND                  (HOENN_FLAGS_START + 67)
+#define FLAG_RECEIVED_TM_WATER_PULSE                (HOENN_FLAGS_START + 68)
+#define FLAG_HIDE_SECRET_BASE_TRAINER               (HOENN_FLAGS_START + 69)
+#define FLAG_HIDE_CONTEST_POKE_BALL                 (HOENN_FLAGS_START + 70)
+#define FLAG_DELIVERED_STEVEN_LETTER                (HOENN_FLAGS_START + 71)
+#define FLAG_DEFEATED_WALLY_MAUVILLE               (HOENN_FLAGS_START + 72)
+#define FLAG_DEFEATED_GRUNT_SPACE_CENTER_1F         (HOENN_FLAGS_START + 73)
+#define FLAG_RECEIVED_SUN_STONE_MOSSDEEP            (HOENN_FLAGS_START + 74)
+#define FLAG_WALLY_SPEECH                           (HOENN_FLAGS_START + 75)
+#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_1          (HOENN_FLAGS_START + 76)
+#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_2          (HOENN_FLAGS_START + 77)
+#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_3          (HOENN_FLAGS_START + 78)
+#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_4          (HOENN_FLAGS_START + 79)
+#define FLAG_TRICK_HOUSE_PUZZLE_7_SWITCH_5          (HOENN_FLAGS_START + 80)
+#define FLAG_RUSTURF_TUNNEL_OPENED                  (HOENN_FLAGS_START + 81)
+#define FLAG_RECEIVED_RED_SCARF                     (HOENN_FLAGS_START + 82)
+#define FLAG_RECEIVED_BLUE_SCARF                    (HOENN_FLAGS_START + 83)
+#define FLAG_RECEIVED_PINK_SCARF                    (HOENN_FLAGS_START + 84)
+#define FLAG_RECEIVED_GREEN_SCARF                   (HOENN_FLAGS_START + 85)
+#define FLAG_RECEIVED_YELLOW_SCARF                  (HOENN_FLAGS_START + 86)
+#define FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTER    (HOENN_FLAGS_START + 87)
+#define FLAG_ENCOUNTERED_LATIAS_OR_LATIOS           (HOENN_FLAGS_START + 88)
+#define FLAG_MET_ARCHIE_METEOR_FALLS                (HOENN_FLAGS_START + 89)
+#define FLAG_GOT_BASEMENT_KEY_FROM_WATTSON          (HOENN_FLAGS_START + 90)
+#define FLAG_GOT_TM_THUNDERBOLT_FROM_WATTSON        (HOENN_FLAGS_START + 91)
+#define FLAG_FAN_CLUB_STRENGTH_SHARED               (HOENN_FLAGS_START + 92)
+#define FLAG_DEFEATED_RIVAL_RUSTBORO                (HOENN_FLAGS_START + 93)
+#define FLAG_RECEIVED_RED_OR_BLUE_ORB               (HOENN_FLAGS_START + 94)
+#define FLAG_RECEIVED_PREMIER_BALL_RUSTBORO         (HOENN_FLAGS_START + 95)
+#define FLAG_ENABLE_WALLY_MATCH_CALL                (HOENN_FLAGS_START + 96)
+#define FLAG_ENABLE_SCOTT_MATCH_CALL                (HOENN_FLAGS_START + 97)
+// In HNS this flag now means "the player registered their partner in the POKeNAV" (Littleroot house).
+#define FLAG_ENABLE_MOM_MATCH_CALL                  (HOENN_FLAGS_START + 765)
+
+// One-time presents from the player's partner in Littleroot (one per two Hoenn badges).
+#define FLAG_PARTNER_GIFT_STONES_1                  (HOENN_FLAGS_START + 766)
+#define FLAG_PARTNER_GIFT_STONES_2                  (HOENN_FLAGS_START + 767)
+#define FLAG_PARTNER_GIFT_CANDY                     (HOENN_FLAGS_START + 768)
+#define FLAG_PARTNER_GIFT_CAPSULE                   (HOENN_FLAGS_START + 769)
+// Set once the partner's ex (the rival) has had their confrontation with the player outside the Littleroot home.
+#define FLAG_EX_RIVAL_CONFRONTED                    (HOENN_FLAGS_START + 770)
+#define FLAG_MET_DIVING_TREASURE_HUNTER             (HOENN_FLAGS_START + 98)
+#define FLAG_MET_WAILMER_TRAINER                    (HOENN_FLAGS_START + 99)
+#define FLAG_EVIL_LEADER_PLEASE_STOP                (HOENN_FLAGS_START + 100)
 #define FLAG_NEVER_SET_0x0DC                        0
-#define FLAG_RECEIVED_GO_GOGGLES                    0
-#define FLAG_WINGULL_SENT_ON_ERRAND                 0
-#define FLAG_RECEIVED_MENTAL_HERB                   0
-#define FLAG_WINGULL_DELIVERED_MAIL                  0
-#define FLAG_RECEIVED_20_COINS                      0
-#define FLAG_RECEIVED_STARTER_DOLL                  0
-#define FLAG_RECEIVED_GOOD_ROD                      0
-#define FLAG_REGI_DOORS_OPENED                      0
-#define FLAG_RECEIVED_TM_RETURN                     0
-#define FLAG_RECEIVED_TM_SLUDGE_BOMB                0
-#define FLAG_RECEIVED_TM_ROAR                       0
-#define FLAG_RECEIVED_TM_GIGA_DRAIN                 0
-#define FLAG_RECEIVED_TM_REST                       0
-#define FLAG_RECEIVED_TM_ATTRACT                    0
-#define FLAG_RECEIVED_GLASS_ORNAMENT                0
-#define FLAG_USED_STORAGE_KEY                       0
-#define FLAG_USED_ROOM_1_KEY                        0
-#define FLAG_USED_ROOM_2_KEY                        0
-#define FLAG_USED_ROOM_4_KEY                        0
-#define FLAG_USED_ROOM_6_KEY                        0
-#define FLAG_MET_PROF_COZMO                         0
-#define FLAG_RECEIVED_WAILMER_DOLL                  0
-#define FLAG_RECEIVED_CHESTO_BERRY_ROUTE_104        0
-#define FLAG_DEFEATED_SS_TIDAL_TRAINERS             0
-#define FLAG_RECEIVED_SPELON_BERRY                  0
-#define FLAG_RECEIVED_PAMTRE_BERRY                  0
-#define FLAG_RECEIVED_WATMEL_BERRY                  0
-#define FLAG_RECEIVED_DURIN_BERRY                   0
-#define FLAG_RECEIVED_BELUE_BERRY                   0
-#define FLAG_ENABLE_RIVAL_MATCH_CALL                0
-#define FLAG_RECEIVED_CHARCOAL                      0
-#define FLAG_RECEIVED_REPEAT_BALL                   0
-#define FLAG_RECEIVED_OLD_ROD                       0
-#define FLAG_RECEIVED_COIN_CASE                     0
-#define FLAG_RETURNED_RED_OR_BLUE_ORB               0
-#define FLAG_RECEIVED_TM_SNATCH                     0
-#define FLAG_RECEIVED_TM_DIG                        0
-#define FLAG_RECEIVED_TM_BULLET_SEED                0
-#define FLAG_ENTERED_ELITE_FOUR                     0
-#define FLAG_RECEIVED_TM_HIDDEN_POWER               0
-#define FLAG_RECEIVED_TM_TORMENT                    0
-#define FLAG_RECEIVED_LAVARIDGE_EGG                 0
+#define FLAG_RECEIVED_GO_GOGGLES                    (HOENN_FLAGS_START + 101)
+#define FLAG_WINGULL_SENT_ON_ERRAND                 (HOENN_FLAGS_START + 102)
+#define FLAG_RECEIVED_MENTAL_HERB                   (HOENN_FLAGS_START + 103)
+#define FLAG_WINGULL_DELIVERED_MAIL                  (HOENN_FLAGS_START + 104)
+#define FLAG_RECEIVED_20_COINS                      (HOENN_FLAGS_START + 105)
+#define FLAG_RECEIVED_STARTER_DOLL                  (HOENN_FLAGS_START + 106)
+#define FLAG_RECEIVED_GOOD_ROD                      (HOENN_FLAGS_START + 107)
+#define FLAG_REGI_DOORS_OPENED                      (HOENN_FLAGS_START + 108)
+#define FLAG_RECEIVED_TM_RETURN                     (HOENN_FLAGS_START + 109)
+#define FLAG_RECEIVED_TM_SLUDGE_BOMB                (HOENN_FLAGS_START + 110)
+#define FLAG_RECEIVED_TM_ROAR                       (HOENN_FLAGS_START + 111)
+#define FLAG_RECEIVED_TM_GIGA_DRAIN                 (HOENN_FLAGS_START + 112)
+#define FLAG_RECEIVED_TM_REST                       (HOENN_FLAGS_START + 113)
+#define FLAG_RECEIVED_TM_ATTRACT                    (HOENN_FLAGS_START + 114)
+#define FLAG_RECEIVED_GLASS_ORNAMENT                (HOENN_FLAGS_START + 115)
+#define FLAG_USED_STORAGE_KEY                       (HOENN_FLAGS_START + 116)
+#define FLAG_USED_ROOM_1_KEY                        (HOENN_FLAGS_START + 117)
+#define FLAG_USED_ROOM_2_KEY                        (HOENN_FLAGS_START + 118)
+#define FLAG_USED_ROOM_4_KEY                        (HOENN_FLAGS_START + 119)
+#define FLAG_USED_ROOM_6_KEY                        (HOENN_FLAGS_START + 120)
+#define FLAG_MET_PROF_COZMO                         (HOENN_FLAGS_START + 121)
+#define FLAG_RECEIVED_WAILMER_DOLL                  (HOENN_FLAGS_START + 122)
+#define FLAG_RECEIVED_CHESTO_BERRY_ROUTE_104        (HOENN_FLAGS_START + 123)
+#define FLAG_DEFEATED_SS_TIDAL_TRAINERS             (HOENN_FLAGS_START + 124)
+#define FLAG_RECEIVED_SPELON_BERRY                  (HOENN_FLAGS_START + 125)
+#define FLAG_RECEIVED_PAMTRE_BERRY                  (HOENN_FLAGS_START + 126)
+#define FLAG_RECEIVED_WATMEL_BERRY                  (HOENN_FLAGS_START + 127)
+#define FLAG_RECEIVED_DURIN_BERRY                   (HOENN_FLAGS_START + 128)
+#define FLAG_RECEIVED_BELUE_BERRY                   (HOENN_FLAGS_START + 129)
+#define FLAG_ENABLE_RIVAL_MATCH_CALL                (HOENN_FLAGS_START + 130)
+#define FLAG_RECEIVED_CHARCOAL                      (HOENN_FLAGS_START + 131)
+#define FLAG_RECEIVED_REPEAT_BALL                   (HOENN_FLAGS_START + 132)
+#define FLAG_RECEIVED_OLD_ROD                       (HOENN_FLAGS_START + 133)
+#define FLAG_RECEIVED_COIN_CASE                     (HOENN_FLAGS_START + 134)
+#define FLAG_RETURNED_RED_OR_BLUE_ORB               (HOENN_FLAGS_START + 135)
+#define FLAG_RECEIVED_TM_SNATCH                     (HOENN_FLAGS_START + 136)
+#define FLAG_RECEIVED_TM_DIG                        (HOENN_FLAGS_START + 137)
+#define FLAG_RECEIVED_TM_BULLET_SEED                (HOENN_FLAGS_START + 138)
+#define FLAG_ENTERED_ELITE_FOUR                     (HOENN_FLAGS_START + 139)
+#define FLAG_RECEIVED_TM_HIDDEN_POWER               (HOENN_FLAGS_START + 140)
+#define FLAG_RECEIVED_TM_TORMENT                    (HOENN_FLAGS_START + 141)
+#define FLAG_RECEIVED_LAVARIDGE_EGG                 (HOENN_FLAGS_START + 142)
 #define FLAG_SECRET_BASE_REGISTRY_ENABLED           0
-#define FLAG_RECEIVED_TM_THIEF                      0
-#define FLAG_CONTEST_SKETCH_CREATED                 0
-#define FLAG_EVIL_TEAM_ESCAPED_STERN_SPOKE          0
-#define FLAG_RECEIVED_EXP_SHARE                     0
-#define FLAG_RECEIVED_QUICK_CLAW                    0
-#define FLAG_RECEIVED_KINGS_ROCK                    0
-#define FLAG_RECEIVED_MACHO_BRACE                   0
-#define FLAG_RECEIVED_SOOTHE_BELL                   0
-#define FLAG_RECEIVED_WHITE_HERB                    0
-#define FLAG_RECEIVED_SOFT_SAND                     0
-#define FLAG_RECEIVED_CLEANSE_TAG                   0
-#define FLAG_RECEIVED_FOCUS_BAND                    0
-#define FLAG_DECLINED_WALLY_BATTLE_MAUVILLE         0
-#define FLAG_RECEIVED_DEVON_SCOPE                   0
-#define FLAG_DECLINED_RIVAL_BATTLE_LILYCOVE         0
-#define FLAG_MET_DEVON_EMPLOYEE                     0
-#define FLAG_MET_RIVAL_RUSTBORO                     0
-#define FLAG_RECEIVED_SILK_SCARF                    0
-#define FLAG_NOT_READY_FOR_BATTLE_ROUTE_120         0
+#define FLAG_RECEIVED_TM_THIEF                      (HOENN_FLAGS_START + 143)
+#define FLAG_CONTEST_SKETCH_CREATED                 (HOENN_FLAGS_START + 144)
+#define FLAG_EVIL_TEAM_ESCAPED_STERN_SPOKE          (HOENN_FLAGS_START + 145)
+#define FLAG_RECEIVED_EXP_SHARE                     (HOENN_FLAGS_START + 146)
+#define FLAG_RECEIVED_QUICK_CLAW                    (HOENN_FLAGS_START + 147)
+#define FLAG_RECEIVED_KINGS_ROCK                    (HOENN_FLAGS_START + 148)
+#define FLAG_RECEIVED_MACHO_BRACE                   (HOENN_FLAGS_START + 149)
+#define FLAG_RECEIVED_SOOTHE_BELL                   (HOENN_FLAGS_START + 150)
+#define FLAG_RECEIVED_WHITE_HERB                    (HOENN_FLAGS_START + 151)
+#define FLAG_RECEIVED_SOFT_SAND                     (HOENN_FLAGS_START + 152)
+#define FLAG_RECEIVED_CLEANSE_TAG                   (HOENN_FLAGS_START + 153)
+#define FLAG_RECEIVED_FOCUS_BAND                    (HOENN_FLAGS_START + 154)
+#define FLAG_DECLINED_WALLY_BATTLE_MAUVILLE         (HOENN_FLAGS_START + 155)
+#define FLAG_RECEIVED_DEVON_SCOPE                   (HOENN_FLAGS_START + 156)
+#define FLAG_DECLINED_RIVAL_BATTLE_LILYCOVE         (HOENN_FLAGS_START + 157)
+#define FLAG_MET_DEVON_EMPLOYEE                     (HOENN_FLAGS_START + 158)
+#define FLAG_MET_RIVAL_RUSTBORO                     (HOENN_FLAGS_START + 159)
+#define FLAG_RECEIVED_SILK_SCARF                    (HOENN_FLAGS_START + 160)
+#define FLAG_NOT_READY_FOR_BATTLE_ROUTE_120         (HOENN_FLAGS_START + 161)
 #define FLAG_RECEIVED_SS_TICKET                     0
-#define FLAG_MET_RIVAL_LILYCOVE                     0
-#define FLAG_MET_RIVAL_IN_HOUSE_AFTER_LILYCOVE      0
-#define FLAG_EXCHANGED_SCANNER                      0
-#define FLAG_KECLEON_FLED_FORTREE                   0
-#define FLAG_PETALBURG_MART_EXPANDED_ITEMS          0
-#define FLAG_RECEIVED_MIRACLE_SEED                  0
-#define FLAG_RECEIVED_BELDUM                        0
-#define FLAG_RECEIVED_FANCLUB_TM_THIS_WEEK          0
-#define FLAG_MET_FANCLUB_YOUNGER_BROTHER            0
-#define FLAG_RIVAL_LEFT_FOR_ROUTE103                0
-#define FLAG_OMIT_DIVE_FROM_STEVEN_LETTER           0
-#define FLAG_REGISTERED_STEVEN_POKENAV              0
-#define FLAG_ENABLE_NORMAN_MATCH_CALL               0
-#define FLAG_STEVEN_GUIDES_TO_CAVE_OF_ORIGIN        0
-#define FLAG_MET_ARCHIE_SOOTOPOLIS                  0
-#define FLAG_MET_MAXIE_SOOTOPOLIS                   0
-#define FLAG_MET_SCOTT_RUSTBORO                     0
-#define FLAG_WALLACE_GOES_TO_SKY_PILLAR             0
-#define FLAG_RECEIVED_HM_WATERFALL                  0
-#define FLAG_BEAT_MAGMA_GRUNT_JAGGED_PASS           0
-#define FLAG_MIRAGE_TOWER_VISIBLE                   0
-#define FLAG_CHOSE_ROOT_FOSSIL                      0
-#define FLAG_CHOSE_CLAW_FOSSIL                      0
-#define FLAG_RECEIVED_POWDER_JAR                    0
-#define FLAG_MET_SLATEPORT_FANCLUB_CHAIRMAN         0
-#define FLAG_ENTERED_CONTEST                        0
+#define FLAG_MET_RIVAL_LILYCOVE                     (HOENN_FLAGS_START + 162)
+#define FLAG_MET_RIVAL_IN_HOUSE_AFTER_LILYCOVE      (HOENN_FLAGS_START + 163)
+#define FLAG_EXCHANGED_SCANNER                      (HOENN_FLAGS_START + 164)
+#define FLAG_KECLEON_FLED_FORTREE                   (HOENN_FLAGS_START + 165)
+#define FLAG_PETALBURG_MART_EXPANDED_ITEMS          (HOENN_FLAGS_START + 166)
+#define FLAG_RECEIVED_MIRACLE_SEED                  (HOENN_FLAGS_START + 167)
+#define FLAG_RECEIVED_BELDUM                        (HOENN_FLAGS_START + 168)
+#define FLAG_RECEIVED_FANCLUB_TM_THIS_WEEK          (HOENN_FLAGS_START + 169)
+#define FLAG_MET_FANCLUB_YOUNGER_BROTHER            (HOENN_FLAGS_START + 170)
+#define FLAG_RIVAL_LEFT_FOR_ROUTE103                (HOENN_FLAGS_START + 171)
+#define FLAG_OMIT_DIVE_FROM_STEVEN_LETTER           (HOENN_FLAGS_START + 172)
+#define FLAG_REGISTERED_STEVEN_POKENAV              (HOENN_FLAGS_START + 173)
+#define FLAG_ENABLE_NORMAN_MATCH_CALL               (HOENN_FLAGS_START + 174)
+#define FLAG_STEVEN_GUIDES_TO_CAVE_OF_ORIGIN        (HOENN_FLAGS_START + 175)
+#define FLAG_MET_ARCHIE_SOOTOPOLIS                  (HOENN_FLAGS_START + 176)
+#define FLAG_MET_MAXIE_SOOTOPOLIS                   (HOENN_FLAGS_START + 177)
+#define FLAG_MET_SCOTT_RUSTBORO                     (HOENN_FLAGS_START + 178)
+#define FLAG_WALLACE_GOES_TO_SKY_PILLAR             (HOENN_FLAGS_START + 179)
+#define FLAG_RECEIVED_HM_WATERFALL                  (HOENN_FLAGS_START + 180)
+#define FLAG_BEAT_MAGMA_GRUNT_JAGGED_PASS           (HOENN_FLAGS_START + 181)
+#define FLAG_MIRAGE_TOWER_VISIBLE                   (HOENN_FLAGS_START + 182)
+#define FLAG_CHOSE_ROOT_FOSSIL                      (HOENN_FLAGS_START + 183)
+#define FLAG_CHOSE_CLAW_FOSSIL                      (HOENN_FLAGS_START + 184)
+#define FLAG_RECEIVED_POWDER_JAR                    (HOENN_FLAGS_START + 185)
+#define FLAG_MET_SLATEPORT_FANCLUB_CHAIRMAN         (HOENN_FLAGS_START + 186)
+#define FLAG_ENTERED_CONTEST                        (HOENN_FLAGS_START + 187)
 #define FLAG_ENABLE_MR_STONE_POKENAV                0
 #define FLAG_NURSE_MENTIONS_GOLD_CARD               0
-#define FLAG_WHITEOUT_TO_LAVARIDGE                  0
+#define FLAG_WHITEOUT_TO_LAVARIDGE                  (HOENN_FLAGS_START + 188)
 
 // Emerald defeated flags
 
-#define FLAG_SHOWN_EON_TICKET                       0
-#define FLAG_SHOWN_OLD_SEA_MAP                      0
-#define FLAG_DEFEATED_REGIROCK                      0
-#define FLAG_DEFEATED_REGICE                        0
-#define FLAG_DEFEATED_REGISTEEL                     0
-#define FLAG_DEFEATED_KYOGRE                        0
-#define FLAG_DEFEATED_GROUDON                       0
-#define FLAG_DEFEATED_RAYQUAZA                      0
-#define FLAG_DEFEATED_VOLTORB_1_NEW_MAUVILLE        0
-#define FLAG_DEFEATED_VOLTORB_2_NEW_MAUVILLE        0
-#define FLAG_DEFEATED_VOLTORB_3_NEW_MAUVILLE        0
-#define FLAG_DEFEATED_ELECTRODE_1_AQUA_HIDEOUT      0
-#define FLAG_DEFEATED_ELECTRODE_2_AQUA_HIDEOUT      0
-#define FLAG_DEFEATED_LATIAS_OR_LATIOS              0
-#define FLAG_CAUGHT_LATIAS_OR_LATIOS                0
-#define FLAG_MET_SCOTT_AFTER_OBTAINING_STONE_BADGE  0
-#define FLAG_MET_SCOTT_IN_VERDANTURF                0
-#define FLAG_MET_SCOTT_IN_FALLARBOR                 0
-#define FLAG_MET_SCOTT_IN_LILYCOVE                  0
-#define FLAG_MET_SCOTT_IN_EVERGRANDE                0
-#define FLAG_MET_SCOTT_ON_SS_TIDAL                  0
-#define FLAG_ENABLE_ROXANNE_MATCH_CALL              0
-#define FLAG_ENABLE_BRAWLY_MATCH_CALL               0
-#define FLAG_ENABLE_WATTSON_MATCH_CALL              0
-#define FLAG_ENABLE_FLANNERY_MATCH_CALL             0
-#define FLAG_ENABLE_WINONA_MATCH_CALL               0
-#define FLAG_ENABLE_TATE_AND_LIZA_MATCH_CALL        0
-#define FLAG_ENABLE_JUAN_MATCH_CALL                 0
-#define FLAG_ENABLE_SHIP_FARAWAY_ISLAND             0
-#define FLAG_ARRIVED_ON_FARAWAY_ISLAND              0
-#define FLAG_ARRIVED_AT_MARINE_CAVE_EMERGE_SPOT     0
-#define FLAG_ARRIVED_AT_TERRA_CAVE_ENTRANCE         0
-#define FLAG_ENTERED_MIRAGE_TOWER                   0
-#define FLAG_ARRIVED_AT_NAVEL_ROCK                  0
+#define FLAG_SHOWN_EON_TICKET                       (HOENN_FLAGS_START + 189)
+#define FLAG_SHOWN_OLD_SEA_MAP                      (HOENN_FLAGS_START + 190)
+#define FLAG_DEFEATED_REGIROCK                      (HOENN_FLAGS_START + 191)
+#define FLAG_DEFEATED_REGICE                        (HOENN_FLAGS_START + 192)
+#define FLAG_DEFEATED_REGISTEEL                     (HOENN_FLAGS_START + 193)
+#define FLAG_DEFEATED_KYOGRE                        (HOENN_FLAGS_START + 194)
+#define FLAG_DEFEATED_GROUDON                       (HOENN_FLAGS_START + 195)
+#define FLAG_DEFEATED_RAYQUAZA                      (HOENN_FLAGS_START + 196)
+#define FLAG_DEFEATED_VOLTORB_1_NEW_MAUVILLE        (HOENN_FLAGS_START + 197)
+#define FLAG_DEFEATED_VOLTORB_2_NEW_MAUVILLE        (HOENN_FLAGS_START + 198)
+#define FLAG_DEFEATED_VOLTORB_3_NEW_MAUVILLE        (HOENN_FLAGS_START + 199)
+#define FLAG_DEFEATED_ELECTRODE_1_AQUA_HIDEOUT      (HOENN_FLAGS_START + 200)
+#define FLAG_DEFEATED_ELECTRODE_2_AQUA_HIDEOUT      (HOENN_FLAGS_START + 201)
+#define FLAG_DEFEATED_LATIAS_OR_LATIOS              (HOENN_FLAGS_START + 202)
+#define FLAG_CAUGHT_LATIAS_OR_LATIOS                (HOENN_FLAGS_START + 203)
+#define FLAG_MET_SCOTT_AFTER_OBTAINING_STONE_BADGE  (HOENN_FLAGS_START + 204)
+#define FLAG_MET_SCOTT_IN_VERDANTURF                (HOENN_FLAGS_START + 205)
+#define FLAG_MET_SCOTT_IN_FALLARBOR                 (HOENN_FLAGS_START + 206)
+#define FLAG_MET_SCOTT_IN_LILYCOVE                  (HOENN_FLAGS_START + 207)
+#define FLAG_MET_SCOTT_IN_EVERGRANDE                (HOENN_FLAGS_START + 208)
+#define FLAG_MET_SCOTT_ON_SS_TIDAL                  (HOENN_FLAGS_START + 209)
+#define FLAG_ENABLE_ROXANNE_MATCH_CALL              (HOENN_FLAGS_START + 210)
+#define FLAG_ENABLE_BRAWLY_MATCH_CALL               (HOENN_FLAGS_START + 211)
+#define FLAG_ENABLE_WATTSON_MATCH_CALL              (HOENN_FLAGS_START + 212)
+#define FLAG_ENABLE_FLANNERY_MATCH_CALL             (HOENN_FLAGS_START + 213)
+#define FLAG_ENABLE_WINONA_MATCH_CALL               (HOENN_FLAGS_START + 214)
+#define FLAG_ENABLE_TATE_AND_LIZA_MATCH_CALL        (HOENN_FLAGS_START + 215)
+#define FLAG_ENABLE_JUAN_MATCH_CALL                 (HOENN_FLAGS_START + 216)
+#define FLAG_ENABLE_SHIP_FARAWAY_ISLAND             (HOENN_FLAGS_START + 217)
+#define FLAG_ARRIVED_ON_FARAWAY_ISLAND              (HOENN_FLAGS_START + 218)
+#define FLAG_ARRIVED_AT_MARINE_CAVE_EMERGE_SPOT     (HOENN_FLAGS_START + 219)
+#define FLAG_ARRIVED_AT_TERRA_CAVE_ENTRANCE         (HOENN_FLAGS_START + 220)
+#define FLAG_ENTERED_MIRAGE_TOWER                   (HOENN_FLAGS_START + 221)
+#define FLAG_ARRIVED_AT_NAVEL_ROCK                  (HOENN_FLAGS_START + 222)
 
 // Emerald move tutors
 #define FLAG_MOVE_TUTOR_TAUGHT_SWAGGER              0
@@ -1606,19 +1651,19 @@
 #define FLAG_MOVE_TUTOR_TAUGHT_EXPLOSION            0
 
 // Emerald gym defeated
-#define FLAG_DEFEATED_RUSTBORO_GYM                  0
-#define FLAG_DEFEATED_DEWFORD_GYM                   0
-#define FLAG_DEFEATED_MAUVILLE_GYM                  0
-#define FLAG_DEFEATED_LAVARIDGE_GYM                 0
-#define FLAG_DEFEATED_PETALBURG_GYM                 0
-#define FLAG_DEFEATED_FORTREE_GYM                   0
-#define FLAG_DEFEATED_MOSSDEEP_GYM                  0
-#define FLAG_DEFEATED_SOOTOPOLIS_GYM                0
-#define FLAG_DEFEATED_METEOR_FALLS_STEVEN           0
-#define FLAG_DEFEATED_ELITE_4_SIDNEY                0
-#define FLAG_DEFEATED_ELITE_4_PHOEBE                0
-#define FLAG_DEFEATED_ELITE_4_GLACIA                0
-#define FLAG_DEFEATED_ELITE_4_DRAKE                 0
+#define FLAG_DEFEATED_RUSTBORO_GYM                  (HOENN_FLAGS_START + 223)
+#define FLAG_DEFEATED_DEWFORD_GYM                   (HOENN_FLAGS_START + 224)
+#define FLAG_DEFEATED_MAUVILLE_GYM                  (HOENN_FLAGS_START + 225)
+#define FLAG_DEFEATED_LAVARIDGE_GYM                 (HOENN_FLAGS_START + 226)
+#define FLAG_DEFEATED_PETALBURG_GYM                 (HOENN_FLAGS_START + 227)
+#define FLAG_DEFEATED_FORTREE_GYM                   (HOENN_FLAGS_START + 228)
+#define FLAG_DEFEATED_MOSSDEEP_GYM                  (HOENN_FLAGS_START + 229)
+#define FLAG_DEFEATED_SOOTOPOLIS_GYM                (HOENN_FLAGS_START + 230)
+#define FLAG_DEFEATED_METEOR_FALLS_STEVEN           (HOENN_FLAGS_START + 231)
+#define FLAG_DEFEATED_ELITE_4_SIDNEY                (HOENN_FLAGS_START + 232)
+#define FLAG_DEFEATED_ELITE_4_PHOEBE                (HOENN_FLAGS_START + 233)
+#define FLAG_DEFEATED_ELITE_4_GLACIA                (HOENN_FLAGS_START + 234)
+#define FLAG_DEFEATED_ELITE_4_DRAKE                 (HOENN_FLAGS_START + 235)
 
 // TRAINER_REGISTERED_FLAGS_START defined above at 0x310
 #define FLAG_REGISTERED_ROSE                        0
@@ -1814,462 +1859,462 @@
 #define FLAG_HIDDEN_ITEM_ROUTE_105_BIG_PEARL        FLAG_HIDDEN_ITEMS_START
 
 // Emerald event / hide flags
-#define FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG      0
-#define FLAG_HIDE_SAFARI_ZONE_SOUTH_CONSTRUCTION_WORKERS 0
-#define FLAG_HIDE_ROUTE_104_RIVAL                   0
-#define FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE  0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH  0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM 0
-#define FLAG_HIDE_ROUTE_103_RIVAL                   0
-#define FLAG_HIDE_PETALBURG_WOODS_DEVON_EMPLOYEE    0
-#define FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT        0
-#define FLAG_HIDE_PETALBURG_CITY_WALLY              0
-#define FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_INVISIBLE_NINJA_BOY 0
-#define FLAG_HIDE_PETALBURG_CITY_WALLYS_MOM         0
-#define FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER     0
-#define FLAG_HIDE_RUSTBORO_CITY_AQUA_GRUNT          0
-#define FLAG_HIDE_RUSTBORO_CITY_DEVON_EMPLOYEE_1    0
-#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_KYOGRE_ASLEEP 0
-#define FLAG_HIDE_PLAYERS_HOUSE_DAD                 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_SIBLING 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_SIBLING 0
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_MAGMA_NOTE 0
-#define FLAG_HIDE_ROUTE_104_MR_BRINEY               0
-#define FLAG_HIDE_BRINEYS_HOUSE_MR_BRINEY           0
-#define FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN            0
-#define FLAG_HIDE_ROUTE_109_MR_BRINEY               0
-#define FLAG_HIDE_ROUTE_104_MR_BRINEY_BOAT          0
-#define FLAG_HIDE_MR_BRINEY_BOAT_DEWFORD_TOWN       0
-#define FLAG_HIDE_ROUTE_109_MR_BRINEY_BOAT          0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_BRENDAN 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_MAY    0
-#define FLAG_HIDE_SAFARI_ZONE_SOUTH_EAST_EXPANSION  0
-#define FLAG_HIDE_LILYCOVE_HARBOR_EVENT_TICKET_TAKER 0
-#define FLAG_HIDE_SLATEPORT_CITY_SCOTT              0
-#define FLAG_HIDE_ROUTE_101_ZIGZAGOON               0
-#define FLAG_HIDE_VICTORY_ROAD_EXIT_WALLY           0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE       0
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_STEVEN 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2 0
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_TEAM_MAGMA 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_MOM 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_MOM    0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK  0
-#define FLAG_HIDE_MAUVILLE_CITY_SCOTT               0
-#define FLAG_HIDE_VERDANTURF_TOWN_SCOTT             0
-#define FLAG_HIDE_FALLARBOR_TOWN_BATTLE_TENT_SCOTT  0
-#define FLAG_HIDE_ROUTE_111_VICTOR_WINSTRATE        0
-#define FLAG_HIDE_ROUTE_111_VICTORIA_WINSTRATE      0
-#define FLAG_HIDE_ROUTE_111_VIVI_WINSTRATE          0
-#define FLAG_HIDE_ROUTE_111_VICKY_WINSTRATE         0
-#define FLAG_HIDE_PETALBURG_GYM_NORMAN              0
-#define FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA           0
-#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_CONTEST_ATTENDANT_1 0
-#define FLAG_HIDE_LILYCOVE_MUSEUM_CURATOR           0
-#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_1          0
-#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_2          0
-#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_3          0
-#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_4          0
-#define FLAG_HIDE_LILYCOVE_MUSEUM_TOURISTS          0
-#define FLAG_HIDE_PETALBURG_GYM_GREETER             0
-#define FLAG_HIDE_MARINE_CAVE_KYOGRE                0
-#define FLAG_HIDE_TERRA_CAVE_GROUDON                0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_MOM 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_MOM 0
-#define FLAG_HIDE_ROUTE_119_SCOTT                   0
-#define FLAG_HIDE_LILYCOVE_MOTEL_SCOTT              0
-#define FLAG_HIDE_MOSSDEEP_CITY_SCOTT               0
-#define FLAG_HIDE_FANCLUB_OLD_LADY                  0
-#define FLAG_HIDE_FANCLUB_BOY                       0
-#define FLAG_HIDE_FANCLUB_LITTLE_BOY                0
-#define FLAG_HIDE_FANCLUB_LADY                      0
-#define FLAG_HIDE_EVER_GRANDE_POKEMON_CENTER_1F_SCOTT 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_RIVAL             0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCH             0
-#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_1          0
-#define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_1          0
-#define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_1          0
-#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_2          0
-#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_REPORTER    0
-#define FLAG_HIDE_SLATEPORT_CITY_CONTEST_REPORTER   0
-#define FLAG_HIDE_MAUVILLE_CITY_WALLY               0
-#define FLAG_HIDE_MAUVILLE_CITY_WALLYS_UNCLE        0
-#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY 0
-#define FLAG_HIDE_RUSTURF_TUNNEL_WANDAS_BOYFRIEND   0
-#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WANDAS_BOYFRIEND 0
-#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLYS_UNCLE 0
-#define FLAG_HIDE_SS_TIDAL_CORRIDOR_SCOTT           0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CYNDAQUIL 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_TOTODILE 0
-#define FLAG_HIDE_ROUTE_116_DROPPED_GLASSES_MAN     0
-#define FLAG_HIDE_RUSTBORO_CITY_RIVAL               0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_SWABLU_DOLL 0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_WALLACE           0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_POKE_BALL 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_POKE_BALL 0
-#define FLAG_HIDE_ROUTE_112_TEAM_MAGMA              0
-#define FLAG_HIDE_CAVE_OF_ORIGIN_B1F_WALLACE        0
-#define FLAG_HIDE_AQUA_HIDEOUT_1F_GRUNT_1_BLOCKING_ENTRANCE 0
-#define FLAG_HIDE_AQUA_HIDEOUT_1F_GRUNT_2_BLOCKING_ENTRANCE 0
-#define FLAG_HIDE_MOSSDEEP_CITY_TEAM_MAGMA          0
-#define FLAG_HIDE_PETALBURG_GYM_WALLYS_DAD          0
+#define FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG      (HOENN_FLAGS_START + 236)
+#define FLAG_HIDE_SAFARI_ZONE_SOUTH_CONSTRUCTION_WORKERS (HOENN_FLAGS_START + 237)
+#define FLAG_HIDE_ROUTE_104_RIVAL                   (HOENN_FLAGS_START + 238)
+#define FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE  (HOENN_FLAGS_START + 239)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH  (HOENN_FLAGS_START + 240)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM (HOENN_FLAGS_START + 241)
+#define FLAG_HIDE_ROUTE_103_RIVAL                   (HOENN_FLAGS_START + 242)
+#define FLAG_HIDE_PETALBURG_WOODS_DEVON_EMPLOYEE    (HOENN_FLAGS_START + 243)
+#define FLAG_HIDE_PETALBURG_WOODS_AQUA_GRUNT        (HOENN_FLAGS_START + 244)
+#define FLAG_HIDE_PETALBURG_CITY_WALLY              (HOENN_FLAGS_START + 245)
+#define FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_INVISIBLE_NINJA_BOY (HOENN_FLAGS_START + 246)
+#define FLAG_HIDE_PETALBURG_CITY_WALLYS_MOM         (HOENN_FLAGS_START + 247)
+#define FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER     (HOENN_FLAGS_START + 248)
+#define FLAG_HIDE_RUSTBORO_CITY_AQUA_GRUNT          (HOENN_FLAGS_START + 249)
+#define FLAG_HIDE_RUSTBORO_CITY_DEVON_EMPLOYEE_1    (HOENN_FLAGS_START + 250)
+#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_KYOGRE_ASLEEP (HOENN_FLAGS_START + 251)
+#define FLAG_HIDE_PLAYERS_HOUSE_DAD                 (HOENN_FLAGS_START + 252)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_SIBLING (HOENN_FLAGS_START + 253)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_SIBLING (HOENN_FLAGS_START + 254)
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_MAGMA_NOTE (HOENN_FLAGS_START + 255)
+#define FLAG_HIDE_ROUTE_104_MR_BRINEY               (HOENN_FLAGS_START + 256)
+#define FLAG_HIDE_BRINEYS_HOUSE_MR_BRINEY           (HOENN_FLAGS_START + 257)
+#define FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN            (HOENN_FLAGS_START + 258)
+#define FLAG_HIDE_ROUTE_109_MR_BRINEY               (HOENN_FLAGS_START + 259)
+#define FLAG_HIDE_ROUTE_104_MR_BRINEY_BOAT          (HOENN_FLAGS_START + 260)
+#define FLAG_HIDE_MR_BRINEY_BOAT_DEWFORD_TOWN       (HOENN_FLAGS_START + 261)
+#define FLAG_HIDE_ROUTE_109_MR_BRINEY_BOAT          (HOENN_FLAGS_START + 262)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_BRENDAN (HOENN_FLAGS_START + 263)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_MAY    (HOENN_FLAGS_START + 264)
+#define FLAG_HIDE_SAFARI_ZONE_SOUTH_EAST_EXPANSION  (HOENN_FLAGS_START + 265)
+#define FLAG_HIDE_LILYCOVE_HARBOR_EVENT_TICKET_TAKER (HOENN_FLAGS_START + 266)
+#define FLAG_HIDE_SLATEPORT_CITY_SCOTT              (HOENN_FLAGS_START + 267)
+#define FLAG_HIDE_ROUTE_101_ZIGZAGOON               (HOENN_FLAGS_START + 268)
+#define FLAG_HIDE_VICTORY_ROAD_EXIT_WALLY           (HOENN_FLAGS_START + 269)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE       (HOENN_FLAGS_START + 270)
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_STEVEN (HOENN_FLAGS_START + 271)
+#define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1 (HOENN_FLAGS_START + 272)
+#define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2 (HOENN_FLAGS_START + 273)
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_TEAM_MAGMA (HOENN_FLAGS_START + 274)
+#define FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM (HOENN_FLAGS_START + 275)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_MOM (HOENN_FLAGS_START + 276)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_MOM    (HOENN_FLAGS_START + 277)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM (HOENN_FLAGS_START + 278)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK (HOENN_FLAGS_START + 279)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK  (HOENN_FLAGS_START + 280)
+#define FLAG_HIDE_MAUVILLE_CITY_SCOTT               (HOENN_FLAGS_START + 281)
+#define FLAG_HIDE_VERDANTURF_TOWN_SCOTT             (HOENN_FLAGS_START + 282)
+#define FLAG_HIDE_FALLARBOR_TOWN_BATTLE_TENT_SCOTT  (HOENN_FLAGS_START + 283)
+#define FLAG_HIDE_ROUTE_111_VICTOR_WINSTRATE        (HOENN_FLAGS_START + 284)
+#define FLAG_HIDE_ROUTE_111_VICTORIA_WINSTRATE      (HOENN_FLAGS_START + 285)
+#define FLAG_HIDE_ROUTE_111_VIVI_WINSTRATE          (HOENN_FLAGS_START + 286)
+#define FLAG_HIDE_ROUTE_111_VICKY_WINSTRATE         (HOENN_FLAGS_START + 287)
+#define FLAG_HIDE_PETALBURG_GYM_NORMAN              (HOENN_FLAGS_START + 288)
+#define FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA           (HOENN_FLAGS_START + 289)
+#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_CONTEST_ATTENDANT_1 (HOENN_FLAGS_START + 290)
+#define FLAG_HIDE_LILYCOVE_MUSEUM_CURATOR           (HOENN_FLAGS_START + 291)
+#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_1          (HOENN_FLAGS_START + 292)
+#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_2          (HOENN_FLAGS_START + 293)
+#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_3          (HOENN_FLAGS_START + 294)
+#define FLAG_HIDE_LILYCOVE_MUSEUM_PATRON_4          (HOENN_FLAGS_START + 295)
+#define FLAG_HIDE_LILYCOVE_MUSEUM_TOURISTS          (HOENN_FLAGS_START + 296)
+#define FLAG_HIDE_PETALBURG_GYM_GREETER             (HOENN_FLAGS_START + 297)
+#define FLAG_HIDE_MARINE_CAVE_KYOGRE                (HOENN_FLAGS_START + 298)
+#define FLAG_HIDE_TERRA_CAVE_GROUDON                (HOENN_FLAGS_START + 299)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_MOM (HOENN_FLAGS_START + 300)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_MOM (HOENN_FLAGS_START + 301)
+#define FLAG_HIDE_ROUTE_119_SCOTT                   (HOENN_FLAGS_START + 302)
+#define FLAG_HIDE_LILYCOVE_MOTEL_SCOTT              (HOENN_FLAGS_START + 303)
+#define FLAG_HIDE_MOSSDEEP_CITY_SCOTT               (HOENN_FLAGS_START + 304)
+#define FLAG_HIDE_FANCLUB_OLD_LADY                  (HOENN_FLAGS_START + 305)
+#define FLAG_HIDE_FANCLUB_BOY                       (HOENN_FLAGS_START + 306)
+#define FLAG_HIDE_FANCLUB_LITTLE_BOY                (HOENN_FLAGS_START + 307)
+#define FLAG_HIDE_FANCLUB_LADY                      (HOENN_FLAGS_START + 308)
+#define FLAG_HIDE_EVER_GRANDE_POKEMON_CENTER_1F_SCOTT (HOENN_FLAGS_START + 309)
+#define FLAG_HIDE_LITTLEROOT_TOWN_RIVAL             (HOENN_FLAGS_START + 310)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCH             (HOENN_FLAGS_START + 311)
+#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_1          (HOENN_FLAGS_START + 312)
+#define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_1          (HOENN_FLAGS_START + 313)
+#define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_1          (HOENN_FLAGS_START + 314)
+#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_2          (HOENN_FLAGS_START + 315)
+#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_REPORTER    (HOENN_FLAGS_START + 316)
+#define FLAG_HIDE_SLATEPORT_CITY_CONTEST_REPORTER   (HOENN_FLAGS_START + 317)
+#define FLAG_HIDE_MAUVILLE_CITY_WALLY               (HOENN_FLAGS_START + 318)
+#define FLAG_HIDE_MAUVILLE_CITY_WALLYS_UNCLE        (HOENN_FLAGS_START + 319)
+#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY (HOENN_FLAGS_START + 320)
+#define FLAG_HIDE_RUSTURF_TUNNEL_WANDAS_BOYFRIEND   (HOENN_FLAGS_START + 321)
+#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WANDAS_BOYFRIEND (HOENN_FLAGS_START + 322)
+#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLYS_UNCLE (HOENN_FLAGS_START + 323)
+#define FLAG_HIDE_SS_TIDAL_CORRIDOR_SCOTT           (HOENN_FLAGS_START + 324)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CYNDAQUIL (HOENN_FLAGS_START + 325)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_TOTODILE (HOENN_FLAGS_START + 326)
+#define FLAG_HIDE_ROUTE_116_DROPPED_GLASSES_MAN     (HOENN_FLAGS_START + 327)
+#define FLAG_HIDE_RUSTBORO_CITY_RIVAL               (HOENN_FLAGS_START + 328)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_SWABLU_DOLL (HOENN_FLAGS_START + 329)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_WALLACE           (HOENN_FLAGS_START + 330)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_POKE_BALL (HOENN_FLAGS_START + 331)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_POKE_BALL (HOENN_FLAGS_START + 332)
+#define FLAG_HIDE_ROUTE_112_TEAM_MAGMA              (HOENN_FLAGS_START + 333)
+#define FLAG_HIDE_CAVE_OF_ORIGIN_B1F_WALLACE        (HOENN_FLAGS_START + 334)
+#define FLAG_HIDE_AQUA_HIDEOUT_1F_GRUNT_1_BLOCKING_ENTRANCE (HOENN_FLAGS_START + 335)
+#define FLAG_HIDE_AQUA_HIDEOUT_1F_GRUNT_2_BLOCKING_ENTRANCE (HOENN_FLAGS_START + 336)
+#define FLAG_HIDE_MOSSDEEP_CITY_TEAM_MAGMA          (HOENN_FLAGS_START + 337)
+#define FLAG_HIDE_PETALBURG_GYM_WALLYS_DAD          (HOENN_FLAGS_START + 338)
 #define FLAG_HIDE_LEGEND_MON_CAVE_OF_ORIGIN         0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_ARCHIE            0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_MAXIE             0
-#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_ARCHIE     0
-#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_MAXIE      0
-#define FLAG_HIDE_PETALBURG_CITY_WALLYS_DAD         0
-#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_MAGMA_GRUNTS 0
-#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER 0
-#define FLAG_HIDE_GRANITE_CAVE_STEVEN               0
-#define FLAG_HIDE_ROUTE_128_STEVEN                  0
-#define FLAG_HIDE_SLATEPORT_CITY_GABBY_AND_TY       0
-#define FLAG_HIDE_ROUTE_110_BIRCH                   0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CHIKORITA 0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_MAN_1             0
-#define FLAG_HIDE_SLATEPORT_CITY_CAPTAIN_STERN      0
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_CAPTAIN_STERN 0
-#define FLAG_HIDE_ROUTE_111_ROCK_SMASH_TIP_GUY      0
-#define FLAG_HIDE_RUSTBORO_CITY_SCIENTIST           0
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_AQUA_GRUNT  0
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_ARCHIE      0
-#define FLAG_HIDE_JAGGED_PASS_MAGMA_GUARD           0
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_SUBMARINE_SHADOW 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_PICHU_DOLL 0
-#define FLAG_HIDE_MAGMA_HIDEOUT_4F_GROUDON_ASLEEP   0
-#define FLAG_HIDE_ROUTE_119_RIVAL                   0
-#define FLAG_HIDE_LILYCOVE_CITY_AQUA_GRUNTS         0
-#define FLAG_HIDE_MAGMA_HIDEOUT_4F_GROUDON          0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_RESIDENTS         0
-#define FLAG_HIDE_SKY_PILLAR_WALLACE                0
-#define FLAG_HIDE_MT_PYRE_SUMMIT_MAXIE              0
-#define FLAG_HIDE_MAGMA_HIDEOUT_GRUNTS              0
-#define FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY       0
-#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_KYOGRE     0
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL    0
-#define FLAG_HIDE_LILYCOVE_HARBOR_SSTIDAL           0
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_TEAM_MAGMA 0
-#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN 0
-#define FLAG_HIDE_PETALBURG_GYM_WALLY               0
+#define FLAG_HIDE_SOOTOPOLIS_CITY_ARCHIE            (HOENN_FLAGS_START + 339)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_MAXIE             (HOENN_FLAGS_START + 340)
+#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_ARCHIE     (HOENN_FLAGS_START + 341)
+#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_MAXIE      (HOENN_FLAGS_START + 342)
+#define FLAG_HIDE_PETALBURG_CITY_WALLYS_DAD         (HOENN_FLAGS_START + 343)
+#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_MAGMA_GRUNTS (HOENN_FLAGS_START + 344)
+#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER (HOENN_FLAGS_START + 345)
+#define FLAG_HIDE_GRANITE_CAVE_STEVEN               (HOENN_FLAGS_START + 346)
+#define FLAG_HIDE_ROUTE_128_STEVEN                  (HOENN_FLAGS_START + 347)
+#define FLAG_HIDE_SLATEPORT_CITY_GABBY_AND_TY       (HOENN_FLAGS_START + 348)
+#define FLAG_HIDE_ROUTE_110_BIRCH                   (HOENN_FLAGS_START + 349)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CHIKORITA (HOENN_FLAGS_START + 350)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_MAN_1             (HOENN_FLAGS_START + 351)
+#define FLAG_HIDE_SLATEPORT_CITY_CAPTAIN_STERN      (HOENN_FLAGS_START + 352)
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_CAPTAIN_STERN (HOENN_FLAGS_START + 353)
+#define FLAG_HIDE_ROUTE_111_ROCK_SMASH_TIP_GUY      (HOENN_FLAGS_START + 354)
+#define FLAG_HIDE_RUSTBORO_CITY_SCIENTIST           (HOENN_FLAGS_START + 355)
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_AQUA_GRUNT  (HOENN_FLAGS_START + 356)
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_ARCHIE      (HOENN_FLAGS_START + 357)
+#define FLAG_HIDE_JAGGED_PASS_MAGMA_GUARD           (HOENN_FLAGS_START + 358)
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_SUBMARINE_SHADOW (HOENN_FLAGS_START + 359)
+#define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_PICHU_DOLL (HOENN_FLAGS_START + 360)
+#define FLAG_HIDE_MAGMA_HIDEOUT_4F_GROUDON_ASLEEP   (HOENN_FLAGS_START + 361)
+#define FLAG_HIDE_ROUTE_119_RIVAL                   (HOENN_FLAGS_START + 362)
+#define FLAG_HIDE_LILYCOVE_CITY_AQUA_GRUNTS         (HOENN_FLAGS_START + 363)
+#define FLAG_HIDE_MAGMA_HIDEOUT_4F_GROUDON          (HOENN_FLAGS_START + 364)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_RESIDENTS         (HOENN_FLAGS_START + 365)
+#define FLAG_HIDE_SKY_PILLAR_WALLACE                (HOENN_FLAGS_START + 366)
+#define FLAG_HIDE_MT_PYRE_SUMMIT_MAXIE              (HOENN_FLAGS_START + 367)
+#define FLAG_HIDE_MAGMA_HIDEOUT_GRUNTS              (HOENN_FLAGS_START + 368)
+#define FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY       (HOENN_FLAGS_START + 369)
+#define FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_KYOGRE     (HOENN_FLAGS_START + 370)
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL    (HOENN_FLAGS_START + 371)
+#define FLAG_HIDE_LILYCOVE_HARBOR_SSTIDAL           (HOENN_FLAGS_START + 372)
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_TEAM_MAGMA (HOENN_FLAGS_START + 373)
+#define FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN (HOENN_FLAGS_START + 374)
+#define FLAG_HIDE_PETALBURG_GYM_WALLY               (HOENN_FLAGS_START + 375)
 #define FLAG_UNKNOWN_0x363                          0
-#define FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN           0
-#define FLAG_HIDE_SLATEPORT_CITY_STERNS_SHIPYARD_MR_BRINEY 0
-#define FLAG_HIDE_LANETTES_HOUSE_LANETTE            0
-#define FLAG_HIDE_FALLARBOR_POKEMON_CENTER_LANETTE  0
-#define FLAG_HIDE_TRICK_HOUSE_ENTRANCE_MAN          0
-#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER_REPLACEMENT 0
-#define FLAG_HIDE_DESERT_UNDERPASS_FOSSIL           0
-#define FLAG_HIDE_ROUTE_111_PLAYER_DESCENT          0
-#define FLAG_HIDE_ROUTE_111_DESERT_FOSSIL           0
-#define FLAG_HIDE_MT_CHIMNEY_TRAINERS               0
-#define FLAG_HIDE_RUSTURF_TUNNEL_AQUA_GRUNT         0
-#define FLAG_HIDE_RUSTURF_TUNNEL_BRINEY             0
-#define FLAG_HIDE_RUSTURF_TUNNEL_PEEKO              0
-#define FLAG_HIDE_BRINEYS_HOUSE_PEEKO               0
-#define FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA          0
-#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_AQUA_GRUNTS 0
-#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_AQUA_GRUNT_1 0
-#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_AQUA_GRUNT_2 0
-#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_ARCHIE 0
-#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_CAPTAIN_STERN 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_RIVAL  0
-#define FLAG_HIDE_ROUTE_119_TEAM_AQUA               0
-#define FLAG_HIDE_ROUTE_116_MR_BRINEY               0
-#define FLAG_HIDE_WEATHER_INSTITUTE_1F_WORKERS      0
-#define FLAG_HIDE_WEATHER_INSTITUTE_2F_WORKERS      0
-#define FLAG_HIDE_ROUTE_116_WANDAS_BOYFRIEND        0
-#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_CONTEST_ATTENDANT_2 0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_UNKNOWN_0x380 0
-#define FLAG_HIDE_ROUTE_101_BIRCH                   0
-#define FLAG_HIDE_ROUTE_103_BIRCH                   0
-#define FLAG_HIDE_TRICK_HOUSE_END_MAN               0
-#define FLAG_HIDE_ROUTE_110_TEAM_AQUA               0
-#define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_2          0
-#define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_2          0
-#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_3          0
-#define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_3          0
-#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS     0
-#define FLAG_HIDE_ROUTE_104_WHITE_HERB_FLORIST      0
-#define FLAG_HIDE_FALLARBOR_AZURILL                 0
-#define FLAG_HIDE_LILYCOVE_HARBOR_FERRY_ATTENDANT   0
-#define FLAG_HIDE_LILYCOVE_HARBOR_FERRY_SAILOR      0
-#define FLAG_HIDE_SOUTHERN_ISLAND_EON_STONE         0
-#define FLAG_HIDE_SOUTHERN_ISLAND_UNCHOSEN_EON_DUO_MON 0
-#define FLAG_HIDE_MAUVILLE_CITY_WATTSON             0
-#define FLAG_HIDE_MAUVILLE_GYM_WATTSON              0
-#define FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS        0
-#define FLAG_UNKNOWN_0x393                          0
-#define FLAG_HIDE_MT_PYRE_SUMMIT_ARCHIE             0
-#define FLAG_HIDE_MT_PYRE_SUMMIT_TEAM_AQUA          0
-#define FLAG_HIDE_ROUTE_110_RIVAL                   0
-#define FLAG_HIDE_CHAMPIONS_ROOM_RIVAL              0
-#define FLAG_HIDE_CHAMPIONS_ROOM_BIRCH              0
-#define FLAG_HIDE_ROUTE_110_RIVAL_ON_BIKE           0
-#define FLAG_HIDE_ROUTE_119_RIVAL_ON_BIKE           0
-#define FLAG_HIDE_AQUA_HIDEOUT_GRUNTS               0
-#define FLAG_HIDE_LILYCOVE_MOTEL_GAME_DESIGNERS     0
-#define FLAG_HIDE_MT_CHIMNEY_TEAM_AQUA              0
-#define FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA             0
-#define FLAG_HIDE_FALLARBOR_HOUSE_PROF_COZMO        0
-#define FLAG_HIDE_LAVARIDGE_TOWN_RIVAL              0
-#define FLAG_HIDE_LAVARIDGE_TOWN_RIVAL_ON_BIKE      0
-#define FLAG_HIDE_RUSTURF_TUNNEL_ROCK_1             0
-#define FLAG_HIDE_RUSTURF_TUNNEL_ROCK_2             0
-#define FLAG_HIDE_FORTREE_CITY_HOUSE_4_WINGULL      0
-#define FLAG_HIDE_MOSSDEEP_CITY_HOUSE_2_WINGULL     0
-#define FLAG_HIDE_REGIROCK                          0
-#define FLAG_HIDE_REGICE                            0
-#define FLAG_HIDE_REGISTEEL                         0
-#define FLAG_HIDE_METEOR_FALLS_TEAM_AQUA            0
-#define FLAG_HIDE_METEOR_FALLS_TEAM_MAGMA           0
-#define FLAG_HIDE_DEWFORD_HALL_SLUDGE_BOMB_MAN      0
-#define FLAG_HIDE_SEAFLOOR_CAVERN_ENTRANCE_AQUA_GRUNT 0
-#define FLAG_HIDE_METEOR_FALLS_1F_1R_COZMO          0
-#define FLAG_HIDE_AQUA_HIDEOUT_B2F_SUBMARINE_SHADOW 0
-#define FLAG_HIDE_ROUTE_128_ARCHIE                  0
-#define FLAG_HIDE_ROUTE_128_MAXIE                   0
-#define FLAG_HIDE_SEAFLOOR_CAVERN_AQUA_GRUNTS       0
-#define FLAG_HIDE_ROUTE_116_DEVON_EMPLOYEE          0
-#define FLAG_HIDE_SLATEPORT_CITY_TM_SALESMAN        0
-#define FLAG_HIDE_RUSTBORO_CITY_DEVON_CORP_3F_EMPLOYEE 0
-#define FLAG_HIDE_SS_TIDAL_CORRIDOR_MR_BRINEY       0
-#define FLAG_HIDE_SS_TIDAL_ROOMS_SNATCH_GIVER       0
-#define FLAG_HIDE_ROUTE_111_SECRET_POWER_MAN        0
-#define FLAG_HIDE_SLATEPORT_MUSEUM_POPULATION       0
-#define FLAG_HIDE_LILYCOVE_DEPARTMENT_STORE_ROOFTOP_SALE_WOMAN 0
-#define FLAG_HIDE_MIRAGE_TOWER_ROOT_FOSSIL          0
-#define FLAG_HIDE_MIRAGE_TOWER_CLAW_FOSSIL          0
-#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_FAMILIAR_AQUA_GRUNT 0
-#define FLAG_HIDE_ROUTE_118_STEVEN                  0
-#define FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_STEVEN 0
-#define FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_BELDUM_POKEBALL 0
-#define FLAG_HIDE_FORTREE_CITY_KECLEON              0
-#define FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE          0
-#define FLAG_HIDE_LILYCOVE_CITY_RIVAL               0
-#define FLAG_HIDE_ROUTE_120_STEVEN                  0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_STEVEN            0
-#define FLAG_HIDE_NEW_MAUVILLE_VOLTORB_1            0
-#define FLAG_HIDE_NEW_MAUVILLE_VOLTORB_2            0
-#define FLAG_HIDE_NEW_MAUVILLE_VOLTORB_3            0
-#define FLAG_HIDE_AQUA_HIDEOUT_B1F_ELECTRODE_1      0
-#define FLAG_HIDE_AQUA_HIDEOUT_B1F_ELECTRODE_2      0
-#define FLAG_HIDE_OLDALE_TOWN_RIVAL                 0
-#define FLAG_HIDE_UNDERWATER_SEA_FLOOR_CAVERN_STOLEN_SUBMARINE 0
-#define FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE_SHADOW   0
-#define FLAG_HIDE_ROUTE_120_KECLEON_1               0
-#define FLAG_HIDE_RUSTURF_TUNNEL_WANDA              0
-#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WANDA 0
-#define FLAG_HIDE_ROUTE_120_KECLEON_2               0
-#define FLAG_HIDE_ROUTE_120_KECLEON_3               0
-#define FLAG_HIDE_ROUTE_120_KECLEON_4               0
-#define FLAG_HIDE_ROUTE_120_KECLEON_5               0
-#define FLAG_HIDE_ROUTE_119_KECLEON_1               0
-#define FLAG_HIDE_ROUTE_119_KECLEON_2               0
-#define FLAG_HIDE_ROUTE_101_BOY                     0
-#define FLAG_HIDE_WEATHER_INSTITUTE_2F_AQUA_GRUNT_M 0
-#define FLAG_HIDE_LILYCOVE_POKEMON_CENTER_CONTEST_LADY_MON 0
-#define FLAG_HIDE_MT_CHIMNEY_LAVA_COOKIE_LADY       0
-#define FLAG_HIDE_PETALBURG_CITY_SCOTT              0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_RAYQUAZA          0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_KYOGRE            0
-#define FLAG_HIDE_SOOTOPOLIS_CITY_GROUDON           0
-#define FLAG_HIDE_RUSTBORO_CITY_POKEMON_SCHOOL_SCOTT 0
-#define FLAG_RECEIVED_SHOAL_SALT_1                  0
-#define FLAG_RECEIVED_SHOAL_SALT_2                  0
-#define FLAG_RECEIVED_SHOAL_SALT_3                  0
-#define FLAG_RECEIVED_SHOAL_SALT_4                  0
-#define FLAG_RECEIVED_SHOAL_SHELL_1                 0
-#define FLAG_RECEIVED_SHOAL_SHELL_2                 0
-#define FLAG_RECEIVED_SHOAL_SHELL_3                 0
-#define FLAG_RECEIVED_SHOAL_SHELL_4                 0
+#define FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN           (HOENN_FLAGS_START + 376)
+#define FLAG_HIDE_SLATEPORT_CITY_STERNS_SHIPYARD_MR_BRINEY (HOENN_FLAGS_START + 377)
+#define FLAG_HIDE_LANETTES_HOUSE_LANETTE            (HOENN_FLAGS_START + 378)
+#define FLAG_HIDE_FALLARBOR_POKEMON_CENTER_LANETTE  (HOENN_FLAGS_START + 379)
+#define FLAG_HIDE_TRICK_HOUSE_ENTRANCE_MAN          (HOENN_FLAGS_START + 380)
+#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER_REPLACEMENT (HOENN_FLAGS_START + 381)
+#define FLAG_HIDE_DESERT_UNDERPASS_FOSSIL           (HOENN_FLAGS_START + 382)
+#define FLAG_HIDE_ROUTE_111_PLAYER_DESCENT          (HOENN_FLAGS_START + 383)
+#define FLAG_HIDE_ROUTE_111_DESERT_FOSSIL           (HOENN_FLAGS_START + 384)
+#define FLAG_HIDE_MT_CHIMNEY_TRAINERS               (HOENN_FLAGS_START + 385)
+#define FLAG_HIDE_RUSTURF_TUNNEL_AQUA_GRUNT         (HOENN_FLAGS_START + 386)
+#define FLAG_HIDE_RUSTURF_TUNNEL_BRINEY             (HOENN_FLAGS_START + 387)
+#define FLAG_HIDE_RUSTURF_TUNNEL_PEEKO              (HOENN_FLAGS_START + 388)
+#define FLAG_HIDE_BRINEYS_HOUSE_PEEKO               (HOENN_FLAGS_START + 389)
+#define FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA          (HOENN_FLAGS_START + 390)
+#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_AQUA_GRUNTS (HOENN_FLAGS_START + 391)
+#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_AQUA_GRUNT_1 (HOENN_FLAGS_START + 392)
+#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_AQUA_GRUNT_2 (HOENN_FLAGS_START + 393)
+#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_ARCHIE (HOENN_FLAGS_START + 394)
+#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_CAPTAIN_STERN (HOENN_FLAGS_START + 395)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_RIVAL  (HOENN_FLAGS_START + 396)
+#define FLAG_HIDE_ROUTE_119_TEAM_AQUA               (HOENN_FLAGS_START + 397)
+#define FLAG_HIDE_ROUTE_116_MR_BRINEY               (HOENN_FLAGS_START + 398)
+#define FLAG_HIDE_WEATHER_INSTITUTE_1F_WORKERS      (HOENN_FLAGS_START + 399)
+#define FLAG_HIDE_WEATHER_INSTITUTE_2F_WORKERS      (HOENN_FLAGS_START + 400)
+#define FLAG_HIDE_ROUTE_116_WANDAS_BOYFRIEND        (HOENN_FLAGS_START + 401)
+#define FLAG_HIDE_LILYCOVE_CONTEST_HALL_CONTEST_ATTENDANT_2 (HOENN_FLAGS_START + 402)
+#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_UNKNOWN_0x380 (HOENN_FLAGS_START + 403)
+#define FLAG_HIDE_ROUTE_101_BIRCH                   (HOENN_FLAGS_START + 404)
+#define FLAG_HIDE_ROUTE_103_BIRCH                   (HOENN_FLAGS_START + 405)
+#define FLAG_HIDE_TRICK_HOUSE_END_MAN               (HOENN_FLAGS_START + 406)
+#define FLAG_HIDE_ROUTE_110_TEAM_AQUA               (HOENN_FLAGS_START + 407)
+#define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_2          (HOENN_FLAGS_START + 408)
+#define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_2          (HOENN_FLAGS_START + 409)
+#define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_3          (HOENN_FLAGS_START + 410)
+#define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_3          (HOENN_FLAGS_START + 411)
+#define FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS     (HOENN_FLAGS_START + 412)
+#define FLAG_HIDE_ROUTE_104_WHITE_HERB_FLORIST      (HOENN_FLAGS_START + 413)
+#define FLAG_HIDE_FALLARBOR_AZURILL                 (HOENN_FLAGS_START + 414)
+#define FLAG_HIDE_LILYCOVE_HARBOR_FERRY_ATTENDANT   (HOENN_FLAGS_START + 415)
+#define FLAG_HIDE_LILYCOVE_HARBOR_FERRY_SAILOR      (HOENN_FLAGS_START + 416)
+#define FLAG_HIDE_SOUTHERN_ISLAND_EON_STONE         (HOENN_FLAGS_START + 417)
+#define FLAG_HIDE_SOUTHERN_ISLAND_UNCHOSEN_EON_DUO_MON (HOENN_FLAGS_START + 418)
+#define FLAG_HIDE_MAUVILLE_CITY_WATTSON             (HOENN_FLAGS_START + 419)
+#define FLAG_HIDE_MAUVILLE_GYM_WATTSON              (HOENN_FLAGS_START + 420)
+#define FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS        (HOENN_FLAGS_START + 421)
+#define FLAG_UNKNOWN_0x393                          (HOENN_FLAGS_START + 422)
+#define FLAG_HIDE_MT_PYRE_SUMMIT_ARCHIE             (HOENN_FLAGS_START + 423)
+#define FLAG_HIDE_MT_PYRE_SUMMIT_TEAM_AQUA          (HOENN_FLAGS_START + 424)
+#define FLAG_HIDE_ROUTE_110_RIVAL                   (HOENN_FLAGS_START + 425)
+#define FLAG_HIDE_CHAMPIONS_ROOM_RIVAL              (HOENN_FLAGS_START + 426)
+#define FLAG_HIDE_CHAMPIONS_ROOM_BIRCH              (HOENN_FLAGS_START + 427)
+#define FLAG_HIDE_ROUTE_110_RIVAL_ON_BIKE           (HOENN_FLAGS_START + 428)
+#define FLAG_HIDE_ROUTE_119_RIVAL_ON_BIKE           (HOENN_FLAGS_START + 429)
+#define FLAG_HIDE_AQUA_HIDEOUT_GRUNTS               (HOENN_FLAGS_START + 430)
+#define FLAG_HIDE_LILYCOVE_MOTEL_GAME_DESIGNERS     (HOENN_FLAGS_START + 431)
+#define FLAG_HIDE_MT_CHIMNEY_TEAM_AQUA              (HOENN_FLAGS_START + 432)
+#define FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA             (HOENN_FLAGS_START + 433)
+#define FLAG_HIDE_FALLARBOR_HOUSE_PROF_COZMO        (HOENN_FLAGS_START + 434)
+#define FLAG_HIDE_LAVARIDGE_TOWN_RIVAL              (HOENN_FLAGS_START + 435)
+#define FLAG_HIDE_LAVARIDGE_TOWN_RIVAL_ON_BIKE      (HOENN_FLAGS_START + 436)
+#define FLAG_HIDE_RUSTURF_TUNNEL_ROCK_1             (HOENN_FLAGS_START + 437)
+#define FLAG_HIDE_RUSTURF_TUNNEL_ROCK_2             (HOENN_FLAGS_START + 438)
+#define FLAG_HIDE_FORTREE_CITY_HOUSE_4_WINGULL      (HOENN_FLAGS_START + 439)
+#define FLAG_HIDE_MOSSDEEP_CITY_HOUSE_2_WINGULL     (HOENN_FLAGS_START + 440)
+#define FLAG_HIDE_REGIROCK                          (HOENN_FLAGS_START + 441)
+#define FLAG_HIDE_REGICE                            (HOENN_FLAGS_START + 442)
+#define FLAG_HIDE_REGISTEEL                         (HOENN_FLAGS_START + 443)
+#define FLAG_HIDE_METEOR_FALLS_TEAM_AQUA            (HOENN_FLAGS_START + 444)
+#define FLAG_HIDE_METEOR_FALLS_TEAM_MAGMA           (HOENN_FLAGS_START + 445)
+#define FLAG_HIDE_DEWFORD_HALL_SLUDGE_BOMB_MAN      (HOENN_FLAGS_START + 446)
+#define FLAG_HIDE_SEAFLOOR_CAVERN_ENTRANCE_AQUA_GRUNT (HOENN_FLAGS_START + 447)
+#define FLAG_HIDE_METEOR_FALLS_1F_1R_COZMO          (HOENN_FLAGS_START + 448)
+#define FLAG_HIDE_AQUA_HIDEOUT_B2F_SUBMARINE_SHADOW (HOENN_FLAGS_START + 449)
+#define FLAG_HIDE_ROUTE_128_ARCHIE                  (HOENN_FLAGS_START + 450)
+#define FLAG_HIDE_ROUTE_128_MAXIE                   (HOENN_FLAGS_START + 451)
+#define FLAG_HIDE_SEAFLOOR_CAVERN_AQUA_GRUNTS       (HOENN_FLAGS_START + 452)
+#define FLAG_HIDE_ROUTE_116_DEVON_EMPLOYEE          (HOENN_FLAGS_START + 453)
+#define FLAG_HIDE_SLATEPORT_CITY_TM_SALESMAN        (HOENN_FLAGS_START + 454)
+#define FLAG_HIDE_RUSTBORO_CITY_DEVON_CORP_3F_EMPLOYEE (HOENN_FLAGS_START + 455)
+#define FLAG_HIDE_SS_TIDAL_CORRIDOR_MR_BRINEY       (HOENN_FLAGS_START + 456)
+#define FLAG_HIDE_SS_TIDAL_ROOMS_SNATCH_GIVER       (HOENN_FLAGS_START + 457)
+#define FLAG_HIDE_ROUTE_111_SECRET_POWER_MAN        (HOENN_FLAGS_START + 458)
+#define FLAG_HIDE_SLATEPORT_MUSEUM_POPULATION       (HOENN_FLAGS_START + 459)
+#define FLAG_HIDE_LILYCOVE_DEPARTMENT_STORE_ROOFTOP_SALE_WOMAN (HOENN_FLAGS_START + 460)
+#define FLAG_HIDE_MIRAGE_TOWER_ROOT_FOSSIL          (HOENN_FLAGS_START + 461)
+#define FLAG_HIDE_MIRAGE_TOWER_CLAW_FOSSIL          (HOENN_FLAGS_START + 462)
+#define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_FAMILIAR_AQUA_GRUNT (HOENN_FLAGS_START + 463)
+#define FLAG_HIDE_ROUTE_118_STEVEN                  (HOENN_FLAGS_START + 464)
+#define FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_STEVEN (HOENN_FLAGS_START + 465)
+#define FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_BELDUM_POKEBALL (HOENN_FLAGS_START + 466)
+#define FLAG_HIDE_FORTREE_CITY_KECLEON              (HOENN_FLAGS_START + 467)
+#define FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE          (HOENN_FLAGS_START + 468)
+#define FLAG_HIDE_LILYCOVE_CITY_RIVAL               (HOENN_FLAGS_START + 469)
+#define FLAG_HIDE_ROUTE_120_STEVEN                  (HOENN_FLAGS_START + 470)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_STEVEN            (HOENN_FLAGS_START + 471)
+#define FLAG_HIDE_NEW_MAUVILLE_VOLTORB_1            (HOENN_FLAGS_START + 472)
+#define FLAG_HIDE_NEW_MAUVILLE_VOLTORB_2            (HOENN_FLAGS_START + 473)
+#define FLAG_HIDE_NEW_MAUVILLE_VOLTORB_3            (HOENN_FLAGS_START + 474)
+#define FLAG_HIDE_AQUA_HIDEOUT_B1F_ELECTRODE_1      (HOENN_FLAGS_START + 475)
+#define FLAG_HIDE_AQUA_HIDEOUT_B1F_ELECTRODE_2      (HOENN_FLAGS_START + 476)
+#define FLAG_HIDE_OLDALE_TOWN_RIVAL                 (HOENN_FLAGS_START + 477)
+#define FLAG_HIDE_UNDERWATER_SEA_FLOOR_CAVERN_STOLEN_SUBMARINE (HOENN_FLAGS_START + 478)
+#define FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE_SHADOW   (HOENN_FLAGS_START + 479)
+#define FLAG_HIDE_ROUTE_120_KECLEON_1               (HOENN_FLAGS_START + 480)
+#define FLAG_HIDE_RUSTURF_TUNNEL_WANDA              (HOENN_FLAGS_START + 481)
+#define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WANDA (HOENN_FLAGS_START + 482)
+#define FLAG_HIDE_ROUTE_120_KECLEON_2               (HOENN_FLAGS_START + 483)
+#define FLAG_HIDE_ROUTE_120_KECLEON_3               (HOENN_FLAGS_START + 484)
+#define FLAG_HIDE_ROUTE_120_KECLEON_4               (HOENN_FLAGS_START + 485)
+#define FLAG_HIDE_ROUTE_120_KECLEON_5               (HOENN_FLAGS_START + 486)
+#define FLAG_HIDE_ROUTE_119_KECLEON_1               (HOENN_FLAGS_START + 487)
+#define FLAG_HIDE_ROUTE_119_KECLEON_2               (HOENN_FLAGS_START + 488)
+#define FLAG_HIDE_ROUTE_101_BOY                     (HOENN_FLAGS_START + 489)
+#define FLAG_HIDE_WEATHER_INSTITUTE_2F_AQUA_GRUNT_M (HOENN_FLAGS_START + 490)
+#define FLAG_HIDE_LILYCOVE_POKEMON_CENTER_CONTEST_LADY_MON (HOENN_FLAGS_START + 491)
+#define FLAG_HIDE_MT_CHIMNEY_LAVA_COOKIE_LADY       (HOENN_FLAGS_START + 492)
+#define FLAG_HIDE_PETALBURG_CITY_SCOTT              (HOENN_FLAGS_START + 493)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_RAYQUAZA          (HOENN_FLAGS_START + 494)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_KYOGRE            (HOENN_FLAGS_START + 495)
+#define FLAG_HIDE_SOOTOPOLIS_CITY_GROUDON           (HOENN_FLAGS_START + 496)
+#define FLAG_HIDE_RUSTBORO_CITY_POKEMON_SCHOOL_SCOTT (HOENN_FLAGS_START + 497)
+#define FLAG_RECEIVED_SHOAL_SALT_1                  (HOENN_FLAGS_START + 498)
+#define FLAG_RECEIVED_SHOAL_SALT_2                  (HOENN_FLAGS_START + 499)
+#define FLAG_RECEIVED_SHOAL_SALT_3                  (HOENN_FLAGS_START + 500)
+#define FLAG_RECEIVED_SHOAL_SALT_4                  (HOENN_FLAGS_START + 501)
+#define FLAG_RECEIVED_SHOAL_SHELL_1                 (HOENN_FLAGS_START + 502)
+#define FLAG_RECEIVED_SHOAL_SHELL_2                 (HOENN_FLAGS_START + 503)
+#define FLAG_RECEIVED_SHOAL_SHELL_3                 (HOENN_FLAGS_START + 504)
+#define FLAG_RECEIVED_SHOAL_SHELL_4                 (HOENN_FLAGS_START + 505)
 
 // Emerald item ball flags
-#define FLAG_ITEM_ROUTE_102_POTION                  0
-#define FLAG_ITEM_ROUTE_116_X_SPECIAL               0
-#define FLAG_ITEM_ROUTE_104_PP_UP                   0
-#define FLAG_ITEM_ROUTE_105_IRON                    0
-#define FLAG_ITEM_ROUTE_106_PROTEIN                 0
-#define FLAG_ITEM_ROUTE_109_PP_UP                   0
-#define FLAG_ITEM_ROUTE_110_RARE_CANDY              0
-#define FLAG_ITEM_ROUTE_110_DIRE_HIT                0
-#define FLAG_ITEM_ROUTE_111_TM_SANDSTORM            0
-#define FLAG_ITEM_ROUTE_111_STARDUST                0
-#define FLAG_ITEM_ROUTE_111_HP_UP                   0
-#define FLAG_ITEM_ROUTE_112_NUGGET                  0
-#define FLAG_ITEM_ROUTE_113_MAX_ETHER               0
-#define FLAG_ITEM_ROUTE_113_SUPER_REPEL             0
-#define FLAG_ITEM_ROUTE_114_RARE_CANDY              0
-#define FLAG_ITEM_ROUTE_114_PROTEIN                 0
-#define FLAG_ITEM_ROUTE_115_SUPER_POTION            0
-#define FLAG_ITEM_ROUTE_115_TM_FOCUS_PUNCH          0
-#define FLAG_ITEM_ROUTE_115_IRON                    0
-#define FLAG_ITEM_ROUTE_116_ETHER                   0
-#define FLAG_ITEM_ROUTE_116_REPEL                   0
-#define FLAG_ITEM_ROUTE_116_HP_UP                   0
-#define FLAG_ITEM_ROUTE_117_GREAT_BALL              0
-#define FLAG_ITEM_ROUTE_117_REVIVE                  0
-#define FLAG_ITEM_ROUTE_119_SUPER_REPEL             0
-#define FLAG_ITEM_ROUTE_119_ZINC                    0
-#define FLAG_ITEM_ROUTE_119_ELIXIR_1                0
-#define FLAG_ITEM_ROUTE_119_LEAF_STONE              0
-#define FLAG_ITEM_ROUTE_119_RARE_CANDY              0
-#define FLAG_ITEM_ROUTE_119_HYPER_POTION_1          0
-#define FLAG_ITEM_ROUTE_120_NUGGET                  0
-#define FLAG_ITEM_ROUTE_120_FULL_HEAL               0
-#define FLAG_ITEM_ROUTE_123_CALCIUM                 0
+#define FLAG_ITEM_ROUTE_102_POTION                  (HOENN_FLAGS_START + 506)
+#define FLAG_ITEM_ROUTE_116_X_SPECIAL               (HOENN_FLAGS_START + 507)
+#define FLAG_ITEM_ROUTE_104_PP_UP                   (HOENN_FLAGS_START + 508)
+#define FLAG_ITEM_ROUTE_105_IRON                    (HOENN_FLAGS_START + 509)
+#define FLAG_ITEM_ROUTE_106_PROTEIN                 (HOENN_FLAGS_START + 510)
+#define FLAG_ITEM_ROUTE_109_PP_UP                   (HOENN_FLAGS_START + 511)
+#define FLAG_ITEM_ROUTE_110_RARE_CANDY              (HOENN_FLAGS_START + 512)
+#define FLAG_ITEM_ROUTE_110_DIRE_HIT                (HOENN_FLAGS_START + 513)
+#define FLAG_ITEM_ROUTE_111_TM_SANDSTORM            (HOENN_FLAGS_START + 514)
+#define FLAG_ITEM_ROUTE_111_STARDUST                (HOENN_FLAGS_START + 515)
+#define FLAG_ITEM_ROUTE_111_HP_UP                   (HOENN_FLAGS_START + 516)
+#define FLAG_ITEM_ROUTE_112_NUGGET                  (HOENN_FLAGS_START + 517)
+#define FLAG_ITEM_ROUTE_113_MAX_ETHER               (HOENN_FLAGS_START + 518)
+#define FLAG_ITEM_ROUTE_113_SUPER_REPEL             (HOENN_FLAGS_START + 519)
+#define FLAG_ITEM_ROUTE_114_RARE_CANDY              (HOENN_FLAGS_START + 520)
+#define FLAG_ITEM_ROUTE_114_PROTEIN                 (HOENN_FLAGS_START + 521)
+#define FLAG_ITEM_ROUTE_115_SUPER_POTION            (HOENN_FLAGS_START + 522)
+#define FLAG_ITEM_ROUTE_115_TM_FOCUS_PUNCH          (HOENN_FLAGS_START + 523)
+#define FLAG_ITEM_ROUTE_115_IRON                    (HOENN_FLAGS_START + 524)
+#define FLAG_ITEM_ROUTE_116_ETHER                   (HOENN_FLAGS_START + 525)
+#define FLAG_ITEM_ROUTE_116_REPEL                   (HOENN_FLAGS_START + 526)
+#define FLAG_ITEM_ROUTE_116_HP_UP                   (HOENN_FLAGS_START + 527)
+#define FLAG_ITEM_ROUTE_117_GREAT_BALL              (HOENN_FLAGS_START + 528)
+#define FLAG_ITEM_ROUTE_117_REVIVE                  (HOENN_FLAGS_START + 529)
+#define FLAG_ITEM_ROUTE_119_SUPER_REPEL             (HOENN_FLAGS_START + 530)
+#define FLAG_ITEM_ROUTE_119_ZINC                    (HOENN_FLAGS_START + 531)
+#define FLAG_ITEM_ROUTE_119_ELIXIR_1                (HOENN_FLAGS_START + 532)
+#define FLAG_ITEM_ROUTE_119_LEAF_STONE              (HOENN_FLAGS_START + 533)
+#define FLAG_ITEM_ROUTE_119_RARE_CANDY              (HOENN_FLAGS_START + 534)
+#define FLAG_ITEM_ROUTE_119_HYPER_POTION_1          (HOENN_FLAGS_START + 535)
+#define FLAG_ITEM_ROUTE_120_NUGGET                  (HOENN_FLAGS_START + 536)
+#define FLAG_ITEM_ROUTE_120_FULL_HEAL               (HOENN_FLAGS_START + 537)
+#define FLAG_ITEM_ROUTE_123_CALCIUM                 (HOENN_FLAGS_START + 538)
 #define FLAG_ITEM_ROUTE_123_RARE_CANDY              0
-#define FLAG_ITEM_ROUTE_127_ZINC                    0
-#define FLAG_ITEM_ROUTE_127_CARBOS                  0
-#define FLAG_ITEM_ROUTE_132_RARE_CANDY              0
-#define FLAG_ITEM_ROUTE_133_BIG_PEARL               0
-#define FLAG_ITEM_ROUTE_133_STAR_PIECE              0
-#define FLAG_ITEM_PETALBURG_CITY_MAX_REVIVE         0
-#define FLAG_ITEM_PETALBURG_CITY_ETHER              0
-#define FLAG_ITEM_RUSTBORO_CITY_X_DEFEND            0
-#define FLAG_ITEM_LILYCOVE_CITY_MAX_REPEL           0
-#define FLAG_ITEM_MOSSDEEP_CITY_NET_BALL            0
-#define FLAG_ITEM_METEOR_FALLS_1F_1R_TM_IRON_TAIL  0
-#define FLAG_ITEM_METEOR_FALLS_1F_1R_FULL_HEAL      0
-#define FLAG_ITEM_METEOR_FALLS_1F_1R_MOON_STONE     0
-#define FLAG_ITEM_METEOR_FALLS_1F_1R_PP_UP          0
-#define FLAG_ITEM_RUSTURF_TUNNEL_POKE_BALL          0
-#define FLAG_ITEM_RUSTURF_TUNNEL_MAX_ETHER          0
-#define FLAG_ITEM_GRANITE_CAVE_1F_ESCAPE_ROPE       0
-#define FLAG_ITEM_GRANITE_CAVE_B1F_POKE_BALL        0
-#define FLAG_ITEM_MT_PYRE_5F_LAX_INCENSE            0
-#define FLAG_ITEM_GRANITE_CAVE_B2F_REPEL            0
-#define FLAG_ITEM_GRANITE_CAVE_B2F_RARE_CANDY       0
-#define FLAG_ITEM_PETALBURG_WOODS_X_ATTACK          0
-#define FLAG_ITEM_PETALBURG_WOODS_GREAT_BALL        0
-#define FLAG_ITEM_ROUTE_104_POKE_BALL               0
-#define FLAG_ITEM_PETALBURG_WOODS_ETHER             0
-#define FLAG_ITEM_MAGMA_HIDEOUT_3F_3R_ECAPE_ROPE    0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_1_ORANGE_MAIL  0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_HARBOR_MAIL  0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_WAVE_MAIL    0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_3_SHADOW_MAIL  0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_3_WOOD_MAIL    0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_4_MECH_MAIL    0
-#define FLAG_ITEM_ROUTE_124_YELLOW_SHARD            0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_6_GLITTER_MAIL 0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_7_TROPIC_MAIL  0
-#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_8_BEAD_MAIL    0
-#define FLAG_ITEM_JAGGED_PASS_BURN_HEAL             0
-#define FLAG_ITEM_AQUA_HIDEOUT_B1F_MAX_ELIXIR       0
-#define FLAG_ITEM_AQUA_HIDEOUT_B2F_NEST_BALL        0
-#define FLAG_ITEM_MT_PYRE_EXTERIOR_MAX_POTION       0
-#define FLAG_ITEM_MT_PYRE_EXTERIOR_TM_SKILL_SWAP    0
-#define FLAG_ITEM_NEW_MAUVILLE_ULTRA_BALL           0
-#define FLAG_ITEM_NEW_MAUVILLE_ESCAPE_ROPE          0
-#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_6_LUXURY_BALL 0
-#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_2_SCANNER 0
-#define FLAG_ITEM_SCORCHED_SLAB_TM_SUNNY_DAY        0
-#define FLAG_ITEM_METEOR_FALLS_B1F_2R_TM_DRAGON_CLAW 0
-#define FLAG_ITEM_SHOAL_CAVE_ENTRANCE_BIG_PEARL     0
-#define FLAG_ITEM_SHOAL_CAVE_INNER_ROOM_RARE_CANDY  0
-#define FLAG_ITEM_SHOAL_CAVE_STAIRS_ROOM_ICE_HEAL   0
-#define FLAG_ITEM_VICTORY_ROAD_1F_MAX_ELIXIR        0
-#define FLAG_ITEM_VICTORY_ROAD_1F_PP_UP             0
-#define FLAG_ITEM_VICTORY_ROAD_B1F_TM_PSYCHIC       0
-#define FLAG_ITEM_VICTORY_ROAD_B1F_FULL_RESTORE     0
-#define FLAG_ITEM_VICTORY_ROAD_B2F_FULL_HEAL        0
-#define FLAG_ITEM_MT_PYRE_6F_TM_SHADOW_BALL         0
-#define FLAG_ITEM_SEAFLOOR_CAVERN_ROOM_9_TM_EARTHQUAKE 0
-#define FLAG_ITEM_FIERY_PATH_TM_TOXIC               0
-#define FLAG_ITEM_ROUTE_124_RED_SHARD               0
-#define FLAG_ITEM_ROUTE_124_BLUE_SHARD              0
-#define FLAG_ITEM_SAFARI_ZONE_NORTH_WEST_TM_SOLAR_BEAM 0
-#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_1F_HARBOR_MAIL 0
-#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_ESCAPE_ROPE 0
-#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_B1F_DIVE_BALL 0
-#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_TM_ICE_BEAM 0
-#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_1F_REVIVE  0
-#define FLAG_ITEM_ABANDONED_SHIP_CAPTAINS_OFFICE_STORAGE_KEY 0
-#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_3_WATER_STONE 0
-#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_1_TM_RAIN_DANCE 0
-#define FLAG_ITEM_ROUTE_121_CARBOS                  0
-#define FLAG_ITEM_ROUTE_123_ULTRA_BALL              0
-#define FLAG_ITEM_ROUTE_126_GREEN_SHARD             0
-#define FLAG_ITEM_ROUTE_119_HYPER_POTION_2          0
-#define FLAG_ITEM_ROUTE_120_HYPER_POTION            0
-#define FLAG_ITEM_ROUTE_120_NEST_BALL               0
-#define FLAG_ITEM_ROUTE_123_ELIXIR                  0
-#define FLAG_ITEM_NEW_MAUVILLE_THUNDER_STONE        0
-#define FLAG_ITEM_FIERY_PATH_FIRE_STONE             0
-#define FLAG_ITEM_SHOAL_CAVE_ICE_ROOM_TM_HAIL       0
-#define FLAG_ITEM_SHOAL_CAVE_ICE_ROOM_NEVER_MELT_ICE 0
-#define FLAG_ITEM_ROUTE_103_GUARD_SPEC              0
-#define FLAG_ITEM_ROUTE_104_X_ACCURACY              0
-#define FLAG_ITEM_MAUVILLE_CITY_X_SPEED             0
-#define FLAG_ITEM_PETALBURG_WOODS_PARALYZE_HEAL     0
-#define FLAG_ITEM_ROUTE_115_GREAT_BALL              0
-#define FLAG_ITEM_SAFARI_ZONE_NORTH_CALCIUM         0
-#define FLAG_ITEM_MT_PYRE_3F_SUPER_REPEL            0
-#define FLAG_ITEM_ROUTE_118_HYPER_POTION            0
-#define FLAG_ITEM_NEW_MAUVILLE_FULL_HEAL            0
-#define FLAG_ITEM_NEW_MAUVILLE_PARALYZE_HEAL        0
-#define FLAG_ITEM_AQUA_HIDEOUT_B1F_MASTER_BALL      0
-#define FLAG_ITEM_MT_PYRE_2F_ULTRA_BALL             0
-#define FLAG_ITEM_MT_PYRE_4F_SEA_INCENSE            0
-#define FLAG_ITEM_SAFARI_ZONE_SOUTH_WEST_MAX_REVIVE 0
-#define FLAG_ITEM_AQUA_HIDEOUT_B1F_NUGGET           0
-#define FLAG_ITEM_ROUTE_119_NUGGET                  0
-#define FLAG_ITEM_ROUTE_104_POTION                  0
-#define FLAG_ITEM_ROUTE_103_PP_UP                   0
-#define FLAG_ITEM_ROUTE_108_STAR_PIECE              0
-#define FLAG_ITEM_ROUTE_109_POTION                  0
-#define FLAG_ITEM_ROUTE_110_ELIXIR                  0
-#define FLAG_ITEM_ROUTE_111_ELIXIR                  0
-#define FLAG_ITEM_ROUTE_113_HYPER_POTION            0
-#define FLAG_ITEM_ROUTE_115_HEAL_POWDER             0
-#define FLAG_ITEM_ROUTE_116_POTION                  0
-#define FLAG_ITEM_ROUTE_119_ELIXIR_2                0
-#define FLAG_ITEM_ROUTE_120_REVIVE                  0
-#define FLAG_ITEM_ROUTE_121_REVIVE                  0
-#define FLAG_ITEM_ROUTE_121_ZINC                    0
-#define FLAG_ITEM_MAGMA_HIDEOUT_1F_RARE_CANDY       0
-#define FLAG_ITEM_ROUTE_123_PP_UP                   0
-#define FLAG_ITEM_ROUTE_123_REVIVAL_HERB            0
-#define FLAG_ITEM_ROUTE_125_BIG_PEARL               0
-#define FLAG_ITEM_ROUTE_127_RARE_CANDY              0
-#define FLAG_ITEM_ROUTE_132_PROTEIN                 0
-#define FLAG_ITEM_ROUTE_133_MAX_REVIVE              0
-#define FLAG_ITEM_ROUTE_134_CARBOS                  0
-#define FLAG_ITEM_ROUTE_134_STAR_PIECE              0
-#define FLAG_ITEM_ROUTE_114_ENERGY_POWDER           0
-#define FLAG_ITEM_ROUTE_115_PP_UP                   0
-#define FLAG_ITEM_ARTISAN_CAVE_B1F_HP_UP            0
-#define FLAG_ITEM_ARTISAN_CAVE_1F_CARBOS            0
-#define FLAG_ITEM_MAGMA_HIDEOUT_2F_2R_MAX_ELIXIR    0
-#define FLAG_ITEM_MAGMA_HIDEOUT_2F_2R_FULL_RESTORE  0
-#define FLAG_ITEM_MAGMA_HIDEOUT_3F_1R_NUGGET        0
-#define FLAG_ITEM_MAGMA_HIDEOUT_3F_2R_PP_MAX        0
-#define FLAG_ITEM_MAGMA_HIDEOUT_4F_MAX_REVIVE       0
-#define FLAG_ITEM_SAFARI_ZONE_NORTH_EAST_NUGGET     0
-#define FLAG_ITEM_SAFARI_ZONE_SOUTH_EAST_BIG_PEARL  0
+#define FLAG_ITEM_ROUTE_127_ZINC                    (HOENN_FLAGS_START + 539)
+#define FLAG_ITEM_ROUTE_127_CARBOS                  (HOENN_FLAGS_START + 540)
+#define FLAG_ITEM_ROUTE_132_RARE_CANDY              (HOENN_FLAGS_START + 541)
+#define FLAG_ITEM_ROUTE_133_BIG_PEARL               (HOENN_FLAGS_START + 542)
+#define FLAG_ITEM_ROUTE_133_STAR_PIECE              (HOENN_FLAGS_START + 543)
+#define FLAG_ITEM_PETALBURG_CITY_MAX_REVIVE         (HOENN_FLAGS_START + 544)
+#define FLAG_ITEM_PETALBURG_CITY_ETHER              (HOENN_FLAGS_START + 545)
+#define FLAG_ITEM_RUSTBORO_CITY_X_DEFEND            (HOENN_FLAGS_START + 546)
+#define FLAG_ITEM_LILYCOVE_CITY_MAX_REPEL           (HOENN_FLAGS_START + 547)
+#define FLAG_ITEM_MOSSDEEP_CITY_NET_BALL            (HOENN_FLAGS_START + 548)
+#define FLAG_ITEM_METEOR_FALLS_1F_1R_TM_IRON_TAIL  (HOENN_FLAGS_START + 549)
+#define FLAG_ITEM_METEOR_FALLS_1F_1R_FULL_HEAL      (HOENN_FLAGS_START + 550)
+#define FLAG_ITEM_METEOR_FALLS_1F_1R_MOON_STONE     (HOENN_FLAGS_START + 551)
+#define FLAG_ITEM_METEOR_FALLS_1F_1R_PP_UP          (HOENN_FLAGS_START + 552)
+#define FLAG_ITEM_RUSTURF_TUNNEL_POKE_BALL          (HOENN_FLAGS_START + 553)
+#define FLAG_ITEM_RUSTURF_TUNNEL_MAX_ETHER          (HOENN_FLAGS_START + 554)
+#define FLAG_ITEM_GRANITE_CAVE_1F_ESCAPE_ROPE       (HOENN_FLAGS_START + 555)
+#define FLAG_ITEM_GRANITE_CAVE_B1F_POKE_BALL        (HOENN_FLAGS_START + 556)
+#define FLAG_ITEM_MT_PYRE_5F_LAX_INCENSE            (HOENN_FLAGS_START + 557)
+#define FLAG_ITEM_GRANITE_CAVE_B2F_REPEL            (HOENN_FLAGS_START + 558)
+#define FLAG_ITEM_GRANITE_CAVE_B2F_RARE_CANDY       (HOENN_FLAGS_START + 559)
+#define FLAG_ITEM_PETALBURG_WOODS_X_ATTACK          (HOENN_FLAGS_START + 560)
+#define FLAG_ITEM_PETALBURG_WOODS_GREAT_BALL        (HOENN_FLAGS_START + 561)
+#define FLAG_ITEM_ROUTE_104_POKE_BALL               (HOENN_FLAGS_START + 562)
+#define FLAG_ITEM_PETALBURG_WOODS_ETHER             (HOENN_FLAGS_START + 563)
+#define FLAG_ITEM_MAGMA_HIDEOUT_3F_3R_ECAPE_ROPE    (HOENN_FLAGS_START + 564)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_1_ORANGE_MAIL  (HOENN_FLAGS_START + 565)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_HARBOR_MAIL  (HOENN_FLAGS_START + 566)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_2_WAVE_MAIL    (HOENN_FLAGS_START + 567)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_3_SHADOW_MAIL  (HOENN_FLAGS_START + 568)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_3_WOOD_MAIL    (HOENN_FLAGS_START + 569)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_4_MECH_MAIL    (HOENN_FLAGS_START + 570)
+#define FLAG_ITEM_ROUTE_124_YELLOW_SHARD            (HOENN_FLAGS_START + 571)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_6_GLITTER_MAIL (HOENN_FLAGS_START + 572)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_7_TROPIC_MAIL  (HOENN_FLAGS_START + 573)
+#define FLAG_ITEM_TRICK_HOUSE_PUZZLE_8_BEAD_MAIL    (HOENN_FLAGS_START + 574)
+#define FLAG_ITEM_JAGGED_PASS_BURN_HEAL             (HOENN_FLAGS_START + 575)
+#define FLAG_ITEM_AQUA_HIDEOUT_B1F_MAX_ELIXIR       (HOENN_FLAGS_START + 576)
+#define FLAG_ITEM_AQUA_HIDEOUT_B2F_NEST_BALL        (HOENN_FLAGS_START + 577)
+#define FLAG_ITEM_MT_PYRE_EXTERIOR_MAX_POTION       (HOENN_FLAGS_START + 578)
+#define FLAG_ITEM_MT_PYRE_EXTERIOR_TM_SKILL_SWAP    (HOENN_FLAGS_START + 579)
+#define FLAG_ITEM_NEW_MAUVILLE_ULTRA_BALL           (HOENN_FLAGS_START + 580)
+#define FLAG_ITEM_NEW_MAUVILLE_ESCAPE_ROPE          (HOENN_FLAGS_START + 581)
+#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_6_LUXURY_BALL (HOENN_FLAGS_START + 582)
+#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_2_SCANNER (HOENN_FLAGS_START + 583)
+#define FLAG_ITEM_SCORCHED_SLAB_TM_SUNNY_DAY        (HOENN_FLAGS_START + 584)
+#define FLAG_ITEM_METEOR_FALLS_B1F_2R_TM_DRAGON_CLAW (HOENN_FLAGS_START + 585)
+#define FLAG_ITEM_SHOAL_CAVE_ENTRANCE_BIG_PEARL     (HOENN_FLAGS_START + 586)
+#define FLAG_ITEM_SHOAL_CAVE_INNER_ROOM_RARE_CANDY  (HOENN_FLAGS_START + 587)
+#define FLAG_ITEM_SHOAL_CAVE_STAIRS_ROOM_ICE_HEAL   (HOENN_FLAGS_START + 588)
+#define FLAG_ITEM_VICTORY_ROAD_1F_MAX_ELIXIR        (HOENN_FLAGS_START + 589)
+#define FLAG_ITEM_VICTORY_ROAD_1F_PP_UP             (HOENN_FLAGS_START + 590)
+#define FLAG_ITEM_VICTORY_ROAD_B1F_TM_PSYCHIC       (HOENN_FLAGS_START + 591)
+#define FLAG_ITEM_VICTORY_ROAD_B1F_FULL_RESTORE     (HOENN_FLAGS_START + 592)
+#define FLAG_ITEM_VICTORY_ROAD_B2F_FULL_HEAL        (HOENN_FLAGS_START + 593)
+#define FLAG_ITEM_MT_PYRE_6F_TM_SHADOW_BALL         (HOENN_FLAGS_START + 594)
+#define FLAG_ITEM_SEAFLOOR_CAVERN_ROOM_9_TM_EARTHQUAKE (HOENN_FLAGS_START + 595)
+#define FLAG_ITEM_FIERY_PATH_TM_TOXIC               (HOENN_FLAGS_START + 596)
+#define FLAG_ITEM_ROUTE_124_RED_SHARD               (HOENN_FLAGS_START + 597)
+#define FLAG_ITEM_ROUTE_124_BLUE_SHARD              (HOENN_FLAGS_START + 598)
+#define FLAG_ITEM_SAFARI_ZONE_NORTH_WEST_TM_SOLAR_BEAM (HOENN_FLAGS_START + 599)
+#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_1F_HARBOR_MAIL (HOENN_FLAGS_START + 600)
+#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_ESCAPE_ROPE (HOENN_FLAGS_START + 601)
+#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_B1F_DIVE_BALL (HOENN_FLAGS_START + 602)
+#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_B1F_TM_ICE_BEAM (HOENN_FLAGS_START + 603)
+#define FLAG_ITEM_ABANDONED_SHIP_ROOMS_2_1F_REVIVE  (HOENN_FLAGS_START + 604)
+#define FLAG_ITEM_ABANDONED_SHIP_CAPTAINS_OFFICE_STORAGE_KEY (HOENN_FLAGS_START + 605)
+#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_3_WATER_STONE (HOENN_FLAGS_START + 606)
+#define FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_1_TM_RAIN_DANCE (HOENN_FLAGS_START + 607)
+#define FLAG_ITEM_ROUTE_121_CARBOS                  (HOENN_FLAGS_START + 608)
+#define FLAG_ITEM_ROUTE_123_ULTRA_BALL              (HOENN_FLAGS_START + 609)
+#define FLAG_ITEM_ROUTE_126_GREEN_SHARD             (HOENN_FLAGS_START + 610)
+#define FLAG_ITEM_ROUTE_119_HYPER_POTION_2          (HOENN_FLAGS_START + 611)
+#define FLAG_ITEM_ROUTE_120_HYPER_POTION            (HOENN_FLAGS_START + 612)
+#define FLAG_ITEM_ROUTE_120_NEST_BALL               (HOENN_FLAGS_START + 613)
+#define FLAG_ITEM_ROUTE_123_ELIXIR                  (HOENN_FLAGS_START + 614)
+#define FLAG_ITEM_NEW_MAUVILLE_THUNDER_STONE        (HOENN_FLAGS_START + 615)
+#define FLAG_ITEM_FIERY_PATH_FIRE_STONE             (HOENN_FLAGS_START + 616)
+#define FLAG_ITEM_SHOAL_CAVE_ICE_ROOM_TM_HAIL       (HOENN_FLAGS_START + 617)
+#define FLAG_ITEM_SHOAL_CAVE_ICE_ROOM_NEVER_MELT_ICE (HOENN_FLAGS_START + 618)
+#define FLAG_ITEM_ROUTE_103_GUARD_SPEC              (HOENN_FLAGS_START + 619)
+#define FLAG_ITEM_ROUTE_104_X_ACCURACY              (HOENN_FLAGS_START + 620)
+#define FLAG_ITEM_MAUVILLE_CITY_X_SPEED             (HOENN_FLAGS_START + 621)
+#define FLAG_ITEM_PETALBURG_WOODS_PARALYZE_HEAL     (HOENN_FLAGS_START + 622)
+#define FLAG_ITEM_ROUTE_115_GREAT_BALL              (HOENN_FLAGS_START + 623)
+#define FLAG_ITEM_SAFARI_ZONE_NORTH_CALCIUM         (HOENN_FLAGS_START + 624)
+#define FLAG_ITEM_MT_PYRE_3F_SUPER_REPEL            (HOENN_FLAGS_START + 625)
+#define FLAG_ITEM_ROUTE_118_HYPER_POTION            (HOENN_FLAGS_START + 626)
+#define FLAG_ITEM_NEW_MAUVILLE_FULL_HEAL            (HOENN_FLAGS_START + 627)
+#define FLAG_ITEM_NEW_MAUVILLE_PARALYZE_HEAL        (HOENN_FLAGS_START + 628)
+#define FLAG_ITEM_AQUA_HIDEOUT_B1F_MASTER_BALL      (HOENN_FLAGS_START + 629)
+#define FLAG_ITEM_MT_PYRE_2F_ULTRA_BALL             (HOENN_FLAGS_START + 630)
+#define FLAG_ITEM_MT_PYRE_4F_SEA_INCENSE            (HOENN_FLAGS_START + 631)
+#define FLAG_ITEM_SAFARI_ZONE_SOUTH_WEST_MAX_REVIVE (HOENN_FLAGS_START + 632)
+#define FLAG_ITEM_AQUA_HIDEOUT_B1F_NUGGET           (HOENN_FLAGS_START + 633)
+#define FLAG_ITEM_ROUTE_119_NUGGET                  (HOENN_FLAGS_START + 634)
+#define FLAG_ITEM_ROUTE_104_POTION                  (HOENN_FLAGS_START + 635)
+#define FLAG_ITEM_ROUTE_103_PP_UP                   (HOENN_FLAGS_START + 636)
+#define FLAG_ITEM_ROUTE_108_STAR_PIECE              (HOENN_FLAGS_START + 637)
+#define FLAG_ITEM_ROUTE_109_POTION                  (HOENN_FLAGS_START + 638)
+#define FLAG_ITEM_ROUTE_110_ELIXIR                  (HOENN_FLAGS_START + 639)
+#define FLAG_ITEM_ROUTE_111_ELIXIR                  (HOENN_FLAGS_START + 640)
+#define FLAG_ITEM_ROUTE_113_HYPER_POTION            (HOENN_FLAGS_START + 641)
+#define FLAG_ITEM_ROUTE_115_HEAL_POWDER             (HOENN_FLAGS_START + 642)
+#define FLAG_ITEM_ROUTE_116_POTION                  (HOENN_FLAGS_START + 643)
+#define FLAG_ITEM_ROUTE_119_ELIXIR_2                (HOENN_FLAGS_START + 644)
+#define FLAG_ITEM_ROUTE_120_REVIVE                  (HOENN_FLAGS_START + 645)
+#define FLAG_ITEM_ROUTE_121_REVIVE                  (HOENN_FLAGS_START + 646)
+#define FLAG_ITEM_ROUTE_121_ZINC                    (HOENN_FLAGS_START + 647)
+#define FLAG_ITEM_MAGMA_HIDEOUT_1F_RARE_CANDY       (HOENN_FLAGS_START + 648)
+#define FLAG_ITEM_ROUTE_123_PP_UP                   (HOENN_FLAGS_START + 649)
+#define FLAG_ITEM_ROUTE_123_REVIVAL_HERB            (HOENN_FLAGS_START + 650)
+#define FLAG_ITEM_ROUTE_125_BIG_PEARL               (HOENN_FLAGS_START + 651)
+#define FLAG_ITEM_ROUTE_127_RARE_CANDY              (HOENN_FLAGS_START + 652)
+#define FLAG_ITEM_ROUTE_132_PROTEIN                 (HOENN_FLAGS_START + 653)
+#define FLAG_ITEM_ROUTE_133_MAX_REVIVE              (HOENN_FLAGS_START + 654)
+#define FLAG_ITEM_ROUTE_134_CARBOS                  (HOENN_FLAGS_START + 655)
+#define FLAG_ITEM_ROUTE_134_STAR_PIECE              (HOENN_FLAGS_START + 656)
+#define FLAG_ITEM_ROUTE_114_ENERGY_POWDER           (HOENN_FLAGS_START + 657)
+#define FLAG_ITEM_ROUTE_115_PP_UP                   (HOENN_FLAGS_START + 658)
+#define FLAG_ITEM_ARTISAN_CAVE_B1F_HP_UP            (HOENN_FLAGS_START + 659)
+#define FLAG_ITEM_ARTISAN_CAVE_1F_CARBOS            (HOENN_FLAGS_START + 660)
+#define FLAG_ITEM_MAGMA_HIDEOUT_2F_2R_MAX_ELIXIR    (HOENN_FLAGS_START + 661)
+#define FLAG_ITEM_MAGMA_HIDEOUT_2F_2R_FULL_RESTORE  (HOENN_FLAGS_START + 662)
+#define FLAG_ITEM_MAGMA_HIDEOUT_3F_1R_NUGGET        (HOENN_FLAGS_START + 663)
+#define FLAG_ITEM_MAGMA_HIDEOUT_3F_2R_PP_MAX        (HOENN_FLAGS_START + 664)
+#define FLAG_ITEM_MAGMA_HIDEOUT_4F_MAX_REVIVE       (HOENN_FLAGS_START + 665)
+#define FLAG_ITEM_SAFARI_ZONE_NORTH_EAST_NUGGET     (HOENN_FLAGS_START + 666)
+#define FLAG_ITEM_SAFARI_ZONE_SOUTH_EAST_BIG_PEARL  (HOENN_FLAGS_START + 667)
 
 // Emerald system flags not in HnS
-#define FLAG_SYS_BRAILLE_DIG                        0
-#define FLAG_SYS_REGIROCK_PUZZLE_COMPLETED          0
-#define FLAG_SYS_BRAILLE_REGICE_COMPLETED           0
-#define FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED         0
-#define FLAG_ENABLE_SHIP_SOUTHERN_ISLAND            0
+#define FLAG_SYS_BRAILLE_DIG                        (HOENN_FLAGS_START + 668)
+#define FLAG_SYS_REGIROCK_PUZZLE_COMPLETED          (HOENN_FLAGS_START + 669)
+#define FLAG_SYS_BRAILLE_REGICE_COMPLETED           (HOENN_FLAGS_START + 670)
+#define FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED         (HOENN_FLAGS_START + 671)
+#define FLAG_ENABLE_SHIP_SOUTHERN_ISLAND            (HOENN_FLAGS_START + 672)
 #define FLAG_SYS_TV_LATIAS_LATIOS                   0
-#define FLAG_SYS_SHOAL_ITEM                         0
-#define FLAG_SYS_WEATHER_CTRL                       0
+#define FLAG_SYS_SHOAL_ITEM                         (HOENN_FLAGS_START + 673)
+#define FLAG_SYS_WEATHER_CTRL                       (HOENN_FLAGS_START + 674)
 #define FLAG_SYS_TV_HOME                            0
 #define FLAG_SYS_TV_WATCH                           0
-#define FLAG_SYS_TV_START                           0
+#define FLAG_SYS_TV_START                           (HOENN_FLAGS_START + 675)
 #define FLAG_SYS_CHANGED_DEWFORD_TREND              0
 #define FLAG_SYS_MIX_RECORD                         0
 #define FLAG_SYS_CAVE_SHIP                          0
 #define FLAG_SYS_CAVE_WONDER                        0
 #define FLAG_SYS_CAVE_BATTLE                        0
-#define FLAG_SYS_SHOAL_TIDE                         0
+#define FLAG_SYS_SHOAL_TIDE                         (HOENN_FLAGS_START + 676)
 #define FLAG_SYS_VS_SEEKER_CHARGING                 0
 #define FLAG_SYS_CRUISE_MODE                        0
 #define FLAG_SYS_QL_DEPARTED                        0
@@ -2281,70 +2326,70 @@
 #define FLAG_SYS_SEVII_MAP_4567                     0
 #define FLAG_SYS_GOT_BERRY_POUCH                    0
 #define FLAG_SYS_UNLOCKED_TANOBY_RUINS              0
-#define FLAG_ENABLE_SHIP_NAVEL_ROCK                 0
-#define FLAG_ENABLE_SHIP_BIRTH_ISLAND               0
+#define FLAG_ENABLE_SHIP_NAVEL_ROCK                 (HOENN_FLAGS_START + 677)
+#define FLAG_ENABLE_SHIP_BIRTH_ISLAND               (HOENN_FLAGS_START + 678)
 #define FLAG_SYS_CHAT_USED                          0
 #define FLAG_UNLOCKED_TRENDY_SAYINGS                0
 
 // Emerald landmark flags
-#define FLAG_LANDMARK_FLOWER_SHOP                   0
-#define FLAG_LANDMARK_MR_BRINEY_HOUSE               0
-#define FLAG_LANDMARK_ABANDONED_SHIP                0
-#define FLAG_LANDMARK_SEASHORE_HOUSE                0
-#define FLAG_LANDMARK_NEW_MAUVILLE                  0
-#define FLAG_LANDMARK_OLD_LADY_REST_SHOP            0
-#define FLAG_LANDMARK_TRICK_HOUSE                   0
-#define FLAG_LANDMARK_WINSTRATE_FAMILY              0
-#define FLAG_LANDMARK_GLASS_WORKSHOP                0
-#define FLAG_LANDMARK_LANETTES_HOUSE                0
-#define FLAG_LANDMARK_POKEMON_DAYCARE               0
-#define FLAG_LANDMARK_SEAFLOOR_CAVERN               0
-#define FLAG_LANDMARK_SOUTHERN_ISLAND               0
-#define FLAG_LANDMARK_FIERY_PATH                    0
-#define FLAG_LANDMARK_POKEMON_LEAGUE                0
-#define FLAG_LANDMARK_ISLAND_CAVE                   0
-#define FLAG_LANDMARK_DESERT_RUINS                  0
-#define FLAG_LANDMARK_FOSSIL_MANIACS_HOUSE          0
-#define FLAG_LANDMARK_SCORCHED_SLAB                 0
-#define FLAG_LANDMARK_ANCIENT_TOMB                  0
-#define FLAG_LANDMARK_TUNNELERS_REST_HOUSE          0
-#define FLAG_LANDMARK_HUNTERS_HOUSE                 0
-#define FLAG_LANDMARK_SEALED_CHAMBER                0
-#define FLAG_LANDMARK_SKY_PILLAR                    0
-#define FLAG_LANDMARK_BERRY_MASTERS_HOUSE           0
-#define FLAG_LANDMARK_ALTERING_CAVE                 0
-#define FLAG_LANDMARK_DESERT_UNDERPASS              0
-#define FLAG_LANDMARK_ARTISAN_CAVE                  0
+#define FLAG_LANDMARK_FLOWER_SHOP                   (HOENN_FLAGS_START + 679)
+#define FLAG_LANDMARK_MR_BRINEY_HOUSE               (HOENN_FLAGS_START + 680)
+#define FLAG_LANDMARK_ABANDONED_SHIP                (HOENN_FLAGS_START + 681)
+#define FLAG_LANDMARK_SEASHORE_HOUSE                (HOENN_FLAGS_START + 682)
+#define FLAG_LANDMARK_NEW_MAUVILLE                  (HOENN_FLAGS_START + 683)
+#define FLAG_LANDMARK_OLD_LADY_REST_SHOP            (HOENN_FLAGS_START + 684)
+#define FLAG_LANDMARK_TRICK_HOUSE                   (HOENN_FLAGS_START + 685)
+#define FLAG_LANDMARK_WINSTRATE_FAMILY              (HOENN_FLAGS_START + 686)
+#define FLAG_LANDMARK_GLASS_WORKSHOP                (HOENN_FLAGS_START + 687)
+#define FLAG_LANDMARK_LANETTES_HOUSE                (HOENN_FLAGS_START + 688)
+#define FLAG_LANDMARK_POKEMON_DAYCARE               (HOENN_FLAGS_START + 689)
+#define FLAG_LANDMARK_SEAFLOOR_CAVERN               (HOENN_FLAGS_START + 690)
+#define FLAG_LANDMARK_SOUTHERN_ISLAND               (HOENN_FLAGS_START + 691)
+#define FLAG_LANDMARK_FIERY_PATH                    (HOENN_FLAGS_START + 692)
+#define FLAG_LANDMARK_POKEMON_LEAGUE                (HOENN_FLAGS_START + 693)
+#define FLAG_LANDMARK_ISLAND_CAVE                   (HOENN_FLAGS_START + 694)
+#define FLAG_LANDMARK_DESERT_RUINS                  (HOENN_FLAGS_START + 695)
+#define FLAG_LANDMARK_FOSSIL_MANIACS_HOUSE          (HOENN_FLAGS_START + 696)
+#define FLAG_LANDMARK_SCORCHED_SLAB                 (HOENN_FLAGS_START + 697)
+#define FLAG_LANDMARK_ANCIENT_TOMB                  (HOENN_FLAGS_START + 698)
+#define FLAG_LANDMARK_TUNNELERS_REST_HOUSE          (HOENN_FLAGS_START + 699)
+#define FLAG_LANDMARK_HUNTERS_HOUSE                 (HOENN_FLAGS_START + 700)
+#define FLAG_LANDMARK_SEALED_CHAMBER                (HOENN_FLAGS_START + 701)
+#define FLAG_LANDMARK_SKY_PILLAR                    (HOENN_FLAGS_START + 702)
+#define FLAG_LANDMARK_BERRY_MASTERS_HOUSE           (HOENN_FLAGS_START + 703)
+#define FLAG_LANDMARK_ALTERING_CAVE                 (HOENN_FLAGS_START + 704)
+#define FLAG_LANDMARK_DESERT_UNDERPASS              (HOENN_FLAGS_START + 705)
+#define FLAG_LANDMARK_ARTISAN_CAVE                  (HOENN_FLAGS_START + 706)
 
 // Emerald visited flags
-#define FLAG_VISITED_LITTLEROOT_TOWN                0
-#define FLAG_VISITED_OLDALE_TOWN                    0
-#define FLAG_VISITED_DEWFORD_TOWN                   0
-#define FLAG_VISITED_LAVARIDGE_TOWN                 0
-#define FLAG_VISITED_FALLARBOR_TOWN                 0
-#define FLAG_VISITED_VERDANTURF_TOWN                0
-#define FLAG_VISITED_PACIFIDLOG_TOWN                0
-#define FLAG_VISITED_PETALBURG_CITY                 0
-#define FLAG_VISITED_SLATEPORT_CITY                 0
-#define FLAG_VISITED_MAUVILLE_CITY                  0
-#define FLAG_VISITED_RUSTBORO_CITY                  0
-#define FLAG_VISITED_FORTREE_CITY                   0
-#define FLAG_VISITED_LILYCOVE_CITY                  0
-#define FLAG_VISITED_MOSSDEEP_CITY                  0
-#define FLAG_VISITED_SOOTOPOLIS_CITY                0
-#define FLAG_VISITED_EVER_GRANDE_CITY               0
+#define FLAG_VISITED_LITTLEROOT_TOWN                (HOENN_FLAGS_START + 707)
+#define FLAG_VISITED_OLDALE_TOWN                    (HOENN_FLAGS_START + 708)
+#define FLAG_VISITED_DEWFORD_TOWN                   (HOENN_FLAGS_START + 709)
+#define FLAG_VISITED_LAVARIDGE_TOWN                 (HOENN_FLAGS_START + 710)
+#define FLAG_VISITED_FALLARBOR_TOWN                 (HOENN_FLAGS_START + 711)
+#define FLAG_VISITED_VERDANTURF_TOWN                (HOENN_FLAGS_START + 712)
+#define FLAG_VISITED_PACIFIDLOG_TOWN                (HOENN_FLAGS_START + 713)
+#define FLAG_VISITED_PETALBURG_CITY                 (HOENN_FLAGS_START + 714)
+#define FLAG_VISITED_SLATEPORT_CITY                 (HOENN_FLAGS_START + 715)
+#define FLAG_VISITED_MAUVILLE_CITY                  (HOENN_FLAGS_START + 716)
+#define FLAG_VISITED_RUSTBORO_CITY                  (HOENN_FLAGS_START + 717)
+#define FLAG_VISITED_FORTREE_CITY                   (HOENN_FLAGS_START + 718)
+#define FLAG_VISITED_LILYCOVE_CITY                  (HOENN_FLAGS_START + 719)
+#define FLAG_VISITED_MOSSDEEP_CITY                  (HOENN_FLAGS_START + 720)
+#define FLAG_VISITED_SOOTOPOLIS_CITY                (HOENN_FLAGS_START + 721)
+#define FLAG_VISITED_EVER_GRANDE_CITY               (HOENN_FLAGS_START + 722)
 
 // Emerald daily flags
 #define FLAG_DAILY_CONTEST_LOBBY_RECEIVED_BERRY     0
 #define FLAG_DAILY_SECRET_BASE                      0
-#define FLAG_DAILY_ROUTE_114_RECEIVED_BERRY         0
-#define FLAG_DAILY_ROUTE_111_RECEIVED_BERRY         0
-#define FLAG_DAILY_BERRY_MASTER_RECEIVED_BERRY      0
-#define FLAG_DAILY_ROUTE_120_RECEIVED_BERRY         0
-#define FLAG_DAILY_LILYCOVE_RECEIVED_BERRY          0
-#define FLAG_DAILY_FLOWER_SHOP_RECEIVED_BERRY       0
-#define FLAG_DAILY_BERRY_MASTERS_WIFE               0
-#define FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY        0
+#define FLAG_DAILY_ROUTE_114_RECEIVED_BERRY         (HOENN_FLAGS_START + 723)
+#define FLAG_DAILY_ROUTE_111_RECEIVED_BERRY         (HOENN_FLAGS_START + 724)
+#define FLAG_DAILY_BERRY_MASTER_RECEIVED_BERRY      (HOENN_FLAGS_START + 725)
+#define FLAG_DAILY_ROUTE_120_RECEIVED_BERRY         (HOENN_FLAGS_START + 726)
+#define FLAG_DAILY_LILYCOVE_RECEIVED_BERRY          (HOENN_FLAGS_START + 727)
+#define FLAG_DAILY_FLOWER_SHOP_RECEIVED_BERRY       (HOENN_FLAGS_START + 728)
+#define FLAG_DAILY_BERRY_MASTERS_WIFE               (HOENN_FLAGS_START + 729)
+#define FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY        (HOENN_FLAGS_START + 730)
 
 // FRLG world map flags
 #define FLAG_WORLD_MAP_PALLET_TOWN                              0
@@ -2412,21 +2457,49 @@
 #define FLAG_HIDE_SAFFRON_FAN_CLUB_ROCKER                       0
 #define FLAG_HIDE_SAFFRON_FAN_CLUB_WOMAN                        0
 #define FLAG_HIDE_SAFFRON_FAN_CLUB_BEAUTY                       0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_1                           0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_2                           0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_3                           0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_4                           0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_5                           0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_6                           0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_7                           0
-#define FLAG_HIDE_UNION_ROOM_PLAYER_8                           0
+#define FLAG_HIDE_UNION_ROOM_PLAYER_1                           (HOENN_FLAGS_START + 731)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_2                           (HOENN_FLAGS_START + 732)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_3                           (HOENN_FLAGS_START + 733)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_4                           (HOENN_FLAGS_START + 734)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_5                           (HOENN_FLAGS_START + 735)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_6                           (HOENN_FLAGS_START + 736)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_7                           (HOENN_FLAGS_START + 737)
+#define FLAG_HIDE_UNION_ROOM_PLAYER_8                           (HOENN_FLAGS_START + 738)
 
 // Wonder card / mystery gift flags
 #define FLAG_RECEIVED_AURORA_TICKET                              0
 #define FLAG_RECEIVED_MYSTIC_TICKET                              0
 #define FLAG_RECEIVED_OLD_SEA_MAP                                0
-#define FLAG_SHOWN_AURORA_TICKET                                 0
-#define FLAG_SHOWN_MYSTIC_TICKET                                 0
+#define FLAG_SHOWN_AURORA_TICKET                                 (HOENN_FLAGS_START + 739)
+#define FLAG_SHOWN_MYSTIC_TICKET                                 (HOENN_FLAGS_START + 740)
+
+// Added for this hack (bank slot 741): the Dragon Council's MYSTERY STONE has been revealed as CHARIZARDITE X.
+#define FLAG_RECEIVED_CHARIZARDITE_X                             (HOENN_FLAGS_START + 741)
+
+// Bank slots 742-764: one 'received' flag per gym MEGA STONE, so the lab assistant can re-issue a missed one.
+#define FLAG_MEGA_STONE_PIDGEOTITE                               (HOENN_FLAGS_START + 742)
+#define FLAG_MEGA_STONE_SCIZORITE                                (HOENN_FLAGS_START + 743)
+#define FLAG_MEGA_STONE_KANGASKHANITE                            (HOENN_FLAGS_START + 744)
+#define FLAG_MEGA_STONE_GENGARITE                                (HOENN_FLAGS_START + 745)
+#define FLAG_MEGA_STONE_LUCARIONITE                              (HOENN_FLAGS_START + 746)
+#define FLAG_MEGA_STONE_STEELIXITE                               (HOENN_FLAGS_START + 747)
+#define FLAG_MEGA_STONE_ABOMASITE                                (HOENN_FLAGS_START + 748)
+#define FLAG_MEGA_STONE_AERODACTYLITE                            (HOENN_FLAGS_START + 749)
+#define FLAG_MEGA_STONE_BLASTOISINITE                            (HOENN_FLAGS_START + 750)
+#define FLAG_MEGA_STONE_AMPHAROSITE                              (HOENN_FLAGS_START + 751)
+#define FLAG_MEGA_STONE_VENUSAURITE                              (HOENN_FLAGS_START + 752)
+#define FLAG_MEGA_STONE_ALAKAZITE                                (HOENN_FLAGS_START + 753)
+#define FLAG_MEGA_STONE_BEEDRILLITE                              (HOENN_FLAGS_START + 754)
+#define FLAG_MEGA_STONE_CHARIZARDITE_Y                           (HOENN_FLAGS_START + 755)
+#define FLAG_MEGA_STONE_GARCHOMPITE                              (HOENN_FLAGS_START + 756)
+#define FLAG_MEGA_STONE_TYRANITARITE                             (HOENN_FLAGS_START + 757)
+#define FLAG_MEGA_STONE_MEDICHAMITE                              (HOENN_FLAGS_START + 758)
+#define FLAG_MEGA_STONE_MANECTITE                                (HOENN_FLAGS_START + 759)
+#define FLAG_MEGA_STONE_CAMERUPTITE                              (HOENN_FLAGS_START + 760)
+#define FLAG_MEGA_STONE_AUDINITE                                 (HOENN_FLAGS_START + 761)
+#define FLAG_MEGA_STONE_ALTARIANITE                              (HOENN_FLAGS_START + 762)
+#define FLAG_MEGA_STONE_GARDEVOIRITE                             (HOENN_FLAGS_START + 763)
+#define FLAG_MEGA_STONE_SWAMPERTITE                              (HOENN_FLAGS_START + 764)
 #define FLAG_MYSTERY_GIFT_DONE                                   0
 #define FLAG_MYSTERY_GIFT_1                                      0
 #define FLAG_MYSTERY_GIFT_2                                      0

@@ -398,7 +398,7 @@ Route110_EventScript_PlayBrendanMusic::
 	return
 
 Route110_EventScript_MayBattle::
-	msgbox Route110_Text_MayLetsBattle, MSGBOX_DEFAULT
+	call Route110_EventScript_MayIntroText
 	switch VAR_STARTER_MON
 	case 0, Route110_EventScript_MayBattleTreecko
 	case 1, Route110_EventScript_MayBattleTorchic
@@ -428,7 +428,7 @@ Route110_EventScript_MayDefeated::
 	end
 
 Route110_EventScript_BrendanBattle::
-	msgbox Route110_Text_BrendanLetsBattle, MSGBOX_DEFAULT
+	call Route110_EventScript_BrendanIntroText
 	switch VAR_STARTER_MON
 	case 0, Route110_EventScript_BrendanBattleTreecko
 	case 1, Route110_EventScript_BrendanBattleTorchic
@@ -754,6 +754,34 @@ Route110_Text_AquaActionsBringSmiles:
 	.string "TEAM AQUA's actions should bring\n"
 	.string "smiles to people's faces!$"
 
+@ Once the player has a partner, the rival is that partner's ex and picks the fight on purpose.
+Route110_EventScript_MayIntroText::
+	goto_if_set FLAG_ENABLE_MOM_MATCH_CALL, Route110_EventScript_MayIntroTextEx
+	msgbox Route110_Text_MayLetsBattle, MSGBOX_DEFAULT
+	return
+
+Route110_EventScript_MayIntroTextEx::
+	msgbox Route110_Text_MayLetsBattleEx, MSGBOX_DEFAULT
+	return
+
+Route110_EventScript_BrendanIntroText::
+	goto_if_set FLAG_ENABLE_MOM_MATCH_CALL, Route110_EventScript_BrendanIntroTextEx
+	msgbox Route110_Text_BrendanLetsBattle, MSGBOX_DEFAULT
+	return
+
+Route110_EventScript_BrendanIntroTextEx::
+	msgbox Route110_Text_BrendanLetsBattleEx, MSGBOX_DEFAULT
+	return
+
+Route110_Text_MayLetsBattleEx:
+	.string "MAY: Oh. {PLAYER}{KUN}.\n"
+	.string "Of all the roads to be on.\p"
+	.string "I heard about you and my ex.\n"
+	.string "Funny how you moved in so fast.\p"
+	.string "I'm not bitter. I just want to see\n"
+	.string "if you're really worth it.\p"
+	.string "Battle me!$"
+
 Route110_Text_MayLetsBattle:
 	.string "MAY: Hi, {PLAYER}{KUN}, long time no see!\p"
 	.string "While I was searching for other\n"
@@ -779,6 +807,15 @@ Route110_Text_MayExplainItemfinder:
 	.string "I know it's a little silly coming from\n"
 	.string "me, but I think you should train a lot\l"
 	.string "harder for the next time.$"
+
+Route110_Text_BrendanLetsBattleEx:
+	.string "BRENDAN: Well, well. {PLAYER}.\n"
+	.string "Fancy running into you.\p"
+	.string "So you're the one dating my ex.\n"
+	.string "I'd heard. I didn't believe it.\p"
+	.string "I'm not jealous. I just want to see\n"
+	.string "what they see in you.\p"
+	.string "Let's battle!$"
 
 Route110_Text_BrendanLetsBattle:
 	.string "BRENDAN: Hey, {PLAYER}.\n"

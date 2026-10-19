@@ -48,6 +48,8 @@ SaffronCity_Gym_EventScript_Sabrina::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 13
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_ALAKAZITE
+	call Common_EventScript_GiveGymMegaStone
 	closemessage
 	clearflag FLAG_HIDE_OLIVINE_SABRINA
 	release

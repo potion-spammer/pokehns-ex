@@ -285,7 +285,7 @@ SlateportCity_Harbor_EventScript_FatMan::
 SlateportCity_Harbor_EventScript_CaptStern::
 	lock
 	faceplayer
-	goto_if_set FLAG_BADGE07_GET, SlateportCity_Harbor_EventScript_CaptSternFerryOrScannerComment
+	goto_if_set FLAG_BADGE23_GET, SlateportCity_Harbor_EventScript_CaptSternFerryOrScannerComment
 	goto_if_set FLAG_EVIL_TEAM_ESCAPED_STERN_SPOKE, SlateportCity_Harbor_EventScript_NeedDive
 	goto_if_set FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, SlateportCity_Harbor_EventScript_TeamAquaLeftNeedDive
 	goto_if_eq VAR_SLATEPORT_HARBOR_STATE, 2, SlateportCity_Harbor_EventScript_WhyStealSubmarine
@@ -538,3 +538,37 @@ SlateportCity_Harbor_Text_HandedScannerToStern:
 SlateportCity_Harbor_Text_ThisWillHelpResearch:
 	.string "CAPT. STERN: Thanks, {PLAYER}{KUN}!\n"
 	.string "This will help our research a lot!$"
+
+@ Return ferry to Johto (Olivine Port). The outbound sailor is in OlivineCity_PortInside_hns.
+SlateportCity_Harbor_EventScript_JohtoSailor::
+	lock
+	faceplayer
+	msgbox SlateportCity_Harbor_Text_JohtoSailor_AskSail, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, SlateportCity_Harbor_EventScript_JohtoSailor_Declined
+	msgbox SlateportCity_Harbor_Text_JohtoSailor_AllAboard, MSGBOX_DEFAULT
+	closemessage
+	playse SE_EXIT
+	fadescreen FADE_TO_BLACK
+	warpsilent MAP_OLIVINE_CITY_PORT_INSIDE_HNS, 8, 14
+	waitstate
+	release
+	end
+
+SlateportCity_Harbor_EventScript_JohtoSailor_Declined::
+	msgbox SlateportCity_Harbor_Text_JohtoSailor_Declined, MSGBOX_DEFAULT
+	release
+	end
+
+SlateportCity_Harbor_Text_JohtoSailor_AskSail:
+	.string "Heading back to JOHTO?\p"
+	.string "My ship sails to OLIVINE PORT,\n"
+	.string "where the LIGHTHOUSE shines.\p"
+	.string "Do you want to set sail?$"
+
+SlateportCity_Harbor_Text_JohtoSailor_AllAboard:
+	.string "All aboard!\n"
+	.string "Next stop, OLIVINE PORT!$"
+
+SlateportCity_Harbor_Text_JohtoSailor_Declined:
+	.string "Take your time. The tide won't\n"
+	.string "leave without you.$"

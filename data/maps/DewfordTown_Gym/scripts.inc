@@ -148,11 +148,14 @@ DewfordTown_Gym_EventScript_BrawlyDefeated::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox DewfordTown_Gym_Text_KnuckleBadgeInfoTakeThis, MSGBOX_DEFAULT
 	setflag FLAG_DEFEATED_DEWFORD_GYM
-	setflag FLAG_BADGE02_GET
+	setflag FLAG_BADGE18_GET
+	addvar VAR_NUM_BADGES, 1
 	addvar VAR_PETALBURG_GYM_STATE, 1
 	call_if_eq VAR_PETALBURG_GYM_STATE, 6, Common_EventScript_ReadyPetalburgGymForBattle
 	setvar VAR_0x8008, 2
 	call Common_EventScript_SetGymTrainers
+	setvar VAR_0x8004, ITEM_MEDICHAMITE
+	call Common_EventScript_GiveGymMegaStone
 	call DewfordTown_Gym_EventScript_GiveBulkUp
 	closemessage
 	delay 30
@@ -262,13 +265,13 @@ DewfordTown_Gym_EventScript_GymGuidePostVictory::
 
 DewfordTown_Gym_EventScript_LeftGymStatue::
 	lockall
-	goto_if_set FLAG_BADGE02_GET, DewfordTown_Gym_EventScript_GymStatueCertified
+	goto_if_set FLAG_BADGE18_GET, DewfordTown_Gym_EventScript_GymStatueCertified
 	goto DewfordTown_Gym_EventScript_GymStatue
 	end
 
 DewfordTown_Gym_EventScript_RightGymStatue::
 	lockall
-	goto_if_set FLAG_BADGE02_GET, DewfordTown_Gym_EventScript_GymStatueCertified
+	goto_if_set FLAG_BADGE18_GET, DewfordTown_Gym_EventScript_GymStatueCertified
 	goto DewfordTown_Gym_EventScript_GymStatue
 	end
 

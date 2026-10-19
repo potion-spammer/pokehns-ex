@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "caps.h"
 #include "battle_anim.h"
 #include "challenge_menu.h"
 #include "battle_ai_main.h"
@@ -2001,6 +2002,11 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
 }
 
+#if IS_HNS
+// Set by CreateNPCTrainerParty while building a Hoenn trainer's team, so its levels follow the player's badges.
+static bool8 sScaleHoennTrainerLevels;
+#endif
+
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
     u32 personalityValue;
@@ -2064,7 +2070,12 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 #if RANDOMIZER_AVAILABLE == TRUE
                 species = RandomizeTrainerMon(trainer->trainerClass, i, monsCount, species);
                 #endif
-                CreateMon(&party[i], species, partyData[monIndex].lvl, personalityValue, otId);
+                u32 monLevel = partyData[monIndex].lvl;
+                #if IS_HNS
+                if (sScaleHoennTrainerLevels)
+                    monLevel = ScaleHoennLevel(monLevel);
+                #endif
+                CreateMon(&party[i], species, monLevel, personalityValue, otId);
             }
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
@@ -2181,6 +2192,9 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
     u8 retVal;
     if (trainerNum == TRAINER_SECRET_BASE)
         return 0;
+#if IS_HNS
+    sScaleHoennTrainerLevels = (trainerNum >= HNS_HOENN_TRAINER_ID_BASE && trainerNum < TRAINERS_COUNT);
+#endif
     if (GetTrainerStructFromId(trainerNum)->overrideTrainer)
     {
         struct Trainer tempTrainer;
@@ -2199,6 +2213,9 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
     {
         retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer, gBattleTypeFlags);
     }
+#if IS_HNS
+    sScaleHoennTrainerLevels = FALSE;
+#endif
     return retVal;
 }
 

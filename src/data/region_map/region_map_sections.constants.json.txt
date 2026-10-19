@@ -8,7 +8,7 @@
 
 enum {
 ## for map_section in map_sections
-{% if existsIn(map_section, "in_hns") %}{% else %}
+{% if existsIn(map_section, "in_hns") %}{% else if existsIn(map_section, "hoenn_in_hns") %}{% else %}
     {{ map_section.id }} = 0,
 {% endif %}
 ## endfor
@@ -17,6 +17,12 @@ enum {
 {% if loop.is_first %}
     {{ map_section.id }} = 1,
 {% else %}
+    {{ map_section.id }},
+{% endif %}
+## endfor
+
+## for map_section in map_sections
+{% if existsIn(map_section, "hoenn_in_hns") %}
     {{ map_section.id }},
 {% endif %}
 ## endfor

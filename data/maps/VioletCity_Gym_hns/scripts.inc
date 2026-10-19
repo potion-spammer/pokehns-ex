@@ -40,6 +40,8 @@ VioletCity_Gym_EventScript_Falkner::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 1
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_PIDGEOTITE
+	call Common_EventScript_GiveGymMegaStone
 	giveitem ITEM_TM_ROOST
 	msgbox VioletGym_Text_Falkner_TMExplain, MSGBOX_DEFAULT
 	setvar VAR_VIOLET_CITY_STATE, 3

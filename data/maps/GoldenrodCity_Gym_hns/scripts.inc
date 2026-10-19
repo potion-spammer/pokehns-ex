@@ -74,6 +74,8 @@ GoldenrodCity_Gym_EventScript_WhitneyBadge::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 3
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_KANGASKHANITE
+	call Common_EventScript_GiveGymMegaStone
 	giveitem ITEM_TM_ATTRACT
 	msgbox GoldenrodCity_Gym_Text_WhitneyAttract, MSGBOX_DEFAULT
 	setvar VAR_GOLDENROD_CITY_STATE, 5

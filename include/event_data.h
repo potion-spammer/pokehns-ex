@@ -4,6 +4,7 @@
 #include "constants/flags.h"
 
 void InitEventData(void);
+void ValidateHoennFlagBank(void);
 void ClearTempFieldEventData(void);
 void ClearDailyFlags(void);
 void DisableNationalPokedex(void);

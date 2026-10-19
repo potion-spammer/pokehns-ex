@@ -58,6 +58,8 @@ FuchsiaCity_Gym_EventScript_Janine::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 14
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_BEEDRILLITE
+	call Common_EventScript_GiveGymMegaStone
 	removeobject LOCALID_FUCHSIAGYM_ALICE_J
 	removeobject LOCALID_FUCHSIAGYM_CINDY_J
 	removeobject LOCALID_FUCHSIAGYM_LINDA_J

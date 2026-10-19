@@ -2,6 +2,7 @@
   "map_sections": [
     {
       "id": "MAPSEC_LITTLEROOT_TOWN",
+      "hoenn_in_hns": true,
       "name": "LITTLEROOT TOWN",
       "x": 4,
       "y": 11,
@@ -10,6 +11,7 @@
     },
     {
       "id": "MAPSEC_OLDALE_TOWN",
+      "hoenn_in_hns": true,
       "name": "OLDALE TOWN",
       "x": 4,
       "y": 9,
@@ -18,6 +20,7 @@
     },
     {
       "id": "MAPSEC_DEWFORD_TOWN",
+      "hoenn_in_hns": true,
       "name": "DEWFORD TOWN",
       "x": 2,
       "y": 14,
@@ -26,6 +29,7 @@
     },
     {
       "id": "MAPSEC_LAVARIDGE_TOWN",
+      "hoenn_in_hns": true,
       "name": "LAVARIDGE TOWN",
       "x": 5,
       "y": 3,
@@ -34,6 +38,7 @@
     },
     {
       "id": "MAPSEC_FALLARBOR_TOWN",
+      "hoenn_in_hns": true,
       "name": "FALLARBOR TOWN",
       "x": 3,
       "y": 0,
@@ -42,6 +47,7 @@
     },
     {
       "id": "MAPSEC_VERDANTURF_TOWN",
+      "hoenn_in_hns": true,
       "name": "VERDANTURF TOWN",
       "x": 4,
       "y": 6,
@@ -50,6 +56,7 @@
     },
     {
       "id": "MAPSEC_PACIFIDLOG_TOWN",
+      "hoenn_in_hns": true,
       "name": "PACIFIDLOG TOWN",
       "x": 17,
       "y": 10,
@@ -58,6 +65,7 @@
     },
     {
       "id": "MAPSEC_PETALBURG_CITY",
+      "hoenn_in_hns": true,
       "name": "PETALBURG CITY",
       "x": 1,
       "y": 9,
@@ -66,6 +74,7 @@
     },
     {
       "id": "MAPSEC_SLATEPORT_CITY",
+      "hoenn_in_hns": true,
       "name": "SLATEPORT CITY",
       "x": 8,
       "y": 10,
@@ -74,6 +83,7 @@
     },
     {
       "id": "MAPSEC_MAUVILLE_CITY",
+      "hoenn_in_hns": true,
       "name": "MAUVILLE CITY",
       "x": 8,
       "y": 6,
@@ -82,6 +92,7 @@
     },
     {
       "id": "MAPSEC_RUSTBORO_CITY",
+      "hoenn_in_hns": true,
       "name": "RUSTBORO CITY",
       "x": 0,
       "y": 5,
@@ -90,6 +101,7 @@
     },
     {
       "id": "MAPSEC_FORTREE_CITY",
+      "hoenn_in_hns": true,
       "name": "FORTREE CITY",
       "x": 12,
       "y": 0,
@@ -107,6 +119,7 @@
     },
     {
       "id": "MAPSEC_MOSSDEEP_CITY",
+      "hoenn_in_hns": true,
       "name": "MOSSDEEP CITY",
       "x": 24,
       "y": 5,
@@ -115,6 +128,7 @@
     },
     {
       "id": "MAPSEC_SOOTOPOLIS_CITY",
+      "hoenn_in_hns": true,
       "name": "SOOTOPOLIS CITY",
       "x": 21,
       "y": 7,
@@ -123,6 +137,7 @@
     },
     {
       "id": "MAPSEC_EVER_GRANDE_CITY",
+      "hoenn_in_hns": true,
       "name": "EVER GRANDE CITY",
       "x": 27,
       "y": 8,
@@ -131,6 +146,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_101",
+      "hoenn_in_hns": true,
       "name": "ROUTE 101",
       "x": 4,
       "y": 10,
@@ -139,6 +155,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_102",
+      "hoenn_in_hns": true,
       "name": "ROUTE 102",
       "x": 2,
       "y": 9,
@@ -147,6 +164,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_103",
+      "hoenn_in_hns": true,
       "name": "ROUTE 103",
       "x": 4,
       "y": 8,
@@ -155,6 +173,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_104",
+      "hoenn_in_hns": true,
       "name": "ROUTE 104",
       "x": 0,
       "y": 7,
@@ -163,6 +182,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_105",
+      "hoenn_in_hns": true,
       "name": "ROUTE 105",
       "x": 0,
       "y": 10,
@@ -171,6 +191,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_106",
+      "hoenn_in_hns": true,
       "name": "ROUTE 106",
       "x": 0,
       "y": 13,
@@ -179,6 +200,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_107",
+      "hoenn_in_hns": true,
       "name": "ROUTE 107",
       "x": 3,
       "y": 14,
@@ -187,6 +209,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_108",
+      "hoenn_in_hns": true,
       "name": "ROUTE 108",
       "x": 6,
       "y": 14,
@@ -195,6 +218,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_109",
+      "hoenn_in_hns": true,
       "name": "ROUTE 109",
       "x": 8,
       "y": 12,
@@ -203,6 +227,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_110",
+      "hoenn_in_hns": true,
       "name": "ROUTE 110",
       "x": 8,
       "y": 7,
@@ -211,6 +236,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_111",
+      "hoenn_in_hns": true,
       "name": "ROUTE 111",
       "x": 8,
       "y": 0,
@@ -219,6 +245,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_112",
+      "hoenn_in_hns": true,
       "name": "ROUTE 112",
       "x": 6,
       "y": 3,
@@ -227,6 +254,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_113",
+      "hoenn_in_hns": true,
       "name": "ROUTE 113",
       "x": 4,
       "y": 0,
@@ -235,6 +263,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_114",
+      "hoenn_in_hns": true,
       "name": "ROUTE 114",
       "x": 1,
       "y": 0,
@@ -243,6 +272,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_115",
+      "hoenn_in_hns": true,
       "name": "ROUTE 115",
       "x": 0,
       "y": 2,
@@ -251,6 +281,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_116",
+      "hoenn_in_hns": true,
       "name": "ROUTE 116",
       "x": 1,
       "y": 5,
@@ -259,6 +290,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_117",
+      "hoenn_in_hns": true,
       "name": "ROUTE 117",
       "x": 5,
       "y": 6,
@@ -267,6 +299,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_118",
+      "hoenn_in_hns": true,
       "name": "ROUTE 118",
       "x": 10,
       "y": 6,
@@ -275,6 +308,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_119",
+      "hoenn_in_hns": true,
       "name": "ROUTE 119",
       "x": 11,
       "y": 0,
@@ -283,6 +317,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_120",
+      "hoenn_in_hns": true,
       "name": "ROUTE 120",
       "x": 13,
       "y": 0,
@@ -291,6 +326,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_121",
+      "hoenn_in_hns": true,
       "name": "ROUTE 121",
       "x": 14,
       "y": 3,
@@ -299,6 +335,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_122",
+      "hoenn_in_hns": true,
       "name": "ROUTE 122",
       "x": 16,
       "y": 4,
@@ -307,6 +344,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_123",
+      "hoenn_in_hns": true,
       "name": "ROUTE 123",
       "x": 12,
       "y": 6,
@@ -315,6 +353,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_124",
+      "hoenn_in_hns": true,
       "name": "ROUTE 124",
       "x": 20,
       "y": 3,
@@ -323,6 +362,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_125",
+      "hoenn_in_hns": true,
       "name": "ROUTE 125",
       "x": 24,
       "y": 3,
@@ -331,6 +371,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_126",
+      "hoenn_in_hns": true,
       "name": "ROUTE 126",
       "x": 20,
       "y": 6,
@@ -339,6 +380,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_127",
+      "hoenn_in_hns": true,
       "name": "ROUTE 127",
       "x": 23,
       "y": 6,
@@ -347,6 +389,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_128",
+      "hoenn_in_hns": true,
       "name": "ROUTE 128",
       "x": 23,
       "y": 9,
@@ -355,6 +398,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_129",
+      "hoenn_in_hns": true,
       "name": "ROUTE 129",
       "x": 24,
       "y": 10,
@@ -363,6 +407,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_130",
+      "hoenn_in_hns": true,
       "name": "ROUTE 130",
       "x": 21,
       "y": 10,
@@ -371,6 +416,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_131",
+      "hoenn_in_hns": true,
       "name": "ROUTE 131",
       "x": 18,
       "y": 10,
@@ -379,6 +425,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_132",
+      "hoenn_in_hns": true,
       "name": "ROUTE 132",
       "x": 15,
       "y": 10,
@@ -387,6 +434,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_133",
+      "hoenn_in_hns": true,
       "name": "ROUTE 133",
       "x": 12,
       "y": 10,
@@ -395,6 +443,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_134",
+      "hoenn_in_hns": true,
       "name": "ROUTE 134",
       "x": 9,
       "y": 10,
@@ -403,6 +452,7 @@
     },
     {
       "id": "MAPSEC_UNDERWATER_124",
+      "hoenn_in_hns": true,
       "name": "UNDERWATER",
       "x": 20,
       "y": 3,
@@ -411,6 +461,7 @@
     },
     {
       "id": "MAPSEC_UNDERWATER_126",
+      "hoenn_in_hns": true,
       "name": "UNDERWATER",
       "x": 20,
       "y": 6,
@@ -419,6 +470,7 @@
     },
     {
       "id": "MAPSEC_UNDERWATER_127",
+      "hoenn_in_hns": true,
       "name": "UNDERWATER",
       "x": 23,
       "y": 6,
@@ -427,6 +479,7 @@
     },
     {
       "id": "MAPSEC_UNDERWATER_128",
+      "hoenn_in_hns": true,
       "name": "UNDERWATER",
       "x": 23,
       "y": 9,
@@ -435,6 +488,7 @@
     },
     {
       "id": "MAPSEC_UNDERWATER_SOOTOPOLIS",
+      "hoenn_in_hns": true,
       "name": "UNDERWATER",
       "x": 21,
       "y": 7,
@@ -443,6 +497,7 @@
     },
     {
       "id": "MAPSEC_GRANITE_CAVE",
+      "hoenn_in_hns": true,
       "name": "GRANITE CAVE",
       "x": 1,
       "y": 13,
@@ -451,6 +506,7 @@
     },
     {
       "id": "MAPSEC_MT_CHIMNEY",
+      "hoenn_in_hns": true,
       "name": "MT. CHIMNEY",
       "x": 6,
       "y": 2,
@@ -477,6 +533,7 @@
     },
     {
       "id": "MAPSEC_PETALBURG_WOODS",
+      "hoenn_in_hns": true,
       "name": "PETALBURG WOODS",
       "x": 0,
       "y": 8,
@@ -485,6 +542,7 @@
     },
     {
       "id": "MAPSEC_RUSTURF_TUNNEL",
+      "hoenn_in_hns": true,
       "name": "RUSTURF TUNNEL",
       "x": 2,
       "y": 5,
@@ -502,6 +560,7 @@
     },
     {
       "id": "MAPSEC_NEW_MAUVILLE",
+      "hoenn_in_hns": true,
       "name": "NEW MAUVILLE",
       "x": 8,
       "y": 7,
@@ -510,6 +569,7 @@
     },
     {
       "id": "MAPSEC_METEOR_FALLS",
+      "hoenn_in_hns": true,
       "name": "METEOR FALLS",
       "x": 0,
       "y": 3,
@@ -518,6 +578,7 @@
     },
     {
       "id": "MAPSEC_METEOR_FALLS2",
+      "hoenn_in_hns": true,
       "name": "METEOR FALLS",
       "x": 1,
       "y": 2,
@@ -526,6 +587,7 @@
     },
     {
       "id": "MAPSEC_MT_PYRE",
+      "hoenn_in_hns": true,
       "name": "MT. PYRE",
       "x": 16,
       "y": 4,
@@ -534,6 +596,7 @@
     },
     {
       "id": "MAPSEC_AQUA_HIDEOUT_OLD",
+      "hoenn_in_hns": true,
       "name": "{AQUA} HIDEOUT",
       "x": 19,
       "y": 3,
@@ -542,6 +605,7 @@
     },
     {
       "id": "MAPSEC_SHOAL_CAVE",
+      "hoenn_in_hns": true,
       "name": "SHOAL CAVE",
       "x": 24,
       "y": 4,
@@ -550,6 +614,7 @@
     },
     {
       "id": "MAPSEC_SEAFLOOR_CAVERN",
+      "hoenn_in_hns": true,
       "name": "SEAFLOOR CAVERN",
       "x": 24,
       "y": 9,
@@ -558,6 +623,7 @@
     },
     {
       "id": "MAPSEC_UNDERWATER_SEAFLOOR_CAVERN",
+      "hoenn_in_hns": true,
       "name": "UNDERWATER",
       "x": 24,
       "y": 9,
@@ -575,6 +641,7 @@
     },
     {
       "id": "MAPSEC_MIRAGE_ISLAND",
+      "hoenn_in_hns": true,
       "name": "MIRAGE ISLAND",
       "x": 17,
       "y": 10,
@@ -583,6 +650,7 @@
     },
     {
       "id": "MAPSEC_CAVE_OF_ORIGIN",
+      "hoenn_in_hns": true,
       "name": "CAVE OF ORIGIN",
       "x": 21,
       "y": 7,
@@ -600,6 +668,7 @@
     },
     {
       "id": "MAPSEC_FIERY_PATH",
+      "hoenn_in_hns": true,
       "name": "FIERY PATH",
       "x": 6,
       "y": 3,
@@ -608,6 +677,7 @@
     },
     {
       "id": "MAPSEC_FIERY_PATH2",
+      "hoenn_in_hns": true,
       "name": "FIERY PATH",
       "x": 7,
       "y": 3,
@@ -616,6 +686,7 @@
     },
     {
       "id": "MAPSEC_JAGGED_PASS",
+      "hoenn_in_hns": true,
       "name": "JAGGED PASS",
       "x": 6,
       "y": 3,
@@ -624,6 +695,7 @@
     },
     {
       "id": "MAPSEC_JAGGED_PASS2",
+      "hoenn_in_hns": true,
       "name": "JAGGED PASS",
       "x": 7,
       "y": 2,
@@ -632,6 +704,7 @@
     },
     {
       "id": "MAPSEC_SEALED_CHAMBER",
+      "hoenn_in_hns": true,
       "name": "SEALED CHAMBER",
       "x": 11,
       "y": 10,
@@ -640,6 +713,7 @@
     },
     {
       "id": "MAPSEC_UNDERWATER_SEALED_CHAMBER",
+      "hoenn_in_hns": true,
       "name": "UNDERWATER",
       "x": 11,
       "y": 10,
@@ -648,6 +722,7 @@
     },
     {
       "id": "MAPSEC_SCORCHED_SLAB",
+      "hoenn_in_hns": true,
       "name": "SCORCHED SLAB",
       "x": 13,
       "y": 0,
@@ -656,6 +731,7 @@
     },
     {
       "id": "MAPSEC_ISLAND_CAVE",
+      "hoenn_in_hns": true,
       "name": "ISLAND CAVE",
       "x": 0,
       "y": 10,
@@ -664,6 +740,7 @@
     },
     {
       "id": "MAPSEC_DESERT_RUINS",
+      "hoenn_in_hns": true,
       "name": "DESERT RUINS",
       "x": 8,
       "y": 3,
@@ -672,6 +749,7 @@
     },
     {
       "id": "MAPSEC_ANCIENT_TOMB",
+      "hoenn_in_hns": true,
       "name": "ANCIENT TOMB",
       "x": 13,
       "y": 2,
@@ -680,10 +758,12 @@
     },
     {
       "id": "MAPSEC_INSIDE_OF_TRUCK",
+      "hoenn_in_hns": true,
       "name": "INSIDE OF TRUCK"
     },
     {
       "id": "MAPSEC_SKY_PILLAR",
+      "hoenn_in_hns": true,
       "name": "SKY PILLAR",
       "x": 19,
       "y": 10,
@@ -692,10 +772,12 @@
     },
     {
       "id": "MAPSEC_SECRET_BASE",
+      "hoenn_in_hns": true,
       "name": "SECRET BASE"
     },
     {
-      "id": "MAPSEC_DYNAMIC"
+      "id": "MAPSEC_DYNAMIC",
+      "hoenn_in_hns": true
     },
     {
       "id": "MAPSEC_PALLET_TOWN",

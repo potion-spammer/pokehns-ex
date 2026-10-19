@@ -1,4 +1,5 @@
 #include "global.h"
+#include "caps.h"
 #include "battle_setup.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -384,6 +385,92 @@ static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIn
     }
 }
 
+#if IS_HNS
+// Hoenn "route bosses". Wild Pokemon in Hoenn keep Emerald's low levels, but now and then (1 in 32
+// encounters, once the player has at least 3 badges in total) the wild Pokemon is replaced by the fully
+// evolved form of whatever it would have been, at a level that follows the player's badges.
+#define HOENN_ROUTE_BOSS_ODDS       32
+#define HOENN_ROUTE_BOSS_MIN_BADGES 3
+
+static bool32 IsRouteBossEvolution(const struct Evolution *evo)
+{
+    u32 i;
+
+    if (evo->method == EVO_NONE || evo->method == EVO_SPLIT_FROM_EVO)
+        return FALSE;
+    if (!IsSpeciesEnabled(evo->targetSpecies))
+        return FALSE;
+    // Skip region-locked branches (e.g. Alolan forms) so a Hoenn route never produces a foreign form.
+    if (evo->params != NULL)
+    {
+        for (i = 0; evo->params[i].condition != CONDITIONS_END; i++)
+        {
+            if (evo->params[i].condition == IF_REGION)
+                return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+static void TryMakeHoennRouteBoss(u16 *species, u8 *level)
+{
+    u32 step;
+    u32 bossLevel;
+    u16 current;
+
+    if (!IsInHoennMap() || GetHoennTotalBadges() < HOENN_ROUTE_BOSS_MIN_BADGES)
+        return;
+    if (Random() % HOENN_ROUTE_BOSS_ODDS != 0)
+        return;
+
+    bossLevel = ScaleHoennLevel(*level) + 4;
+    current = *species;
+
+    // Walk up the evolution line (at most 3 steps), picking at random where it branches.
+    for (step = 0; step < 3; step++)
+    {
+        const struct Evolution *evos = GetSpeciesEvolutions(current);
+        u32 count = 0, pick, i;
+        u16 next = SPECIES_NONE;
+        u32 nextLevelReq = 0;
+
+        for (i = 0; evos[i].method != EVOLUTIONS_END; i++)
+        {
+            if (IsRouteBossEvolution(&evos[i]))
+                count++;
+        }
+        if (count == 0)
+            break;
+
+        pick = Random() % count;
+        for (i = 0; evos[i].method != EVOLUTIONS_END; i++)
+        {
+            if (!IsRouteBossEvolution(&evos[i]))
+                continue;
+            if (pick == 0)
+            {
+                next = evos[i].targetSpecies;
+                if (evos[i].method == EVO_LEVEL || evos[i].method == EVO_LEVEL_BATTLE_ONLY)
+                    nextLevelReq = evos[i].param;
+                break;
+            }
+            pick--;
+        }
+        if (next == SPECIES_NONE)
+            break;
+
+        current = next;
+        if (bossLevel < nextLevelReq)
+            bossLevel = nextLevelReq; // it must be at least old enough to have evolved
+    }
+
+    if (bossLevel > MAX_LEVEL)
+        bossLevel = MAX_LEVEL;
+    *species = current;
+    *level = bossLevel;
+}
+#endif // IS_HNS
+
 u16 GetCurrentMapWildMonHeaderId(void)
 {
     u16 i;
@@ -664,6 +751,9 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
         #if RANDOMIZER_AVAILABLE == TRUE
         species = RandomizeWildEncounter(species, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, area, wildMonIndex);
         #endif
+        #if IS_HNS
+        TryMakeHoennRouteBoss(&species, &level);
+        #endif
         CreateWildMon(species, level);
     }
     return TRUE;
@@ -679,6 +769,9 @@ static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 
     wildMonSpecies = RandomizeWildEncounter(wildMonSpecies, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, WILD_AREA_FISHING, wildMonIndex);
     #endif
 
+    #if IS_HNS
+    TryMakeHoennRouteBoss(&wildMonSpecies, &level);
+    #endif
     UpdateChainFishingStreak();
     CreateWildMon(wildMonSpecies, level);
     return wildMonSpecies;

@@ -56,7 +56,15 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* firstId, u32*
 static bool32 IsSlideInitalizedOrPlayed(enum BattlerId battler, enum TrainerSlideType slideId);
 
 // Partner trainers must be added as TRAINER_PARTNER(PARTNER_XXXX)
-static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_COUNT)][TRAINER_SLIDE_COUNT] =
+// Heart & Soul defines no trainer slides, and its trainer ids (Hoenn included) run past 1500, so a table
+// indexed by trainer id would cost ~250 KB of ROM for nothing. It is kept at one entry and lookups past
+// the end return NULL. If slides are ever added for HNS trainers, raise this to TRAINER_PARTNER(PARTNER_COUNT).
+#if IS_HNS
+#define TRAINER_SLIDE_TABLE_SIZE 1
+#else
+#define TRAINER_SLIDE_TABLE_SIZE TRAINER_PARTNER(PARTNER_COUNT)
+#endif
+static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINER_SLIDE_TABLE_SIZE][TRAINER_SLIDE_COUNT] =
 {
     [DIFFICULTY_NORMAL] =
     {
@@ -74,7 +82,7 @@ static const u8* const sFrontierTrainerSlides[DIFFICULTY_COUNT][FRONTIER_TRAINER
 #define TRAINER_LEAF_TEST   2
 #define PARTNER_STEVEN_TEST 1
 
-static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][MAX_TRAINERS_COUNT_EMERALD + PARTNER_COUNT][TRAINER_SLIDE_COUNT] =
+static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_COUNT)][TRAINER_SLIDE_COUNT] =
 {
 #include "../test/battle/trainer_slides.h"
 };
@@ -143,6 +151,8 @@ static const u8* const *GetTrainerSlideArray(enum DifficultyLevel difficulty, u3
 #else
     if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
         return sFrontierTrainerSlides[difficulty][trainerId];
+    else if (trainerId >= TRAINER_SLIDE_TABLE_SIZE)
+        return NULL;
     else
         return sTrainerSlides[difficulty][trainerId];
 #endif // TESTING

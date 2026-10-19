@@ -84,6 +84,13 @@ static EWRAM_DATA struct {
 
 static bool32 sDrawFlyDestTextWindow;
 
+#if IS_HNS
+// Set by the Fly region picker: TRUE while the Fly map shows Hoenn instead of Johto/Kanto.
+static bool8 sFlyHoennSelected;
+// Set when the player's current location isn't part of the map being shown (no player icon is drawn).
+static bool8 sPlayerOutsideShownRegion;
+#endif
+
 static u8 ProcessRegionMapInput_Full(void);
 static u8 MoveRegionMapCursor_Full(void);
 static u8 ProcessRegionMapInput_Zoomed(void);
@@ -150,6 +157,9 @@ static const u8 sRegionMapPlayerIcon_KrisGfx[] = INCBIN_U8("graphics/pokenav/reg
 #include "data/region_map/region_map_layout_jk.h"
 #endif
 #include "data/region_map/region_map_entries.h"
+#if IS_HNS
+#include "data/region_map/region_map_entries_hoenn.h"
+#endif
 
 #if IS_HNS
 // Johto-only map coordinates (before FLAG_VISITED_KANTO is set).
@@ -281,6 +291,8 @@ const struct RegionMapLocation *GetActiveRegionMapEntries(void)
 {
 #if IS_HNS
     const struct RegionMapLocation *entries;
+    if (sFlyHoennSelected)
+        return sRegionMapEntries_Hoenn;
     if (FlagGet(FLAG_VISITED_KANTO))
         entries = sRegionMapEntries_Johto;
     else
@@ -1490,6 +1502,8 @@ void PokedexAreaScreen_UpdateRegionMapVariablesAndVideoRegs(s16 x, s16 y)
 enum RegionMapType GetRegionMapType(u32 mapSecId)
 {
 #if IS_HNS
+    if (sFlyHoennSelected)
+        return REGION_MAP_HOENN;
     if (FlagGet(FLAG_VISITED_KANTO))
         return REGION_MAP_JK;
     return REGION_MAP_JOHTO;
@@ -1526,6 +1540,8 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
     x -= MAPCURSOR_X_MIN;
 
 #if IS_HNS
+    if (sFlyHoennSelected)
+        return sRegionMap_MapSectionLayout[y][x];
     if (FlagGet(FLAG_VISITED_KANTO))
         return sRegionMapSections_JK[y][x];
     return sRegionMapSections_Johto[y][x];
@@ -1552,6 +1568,24 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
 #endif
 }
 
+#if IS_HNS
+// TRUE if the given map section has a place on the region map currently being shown.
+static bool8 IsMapSecOnShownMap(u32 mapSecId)
+{
+    const struct RegionMapLocation *entries = GetActiveRegionMapEntries();
+    u32 count;
+
+    if (sFlyHoennSelected)
+        count = ARRAY_COUNT(sRegionMapEntries_Hoenn);
+    else if (FlagGet(FLAG_VISITED_KANTO))
+        count = ARRAY_COUNT(sRegionMapEntries_Johto);
+    else
+        count = ARRAY_COUNT(gRegionMapEntries);
+
+    return mapSecId < count && entries[mapSecId].width != 0 && entries[mapSecId].height != 0;
+}
+#endif
+
 static void InitMapBasedOnPlayerLocation(void)
 {
     const struct MapHeader *mapHeader;
@@ -1562,6 +1596,10 @@ static void InitMapBasedOnPlayerLocation(void)
     u16 dimensionScale;
     u16 xOnMap;
     struct WarpData *warp;
+
+#if IS_HNS
+    sPlayerOutsideShownRegion = FALSE;
+#endif
 
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SS_TIDAL_CORRIDOR)
         && (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SS_TIDAL_CORRIDOR)
@@ -1645,6 +1683,21 @@ static void InitMapBasedOnPlayerLocation(void)
         y = warp->y;
         break;
     }
+
+#if IS_HNS
+    // The player may be standing outside the region being shown (e.g. in Johto while viewing Hoenn):
+    // start the cursor on a sensible town instead and don't draw the player icon.
+    if (!IsMapSecOnShownMap(sRegionMap->mapSecId))
+    {
+        sRegionMap->mapSecId = sFlyHoennSelected ? MAPSEC_SLATEPORT_CITY : MAPSEC_OLIVINE_CITY;
+        sRegionMap->playerIsInCave = FALSE;
+        sPlayerOutsideShownRegion = TRUE;
+        mapWidth = 1;
+        mapHeight = 1;
+        x = 0;
+        y = 0;
+    }
+#endif
 
     xOnMap = x;
 
@@ -1767,7 +1820,6 @@ static u8 GetMapsecType(mapsec_u16_t mapSecId)
     {
     case MAPSEC_NONE:
         return MAPSECTYPE_NONE;
-#if !IS_HNS
     case MAPSEC_LITTLEROOT_TOWN:
         return FlagGet(FLAG_VISITED_LITTLEROOT_TOWN) ? MAPSECTYPE_CITY_CANFLY : MAPSECTYPE_CITY_CANTFLY;
     case MAPSEC_OLDALE_TOWN:
@@ -1798,7 +1850,6 @@ static u8 GetMapsecType(mapsec_u16_t mapSecId)
         return FlagGet(FLAG_VISITED_SOOTOPOLIS_CITY) ? MAPSECTYPE_CITY_CANFLY : MAPSECTYPE_CITY_CANTFLY;
     case MAPSEC_EVER_GRANDE_CITY:
         return FlagGet(FLAG_VISITED_EVER_GRANDE_CITY) ? MAPSECTYPE_CITY_CANFLY : MAPSECTYPE_CITY_CANTFLY;
-#endif
     case MAPSEC_BATTLE_FRONTIER:
         return FlagGet(FLAG_LANDMARK_BATTLE_FRONTIER) ? MAPSECTYPE_BATTLE_FRONTIER : MAPSECTYPE_NONE;
 #if IS_HNS
@@ -2168,6 +2219,11 @@ void CreateRegionMapPlayerIcon(u16 tileTag, u16 paletteTag)
         return;
     }
     #if IS_HNS
+    if (sPlayerOutsideShownRegion)
+    {
+        sRegionMap->playerIconSprite = NULL;
+        return;
+    }
     if (gSaveBlock2Ptr->playerGender == FEMALE)
     {
         sheet.data = sRegionMapPlayerIcon_KrisGfx;
@@ -2399,6 +2455,9 @@ void CB2_OpenFlyMap(void)
         sFlyMap = Alloc(sizeof(*sFlyMap));
         if (sFlyMap == NULL)
         {
+#if IS_HNS
+            sFlyHoennSelected = FALSE;
+#endif
             SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
         }
         else
@@ -3012,12 +3071,209 @@ static void CB_ExitFlyMap(void)
             {
                 SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
             }
+#if IS_HNS
+            sFlyHoennSelected = FALSE;
+#endif
             TRY_FREE_AND_SET_NULL(sFlyMap);
             FreeAllWindowBuffers();
         }
         break;
     }
 }
+
+#if IS_HNS
+// ---------------------------------------------------------------------------------------------
+// Fly region picker: shown before the Fly map once Hoenn has been reached, so the player can
+// choose between Johto/Kanto and Hoenn. Before Hoenn is reachable it opens the map directly.
+// ---------------------------------------------------------------------------------------------
+enum
+{
+    WIN_PICKER_TITLE,
+    WIN_PICKER_OPTIONS,
+};
+
+#define PICKER_FRAME_TILE_NUM 128
+#define PICKER_FRAME_PAL_NUM  13
+
+static const struct BgTemplate sFlyPickerBgTemplates[] =
+{
+    {
+        .bg = 0,
+        .charBaseIndex = 0,
+        .mapBaseIndex = 31,
+        .screenSize = 0,
+        .paletteMode = 0,
+        .priority = 0
+    },
+};
+
+static const struct WindowTemplate sFlyPickerWindowTemplates[] =
+{
+    [WIN_PICKER_TITLE] = {
+        .bg = 0,
+        .tilemapLeft = 4,
+        .tilemapTop = 3,
+        .width = 22,
+        .height = 2,
+        .paletteNum = 15,
+        .baseBlock = 0x01
+    },
+    [WIN_PICKER_OPTIONS] = {
+        .bg = 0,
+        .tilemapLeft = 7,
+        .tilemapTop = 8,
+        .width = 16,
+        .height = 4,
+        .paletteNum = 15,
+        .baseBlock = 0x2D
+    },
+    DUMMY_WIN_TEMPLATE
+};
+
+static const u8 sText_FlyRegionTitle[] = _("FLY TO WHICH REGION?");
+static const u8 sText_FlyRegionJohto[] = _("JOHTO");
+static const u8 sText_FlyRegionJohtoKanto[] = _("JOHTO & KANTO");
+static const u8 sText_FlyRegionHoenn[] = _("HOENN");
+
+static struct MenuAction sFlyRegionMenuActions[2];
+static u8 sFlyPickerState;
+static s8 sFlyPickerChoice;
+
+static void CB2_FlyRegionPicker(void);
+
+// Hoenn is selectable once the player has set foot in one of its harbor cities.
+static bool8 IsHoennFlyUnlocked(void)
+{
+    return FlagGet(FLAG_VISITED_SLATEPORT_CITY) || FlagGet(FLAG_VISITED_LILYCOVE_CITY);
+}
+
+// TRUE if the player is currently somewhere on the Hoenn map.
+static bool8 IsPlayerInHoenn(void)
+{
+    u32 mapSecId = gMapHeader.regionMapSectionId;
+
+    return mapSecId < ARRAY_COUNT(sRegionMapEntries_Hoenn) && sRegionMapEntries_Hoenn[mapSecId].width != 0;
+}
+
+void CB2_OpenFlyRegionPicker(void)
+{
+    switch (gMain.state)
+    {
+    case 0:
+        sFlyHoennSelected = FALSE;
+        if (!IsHoennFlyUnlocked())
+        {
+            // Nothing to choose between yet: open the Johto/Kanto Fly map as before.
+            SetMainCallback2(CB2_OpenFlyMap);
+            return;
+        }
+        SetVBlankCallback(NULL);
+        SetGpuReg(REG_OFFSET_DISPCNT, 0);
+        SetGpuReg(REG_OFFSET_BG0HOFS, 0);
+        SetGpuReg(REG_OFFSET_BG0VOFS, 0);
+        SetGpuReg(REG_OFFSET_BG1HOFS, 0);
+        SetGpuReg(REG_OFFSET_BG1VOFS, 0);
+        SetGpuReg(REG_OFFSET_BG2HOFS, 0);
+        SetGpuReg(REG_OFFSET_BG2VOFS, 0);
+        SetGpuReg(REG_OFFSET_BG3HOFS, 0);
+        SetGpuReg(REG_OFFSET_BG3VOFS, 0);
+        ResetPaletteFade();
+        ResetSpriteData();
+        FreeSpriteTileRanges();
+        FreeAllSpritePalettes();
+        gMain.state++;
+        break;
+    case 1:
+        ResetBgsAndClearDma3BusyFlags(0);
+        InitBgsFromTemplates(0, sFlyPickerBgTemplates, ARRAY_COUNT(sFlyPickerBgTemplates));
+        gMain.state++;
+        break;
+    case 2:
+        InitWindows(sFlyPickerWindowTemplates);
+        DeactivateAllTextPrinters();
+        LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+        LoadUserWindowBorderGfx(WIN_PICKER_TITLE, PICKER_FRAME_TILE_NUM, BG_PLTT_ID(PICKER_FRAME_PAL_NUM));
+        ClearScheduledBgCopiesToVram();
+        gMain.state++;
+        break;
+    case 3:
+        sFlyRegionMenuActions[0].text = FlagGet(FLAG_VISITED_KANTO) ? sText_FlyRegionJohtoKanto : sText_FlyRegionJohto;
+        sFlyRegionMenuActions[1].text = sText_FlyRegionHoenn;
+
+        DrawStdFrameWithCustomTileAndPalette(WIN_PICKER_TITLE, FALSE, PICKER_FRAME_TILE_NUM, PICKER_FRAME_PAL_NUM);
+        AddTextPrinterParameterized(WIN_PICKER_TITLE, FONT_NORMAL, sText_FlyRegionTitle, 0, 1, 0, NULL);
+        CopyWindowToVram(WIN_PICKER_TITLE, COPYWIN_FULL);
+
+        DrawStdFrameWithCustomTileAndPalette(WIN_PICKER_OPTIONS, FALSE, PICKER_FRAME_TILE_NUM, PICKER_FRAME_PAL_NUM);
+        PrintMenuTable(WIN_PICKER_OPTIONS, ARRAY_COUNT(sFlyRegionMenuActions), sFlyRegionMenuActions);
+        // Start on the region the player isn't currently in: that is where they are most likely headed.
+        InitMenuInUpperLeftCornerNormal(WIN_PICKER_OPTIONS, ARRAY_COUNT(sFlyRegionMenuActions), IsPlayerInHoenn() ? 0 : 1);
+        CopyWindowToVram(WIN_PICKER_OPTIONS, COPYWIN_FULL);
+        gMain.state++;
+        break;
+    case 4:
+        BlendPalettes(PALETTES_ALL, 16, 0);
+        SetVBlankCallback(VBlankCB_FlyMap);
+        gMain.state++;
+        break;
+    case 5:
+        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+        ShowBg(0);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+        sFlyPickerState = 0;
+        SetMainCallback2(CB2_FlyRegionPicker);
+        gMain.state++;
+        break;
+    }
+}
+
+static void CB2_FlyRegionPicker(void)
+{
+    s8 input;
+
+    switch (sFlyPickerState)
+    {
+    case 0: // fading in
+        if (!UpdatePaletteFade())
+            sFlyPickerState = 1;
+        break;
+    case 1: // waiting for a choice
+        input = Menu_ProcessInputNoWrap();
+        if (input != MENU_NOTHING_CHOSEN)
+        {
+            sFlyPickerChoice = (input == MENU_B_PRESSED) ? -1 : input;
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+            sFlyPickerState = 2;
+        }
+        break;
+    case 2: // fading out
+        if (!UpdatePaletteFade())
+        {
+            FreeAllWindowBuffers();
+            if (sFlyPickerChoice < 0)
+            {
+                // Cancelled: back to the party menu, like cancelling the Fly map itself.
+                SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
+            }
+            else
+            {
+                sFlyHoennSelected = (sFlyPickerChoice == 1);
+                gMain.state = 0;
+                SetMainCallback2(CB2_OpenFlyMap);
+            }
+        }
+        break;
+    }
+    AnimateSprites();
+    BuildOamBuffer();
+    DoScheduledBgTilemapCopiesToVram();
+}
+#else
+void CB2_OpenFlyRegionPicker(void)
+{
+    CB2_OpenFlyMap();
+}
+#endif // IS_HNS
 
 u32 FilterFlyDestination(struct RegionMap* regionMap)
 {
@@ -3031,12 +3287,10 @@ u32 FilterFlyDestination(struct RegionMap* regionMap)
 #else
         return HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST;
 #endif
-#if !IS_HNS
     case MAPSEC_LITTLEROOT_TOWN:
         return (gSaveBlock2Ptr->playerGender == MALE ? HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE : HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE);
     case MAPSEC_EVER_GRANDE_CITY:
         return (FlagGet(FLAG_LANDMARK_POKEMON_LEAGUE) && regionMap->posWithinMapSec == 0 ? HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE : HEAL_LOCATION_EVER_GRANDE_CITY);
-#endif
     default:
         if (sMapHealLocations[regionMap->mapSecId][2] != HEAL_LOCATION_NONE)
             return sMapHealLocations[regionMap->mapSecId][2];

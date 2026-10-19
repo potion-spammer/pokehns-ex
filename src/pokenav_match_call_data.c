@@ -204,6 +204,7 @@ static const match_call_text_data_t sNormanTextScripts[] = {
     { MatchCall_Text_Norman7, FLAG_SYS_GAME_CLEAR,              NO_FLAG_TO_SET },
     { MatchCall_Text_Norman8, FLAG_SYS_GAME_CLEAR,              NO_FLAG_TO_SET },
     { MatchCall_Text_Norman9, FLAG_SYS_GAME_CLEAR,              NO_FLAG_TO_SET },
+    { MatchCall_Text_Norman10, FLAG_ENABLE_MOM_MATCH_CALL,      NO_FLAG_TO_SET }, // partner registered: father-in-law call
     MATCH_CALL_TEXT_END
 };
 
@@ -213,8 +214,8 @@ static const struct MatchCallStructTrainer sNormanMatchCallHeader =
     .mapSec = MAPSEC_SAFARI_ZONE_GATE,
     .flag = FLAG_ENABLE_NORMAN_MATCH_CALL,
     .rematchTableIdx = REMATCH_NORMAN,
-    .desc = COMPOUND_STRING("RELIABLE ONE"),
-    .name = COMPOUND_STRING("DAD"),
+    .desc = COMPOUND_STRING("GYM LEADER"),
+    .name = COMPOUND_STRING("NORMAN"),
     .textData = sNormanTextScripts
 };
 
@@ -228,9 +229,12 @@ static const struct MatchCallBirch sProfBirchMatchCallHeader =
 };
 
 static const match_call_text_data_t sMomTextScripts[] = {
-    { MatchCall_Text_Mom3, ALWAYS_AVAILABLE,            NO_FLAG_TO_SET },
-    { MatchCall_Text_Mom3, FLAG_DEFEATED_CIANWOOD_GYM,  NO_FLAG_TO_SET },
-    { MatchCall_Text_Mom3, FLAG_SYS_GAME_CLEAR,         NO_FLAG_TO_SET },
+    { MatchCall_Text_MomHns1, ALWAYS_AVAILABLE,            NO_FLAG_TO_SET },
+    { MatchCall_Text_MomHns2, FLAG_DEFEATED_CIANWOOD_GYM,  NO_FLAG_TO_SET },
+    { MatchCall_Text_MomHns3, FLAG_SYS_GAME_CLEAR,         NO_FLAG_TO_SET },
+    { MatchCall_Text_MomHns4, FLAG_VISITED_SLATEPORT_CITY, NO_FLAG_TO_SET },
+    { MatchCall_Text_MomHns4, FLAG_VISITED_LILYCOVE_CITY,  NO_FLAG_TO_SET },
+    { MatchCall_Text_MomHns5, FLAG_BADGE17_GET,            NO_FLAG_TO_SET },
     MATCH_CALL_TEXT_END
 };
 
@@ -242,6 +246,26 @@ static const struct MatchCallStructNPC sMomMatchCallHeader =
     .desc = COMPOUND_STRING("CALM & KIND"),
     .name = COMPOUND_STRING("MOM"),
     .textData = sMomTextScripts
+};
+
+// The player's girlfriend/boyfriend in Littleroot Town. Registered by talking to them in the house
+// (FLAG_ENABLE_MOM_MATCH_CALL, a Hoenn bank flag in this fork).
+static const match_call_text_data_t sPartnerTextScripts[] = {
+    { MatchCall_Text_PartnerHns1, ALWAYS_AVAILABLE,       NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerHns2, FLAG_BADGE19_GET,       NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerHns3, FLAG_BADGE22_GET,       NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerHns4, FLAG_BADGE24_GET,       NO_FLAG_TO_SET },
+    MATCH_CALL_TEXT_END
+};
+
+static const struct MatchCallStructNPC sPartnerMatchCallHeader =
+{
+    .type = MC_TYPE_NPC,
+    .mapSec = MAPSEC_LITTLEROOT_TOWN,
+    .flag = FLAG_ENABLE_MOM_MATCH_CALL,
+    .desc = COMPOUND_STRING("WARM & LOVING"),
+    .name = COMPOUND_STRING("PARTNER"),
+    .textData = sPartnerTextScripts
 };
 
 static const match_call_text_data_t sBaobaTextScripts[] = {
@@ -616,6 +640,7 @@ static const match_call_t sMatchCallHeaders[] = {
     [MC_HEADER_NORMAN]     = {.leader = &sNormanMatchCallHeader},
     [MC_HEADER_MOM]        = {.npc    = &sMomMatchCallHeader},
     [MC_HEADER_BAOBA]      = {.npc    = &sBaobaMatchCallHeader},
+    [MC_HEADER_PARTNER]    = {.npc    = &sPartnerMatchCallHeader},
     [MC_HEADER_STEVEN]     = {.npc    = &sStevenMatchCallHeader},
     [MC_HEADER_SCOTT]      = {.npc    = &sScottMatchCallHeader},
     [MC_HEADER_ROXANNE]    = {.leader = &sRoxanneMatchCallHeader},
@@ -678,8 +703,8 @@ static const struct MatchCallStructTrainer sNormanMatchCallHeader =
     .mapSec = MAPSEC_PETALBURG_CITY,
     .flag = FLAG_ENABLE_NORMAN_MATCH_CALL,
     .rematchTableIdx = REMATCH_NORMAN,
-    .desc = COMPOUND_STRING("RELIABLE ONE"),
-    .name = COMPOUND_STRING("DAD"),
+    .desc = COMPOUND_STRING("GYM LEADER"),
+    .name = COMPOUND_STRING("NORMAN"),
     .textData = sNormanTextScripts
 };
 

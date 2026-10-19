@@ -2721,67 +2721,74 @@ MatchCall_Text_Scott7::
 	.string "the POKéNAV's service area…$"
 
 MatchCall_Text_Norman1::
-	.string "DAD: In RUSTBORO, there's a man\n"
+	.string "NORMAN: In RUSTBORO, there's a man\n"
 	.string "that goes by the odd name of\l"
 	.string "the CUTTER.\p"
 	.string "If you're in the area, you should\n"
 	.string "pay him a visit.$"
 
 MatchCall_Text_Norman2::
-	.string "DAD: Hm… Little by little, but also\n"
+	.string "NORMAN: Hm… Little by little, but also\n"
 	.string "very surely, you're getting\l"
 	.string "tougher, {PLAYER}.\p"
-	.string "The stronger you get, the farther\n"
-	.string "and higher you soar from Mother\l"
-	.string "and me…\p"
+	.string "A TRAINER who keeps improving makes\n"
+	.string "a GYM LEADER want to train harder, too.\p"
 	.string "This feeling is hard to explain.$"
 
 MatchCall_Text_Norman3::
-	.string "DAD: I see…\n"
+	.string "NORMAN: I see…\n"
 	.string "You've collected four GYM BADGES…\p"
 	.string "There's no avoiding it now.\n"
 	.string "We will battle like I promised.\p"
 	.string "Come anytime.\n"
-	.string "We'll all be waiting for you!$"
+	.string "I'll be waiting for you!$"
 
 MatchCall_Text_Norman4::
-	.string "DAD: {PLAYER}! You'd better go visit\n"
-	.string "Mother every so often.\p"
-	.string "I'm going to remain here and\n"
-	.string "redouble my training.\p"
+	.string "NORMAN: {PLAYER}! I'm going to remain\n"
+	.string "here and redouble my training.\p"
 	.string "The way of battling is deep\n"
 	.string "and unforgiving!$"
 
 MatchCall_Text_Norman5::
-	.string "DAD: Oh, hi, {PLAYER}!\p"
+	.string "NORMAN: Oh, hi, {PLAYER}!\p"
 	.string "What's that? MAGMA EMBLEM?\n"
 	.string "I don't know what that's about.\p"
 	.string "But with a name like that, it may\n"
 	.string "be somehow linked to a volcano!$"
 
 MatchCall_Text_Norman6::
-	.string "DAD: Hiyah! Haah! Dwah!\p"
+	.string "NORMAN: Hiyah! Haah! Dwah!\p"
 	.string "…Oh? {PLAYER}!\p"
 	.string "You caught me right in the middle\n"
 	.string "of a POKéMON training session!$"
 
 MatchCall_Text_Norman7::
-	.string "DAD: {PLAYER}!\p"
+	.string "NORMAN: {PLAYER}!\p"
 	.string "Who would've thought you'd become\n"
 	.string "the POKéMON LEAGUE CHAMPION…\p"
 	.string "Okay!\n"
 	.string "I won't be left behind!$"
 
 MatchCall_Text_Norman8::
-	.string "DAD: Hm? {PLAYER}?\n"
+	.string "NORMAN: Hm? {PLAYER}?\n"
 	.string "What good timing!\p"
 	.string "This time, I'm going to challenge\n"
 	.string "you to battle.\p"
 	.string "I'm waiting in the PETALBURG GYM.\n"
 	.string "Accept my challenge anytime!$"
 
+MatchCall_Text_Norman10::
+	.string "NORMAN: Hm? {PLAYER}?\p"
+	.string "My kid tells me you two are doing\n"
+	.string "well. Good.\p"
+	.string "Don't think that means you can\n"
+	.string "skip your training.\p"
+	.string "The next time you come by the GYM,\n"
+	.string "I'll be waiting.\p"
+	.string "Take care of my kid.$"
+
 MatchCall_Text_Norman9::
-	.string "DAD: …You amaze me, {PLAYER}.\n"
+	.string "NORMAN: …You amaze me, {PLAYER}.\n"
 	.string "How much higher will you soar?$"
 
 MatchCall_Text_Steven1::
@@ -2963,3 +2970,77 @@ MatchCall_Text_MrStone11::
 	.string "I didn't recognize you right off!\p"
 	.string "Hm! You must come visit us at DEVON\n"
 	.string "sometime!$"
+
+@ Heart & Soul / Hoenn: MOM (New Bark Town) and the player's PARTNER (Littleroot Town).
+MatchCall_Text_MomHns1::
+	.string "MOM: {PLAYER}, it's your mother.\p"
+	.string "The house is quiet without you, but I\n"
+	.string "would rather it be quiet and know you\l"
+	.string "are out there doing what you love.\p"
+	.string "Eat something warm, and call me\n"
+	.string "when you can.$"
+
+MatchCall_Text_MomHns2::
+	.string "MOM: {PLAYER}! I told everyone at the\n"
+	.string "market that my child is collecting\l"
+	.string "GYM BADGES.\p"
+	.string "They didn't believe me!\p"
+	.string "Make sure your POKéMON rest, too.\n"
+	.string "They get tired just like you do.$"
+
+MatchCall_Text_MomHns3::
+	.string "MOM: {PLAYER}…\p"
+	.string "A CHAMPION. I keep saying it out loud\n"
+	.string "to see if it feels real.\p"
+	.string "It seems like yesterday you were\n"
+	.string "learning to tie your shoes.\p"
+	.string "Take your time with what comes next.\n"
+	.string "The road will wait for you.$"
+
+MatchCall_Text_MomHns4::
+	.string "MOM: {PLAYER}, they tell me there is a\n"
+	.string "whole other region across the sea.\p"
+	.string "HOENN? That is quite a ferry ride!\p"
+	.string "Promise me you'll wear a jacket.\n"
+	.string "The sea air is colder than it looks.$"
+
+MatchCall_Text_MomHns5::
+	.string "MOM: Another BADGE, and this time from\n"
+	.string "HOENN?\p"
+	.string "I'm running out of shelf space for\n"
+	.string "all your trophies, dear.\p"
+	.string "Don't push yourself too hard.\n"
+	.string "Home is always here for you.$"
+
+MatchCall_Text_PartnerHns1::
+	.string "PARTNER: Hey, {PLAYER}. It's me.\p"
+	.string "I just wanted to hear your voice.\p"
+	.string "The house is quiet without you, but\n"
+	.string "I'm keeping your side of the couch\l"
+	.string "warm.\p"
+	.string "Call me whenever you like.$"
+
+MatchCall_Text_PartnerHns2::
+	.string "PARTNER: Three BADGES from HOENN\n"
+	.string "already? I knew you could do it.\p"
+	.string "Don't forget to eat something that\n"
+	.string "isn't from a vending machine.\p"
+	.string "I saved some dinner for you.\n"
+	.string "Hurry home!$"
+
+MatchCall_Text_PartnerHns3::
+	.string "PARTNER: Six BADGES…\p"
+	.string "I used to worry every time you left\n"
+	.string "on a long trip.\p"
+	.string "Now I mostly worry that you'll forget\n"
+	.string "to call.\p"
+	.string "I'm so proud of you.\n"
+	.string "Come home soon, okay?$"
+
+MatchCall_Text_PartnerHns4::
+	.string "PARTNER: You did it, didn't you?\n"
+	.string "All eight BADGES in HOENN.\p"
+	.string "I'm not surprised. I'm just really,\n"
+	.string "really happy.\p"
+	.string "Come home. Let's celebrate somewhere\n"
+	.string "quiet, just the two of us.$"

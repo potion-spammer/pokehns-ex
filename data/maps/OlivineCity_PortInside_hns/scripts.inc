@@ -313,3 +313,54 @@ OlivinePort_Text_CooltrainerF:
 OlivinePort_Text_SailorBeforeHOF:
     .string "We don't want you to fall into the\n"
     .string "sea, so you're not allowed in.$"
+
+@ Hoenn ferry (Olivine end). Opens once the lighthouse has its light back (Ampharos healed).
+@ The return trip is the sailor in SlateportCity_Harbor.
+OlivinePort_EventScript_HoennSailor::
+	lock
+	faceplayer
+	goto_if_unset FLAG_AMPHAROS_HEALED, OlivinePort_EventScript_HoennSailor_LighthouseDark
+	msgbox OlivinePort_Text_HoennSailor_AskSail, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_HoennSailor_Declined
+	msgbox OlivinePort_Text_HoennSailor_AllAboard, MSGBOX_DEFAULT
+	closemessage
+	playse SE_EXIT
+	fadescreen FADE_TO_BLACK
+	setflag FLAG_VISITED_SLATEPORT_CITY
+	warpsilent MAP_SLATEPORT_CITY_HARBOR, 8, 11
+	waitstate
+	release
+	end
+
+OlivinePort_EventScript_HoennSailor_LighthouseDark::
+	msgbox OlivinePort_Text_HoennSailor_LighthouseDark, MSGBOX_DEFAULT
+	release
+	end
+
+OlivinePort_EventScript_HoennSailor_Declined::
+	msgbox OlivinePort_Text_HoennSailor_Declined, MSGBOX_DEFAULT
+	release
+	end
+
+OlivinePort_Text_HoennSailor_LighthouseDark:
+	.string "I'd sail for HOENN in a heartbeat,\n"
+	.string "but the LIGHTHOUSE has gone dark.\p"
+	.string "No ship will cross the open sea\n"
+	.string "without its light.\p"
+	.string "Once the light is back on, come\n"
+	.string "find me.$"
+
+OlivinePort_Text_HoennSailor_AskSail:
+	.string "The LIGHTHOUSE is shining again!\p"
+	.string "The sea route to the HOENN region\n"
+	.string "is open. I can take you to\l"
+	.string "SLATEPORT CITY.\p"
+	.string "Do you want to set sail?$"
+
+OlivinePort_Text_HoennSailor_AllAboard:
+	.string "All aboard, then!\n"
+	.string "Next stop, SLATEPORT CITY!$"
+
+OlivinePort_Text_HoennSailor_Declined:
+	.string "No rush. The route will be here\n"
+	.string "whenever you're ready.$"

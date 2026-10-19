@@ -965,7 +965,9 @@ NewBarkTown_Lab_Text_ElmGiveTicket2:
 	.string "After all, you've traveled all\n"
 	.string "over with your POKéMON.\p"
 	.string "Give my regards to PROF.OAK in\n"
-	.string "KANTO!$"
+	.string "KANTO!\p"
+	.string "Oh, and your MOTHER was asking\n"
+	.string "about you. Stop by home first!$"
 
 NewBarkTown_Lab_Text_LabMonEgg:
 	.string "It's the POKéMON EGG being\n"
@@ -1036,3 +1038,310 @@ NewBarkTown_Lab_Text_Elm_CallMe:
 	.string "How's your POKéDEX coming along?\n"
 	.string "I'm busy now, but call me sometime\l"
 	.string "and I can check your progress!$"
+
+@ Lab assistant: re-issues any gym MEGA STONE whose badge has been earned but whose stone was missed
+@ (bag full, or the gym was beaten before stones existed). Only stones tied to earned badges are offered.
+NewBarkTown_Lab_EventScript_MegaAssistant::
+	lock
+	faceplayer
+	msgbox NewBarkTown_Lab_Text_MegaAssistantHello, MSGBOX_DEFAULT
+	setvar VAR_TEMP_4, 0
+	setvar VAR_TEMP_5, 0
+	call NewBarkTown_Lab_MegaAssistant_PIDGEOTITE
+	call NewBarkTown_Lab_MegaAssistant_SCIZORITE
+	call NewBarkTown_Lab_MegaAssistant_KANGASKHANITE
+	call NewBarkTown_Lab_MegaAssistant_GENGARITE
+	call NewBarkTown_Lab_MegaAssistant_LUCARIONITE
+	call NewBarkTown_Lab_MegaAssistant_STEELIXITE
+	call NewBarkTown_Lab_MegaAssistant_ABOMASITE
+	call NewBarkTown_Lab_MegaAssistant_AERODACTYLITE
+	call NewBarkTown_Lab_MegaAssistant_BLASTOISINITE
+	call NewBarkTown_Lab_MegaAssistant_AMPHAROSITE
+	call NewBarkTown_Lab_MegaAssistant_VENUSAURITE
+	call NewBarkTown_Lab_MegaAssistant_ALAKAZITE
+	call NewBarkTown_Lab_MegaAssistant_BEEDRILLITE
+	call NewBarkTown_Lab_MegaAssistant_CHARIZARDITE_Y
+	call NewBarkTown_Lab_MegaAssistant_GARCHOMPITE
+	call NewBarkTown_Lab_MegaAssistant_TYRANITARITE
+	call NewBarkTown_Lab_MegaAssistant_MEDICHAMITE
+	call NewBarkTown_Lab_MegaAssistant_MANECTITE
+	call NewBarkTown_Lab_MegaAssistant_CAMERUPTITE
+	call NewBarkTown_Lab_MegaAssistant_AUDINITE
+	call NewBarkTown_Lab_MegaAssistant_ALTARIANITE
+	call NewBarkTown_Lab_MegaAssistant_GARDEVOIRITE
+	call NewBarkTown_Lab_MegaAssistant_SWAMPERTITE
+	goto_if_eq VAR_TEMP_5, 1, NewBarkTown_Lab_MegaAssistant_BagFull
+	goto_if_ge VAR_TEMP_4, 1, NewBarkTown_Lab_MegaAssistant_Done
+	msgbox NewBarkTown_Lab_Text_MegaAssistantNothing, MSGBOX_DEFAULT
+	release
+	end
+
+NewBarkTown_Lab_MegaAssistant_Done::
+	msgbox NewBarkTown_Lab_Text_MegaAssistantDone, MSGBOX_DEFAULT
+	release
+	end
+
+NewBarkTown_Lab_MegaAssistant_BagFull::
+	msgbox NewBarkTown_Lab_Text_MegaAssistantBagFull, MSGBOX_DEFAULT
+	release
+	end
+
+NewBarkTown_Lab_MegaAssistant_Return::
+	return
+
+NewBarkTown_Lab_MegaAssistant_PIDGEOTITE::
+	goto_if_unset FLAG_BADGE01_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_PIDGEOTITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_PIDGEOTITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_PIDGEOTITE
+	giveitem ITEM_PIDGEOTITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_SCIZORITE::
+	goto_if_unset FLAG_BADGE02_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_SCIZORITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_SCIZORITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_SCIZORITE
+	giveitem ITEM_SCIZORITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_KANGASKHANITE::
+	goto_if_unset FLAG_BADGE03_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_KANGASKHANITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_KANGASKHANITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_KANGASKHANITE
+	giveitem ITEM_KANGASKHANITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_GENGARITE::
+	goto_if_unset FLAG_BADGE04_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_GENGARITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_GENGARITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_GENGARITE
+	giveitem ITEM_GENGARITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_LUCARIONITE::
+	goto_if_unset FLAG_BADGE05_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_LUCARIONITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_LUCARIONITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_LUCARIONITE
+	giveitem ITEM_LUCARIONITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_STEELIXITE::
+	goto_if_unset FLAG_BADGE06_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_STEELIXITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_STEELIXITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_STEELIXITE
+	giveitem ITEM_STEELIXITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_ABOMASITE::
+	goto_if_unset FLAG_BADGE07_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_ABOMASITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_ABOMASITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_ABOMASITE
+	giveitem ITEM_ABOMASITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_AERODACTYLITE::
+	goto_if_unset FLAG_BADGE09_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_AERODACTYLITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_AERODACTYLITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_AERODACTYLITE
+	giveitem ITEM_AERODACTYLITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_BLASTOISINITE::
+	goto_if_unset FLAG_BADGE10_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_BLASTOISINITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_BLASTOISINITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_BLASTOISINITE
+	giveitem ITEM_BLASTOISINITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_AMPHAROSITE::
+	goto_if_unset FLAG_BADGE11_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_AMPHAROSITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_AMPHAROSITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_AMPHAROSITE
+	giveitem ITEM_AMPHAROSITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_VENUSAURITE::
+	goto_if_unset FLAG_BADGE12_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_VENUSAURITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_VENUSAURITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_VENUSAURITE
+	giveitem ITEM_VENUSAURITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_ALAKAZITE::
+	goto_if_unset FLAG_BADGE13_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_ALAKAZITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_ALAKAZITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_ALAKAZITE
+	giveitem ITEM_ALAKAZITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_BEEDRILLITE::
+	goto_if_unset FLAG_BADGE14_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_BEEDRILLITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_BEEDRILLITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_BEEDRILLITE
+	giveitem ITEM_BEEDRILLITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_CHARIZARDITE_Y::
+	goto_if_unset FLAG_BADGE15_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_CHARIZARDITE_Y, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_CHARIZARDITE_Y
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_CHARIZARDITE_Y
+	giveitem ITEM_CHARIZARDITE_Y
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_GARCHOMPITE::
+	goto_if_unset FLAG_BADGE16_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_GARCHOMPITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_GARCHOMPITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_GARCHOMPITE
+	giveitem ITEM_GARCHOMPITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_TYRANITARITE::
+	goto_if_unset FLAG_BADGE17_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_TYRANITARITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_TYRANITARITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_TYRANITARITE
+	giveitem ITEM_TYRANITARITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_MEDICHAMITE::
+	goto_if_unset FLAG_BADGE18_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_MEDICHAMITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_MEDICHAMITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_MEDICHAMITE
+	giveitem ITEM_MEDICHAMITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_MANECTITE::
+	goto_if_unset FLAG_BADGE19_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_MANECTITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_MANECTITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_MANECTITE
+	giveitem ITEM_MANECTITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_CAMERUPTITE::
+	goto_if_unset FLAG_BADGE20_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_CAMERUPTITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_CAMERUPTITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_CAMERUPTITE
+	giveitem ITEM_CAMERUPTITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_AUDINITE::
+	goto_if_unset FLAG_BADGE21_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_AUDINITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_AUDINITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_AUDINITE
+	giveitem ITEM_AUDINITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_ALTARIANITE::
+	goto_if_unset FLAG_BADGE22_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_ALTARIANITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_ALTARIANITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_ALTARIANITE
+	giveitem ITEM_ALTARIANITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_GARDEVOIRITE::
+	goto_if_unset FLAG_BADGE23_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_GARDEVOIRITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_GARDEVOIRITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_GARDEVOIRITE
+	giveitem ITEM_GARDEVOIRITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_SWAMPERTITE::
+	goto_if_unset FLAG_BADGE24_GET, NewBarkTown_Lab_MegaAssistant_Return
+	goto_if_set FLAG_MEGA_STONE_SWAMPERTITE, NewBarkTown_Lab_MegaAssistant_Return
+	checkitemspace ITEM_SWAMPERTITE
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_MegaAssistant_NoRoomFor
+	setflag FLAG_MEGA_STONE_SWAMPERTITE
+	giveitem ITEM_SWAMPERTITE
+	addvar VAR_TEMP_4, 1
+	return
+
+NewBarkTown_Lab_MegaAssistant_NoRoomFor::
+	setvar VAR_TEMP_5, 1
+	return
+
+NewBarkTown_Lab_Text_MegaAssistantHello:
+	.string "Hello, {PLAYER}!\p"
+	.string "GYM LEADERS entrust MEGA STONES\n"
+	.string "to this LAB, and I keep a record\l"
+	.string "of every BADGE you've earned.\p"
+	.string "Let me see what I owe you…$"
+
+NewBarkTown_Lab_Text_MegaAssistantDone:
+	.string "That's every stone your BADGES\n"
+	.string "have unlocked so far.\p"
+	.string "Earn more BADGES and come see me\n"
+	.string "again!$"
+
+NewBarkTown_Lab_Text_MegaAssistantNothing:
+	.string "You've already collected every\n"
+	.string "stone your BADGES have unlocked.\p"
+	.string "Earn more BADGES and come see me!$"
+
+NewBarkTown_Lab_Text_MegaAssistantBagFull:
+	.string "Your BAG is too full for the\n"
+	.string "rest.\p"
+	.string "Make some room and come back!$"

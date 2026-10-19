@@ -537,6 +537,8 @@ AzaleaTown_Gym_EventScript_Bugsy::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 2
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_SCIZORITE
+	call Common_EventScript_GiveGymMegaStone
 	giveitem ITEM_TM_U_TURN
 	msgbox AzaleaTown_Gym_Text_FuryCutterSpeech, MSGBOX_DEFAULT
 	setvar VAR_AZALEA_TOWN_STATE, 5

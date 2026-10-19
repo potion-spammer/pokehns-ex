@@ -68,7 +68,7 @@ Route119_EventScript_PlayBrendanMusic::
 	return
 
 Route119_EventScript_BattleMay::
-	msgbox Route119_Text_MayIntro, MSGBOX_DEFAULT
+	call Route119_EventScript_MayIntroText
 	switch VAR_STARTER_MON
 	case 0, Route119_EventScript_BattleMayTreecko
 	case 1, Route119_EventScript_BattleMayTorchic
@@ -98,7 +98,7 @@ Route119_EventScript_DefeatedMay::
 	end
 
 Route119_EventScript_BattleBrendan::
-	msgbox Route119_Text_BrendanIntro, MSGBOX_DEFAULT
+	call Route119_EventScript_BrendanIntroText
 	switch VAR_STARTER_MON
 	case 0, Route119_EventScript_BattleBrendanTreecko
 	case 1, Route119_EventScript_BattleBrendanTorchic
@@ -475,6 +475,31 @@ Route119_EventScript_ScottWonAtFortreeGymCall::
 	releaseall
 	end
 
+Route119_EventScript_MayIntroText::
+	goto_if_set FLAG_ENABLE_MOM_MATCH_CALL, Route119_EventScript_MayIntroTextEx
+	msgbox Route119_Text_MayIntro, MSGBOX_DEFAULT
+	return
+
+Route119_EventScript_MayIntroTextEx::
+	msgbox Route119_Text_MayIntroEx, MSGBOX_DEFAULT
+	return
+
+Route119_EventScript_BrendanIntroText::
+	goto_if_set FLAG_ENABLE_MOM_MATCH_CALL, Route119_EventScript_BrendanIntroTextEx
+	msgbox Route119_Text_BrendanIntro, MSGBOX_DEFAULT
+	return
+
+Route119_EventScript_BrendanIntroTextEx::
+	msgbox Route119_Text_BrendanIntroEx, MSGBOX_DEFAULT
+	return
+
+Route119_Text_MayIntroEx:
+	.string "MAY: {PLAYER}{KUN}! There you are.\p"
+	.string "I keep hearing how happy my ex is\n"
+	.string "with you. It's getting old.\p"
+	.string "So let's settle it.\n"
+	.string "Show me what you've really got!$"
+
 Route119_Text_MayIntro:
 	.string "MAY: {PLAYER}{KUN}!\n"
 	.string "Where were you? I was looking for you!\p"
@@ -506,6 +531,13 @@ Route119_Text_MayExplainFly:
 	.string "I bet your mom's worried about you,\n"
 	.string "{PLAYER}{KUN}.\p"
 	.string "Well, let's meet again somewhere!$"
+
+Route119_Text_BrendanIntroEx:
+	.string "BRENDAN: {PLAYER}. Finally.\p"
+	.string "Everyone keeps telling me how well\n"
+	.string "you and my ex are doing.\p"
+	.string "So let's see if you can back it up.\n"
+	.string "No holding back!$"
 
 Route119_Text_BrendanIntro:
 	.string "BRENDAN: {PLAYER}! So this is where\n"

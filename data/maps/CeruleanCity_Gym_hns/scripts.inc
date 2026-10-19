@@ -193,6 +193,8 @@ CeruleanCity_Gym_EventScript_Misty::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 10
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_BLASTOISINITE
+	call Common_EventScript_GiveGymMegaStone
 	msgbox CeruleanGym_Text_Misty_GiveTM, MSGBOX_DEFAULT
 	giveitem ITEM_TM_WATER_PULSE
 	msgbox CeruleanGym_Text_Misty_ExplainTM, MSGBOX_DEFAULT

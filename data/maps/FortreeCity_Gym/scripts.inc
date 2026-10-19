@@ -32,9 +32,12 @@ FortreeCity_Gym_EventScript_WinonaDefeated::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox FortreeCity_Gym_Text_ExplainFeatherBadgeTakeThis, MSGBOX_DEFAULT
 	setflag FLAG_DEFEATED_FORTREE_GYM
-	setflag FLAG_BADGE06_GET
+	setflag FLAG_BADGE22_GET
+	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 6
 	call Common_EventScript_SetGymTrainers
+	setvar VAR_0x8004, ITEM_ALTARIANITE
+	call Common_EventScript_GiveGymMegaStone
 	call FortreeCity_Gym_EventScript_GiveAerialAce
 	closemessage
 	delay 30
@@ -114,13 +117,13 @@ FortreeCity_Gym_EventScript_GymGuidePostVictory::
 
 FortreeCity_Gym_EventScript_LeftGymStatue::
 	lockall
-	goto_if_set FLAG_BADGE06_GET, FortreeCity_Gym_EventScript_GymStatueCertified
+	goto_if_set FLAG_BADGE22_GET, FortreeCity_Gym_EventScript_GymStatueCertified
 	goto FortreeCity_Gym_EventScript_GymStatue
 	end
 
 FortreeCity_Gym_EventScript_RightGymStatue::
 	lockall
-	goto_if_set FLAG_BADGE06_GET, FortreeCity_Gym_EventScript_GymStatueCertified
+	goto_if_set FLAG_BADGE22_GET, FortreeCity_Gym_EventScript_GymStatueCertified
 	goto FortreeCity_Gym_EventScript_GymStatue
 	end
 

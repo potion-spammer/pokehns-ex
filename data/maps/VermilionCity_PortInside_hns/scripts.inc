@@ -210,3 +210,53 @@ VermilionPort_Text_NoTicket:
     .string "Sorry!\n"
     .string "You may board only\l"
     .string "if you have an S.S.TICKET.$"
+
+@ Hoenn ferry (Vermilion end). Opens once the lighthouse has its light back (Ampharos healed).
+@ The return trip is the sailor in LilycoveCity_Harbor.
+VermilionPort_EventScript_HoennSailor::
+	lock
+	faceplayer
+	goto_if_unset FLAG_AMPHAROS_HEALED, VermilionPort_EventScript_HoennSailor_Dark
+	msgbox VermilionPort_Text_HoennSailor_AskSail, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_HoennSailor_Declined
+	msgbox VermilionPort_Text_HoennSailor_AllAboard, MSGBOX_DEFAULT
+	closemessage
+	playse SE_EXIT
+	fadescreen FADE_TO_BLACK
+	setflag FLAG_VISITED_LILYCOVE_CITY
+	warpsilent MAP_LILYCOVE_CITY_HARBOR, 6, 13
+	waitstate
+	release
+	end
+
+VermilionPort_EventScript_HoennSailor_Dark::
+	msgbox VermilionPort_Text_HoennSailor_Dark, MSGBOX_DEFAULT
+	release
+	end
+
+VermilionPort_EventScript_HoennSailor_Declined::
+	msgbox VermilionPort_Text_HoennSailor_Declined, MSGBOX_DEFAULT
+	release
+	end
+
+VermilionPort_Text_HoennSailor_Dark:
+	.string "There's a sea route to HOENN, but\n"
+	.string "the LIGHTHOUSE at OLIVINE has gone\l"
+	.string "dark.\p"
+	.string "Nobody sails that far without it.\n"
+	.string "Check back once the light is on.$"
+
+VermilionPort_Text_HoennSailor_AskSail:
+	.string "The LIGHTHOUSE is shining again!\p"
+	.string "The northern route to the HOENN\n"
+	.string "region is open. I can take you to\l"
+	.string "LILYCOVE CITY.\p"
+	.string "Do you want to set sail?$"
+
+VermilionPort_Text_HoennSailor_AllAboard:
+	.string "All aboard, then!\n"
+	.string "Next stop, LILYCOVE CITY!$"
+
+VermilionPort_Text_HoennSailor_Declined:
+	.string "No rush. The route will be here\n"
+	.string "whenever you're ready.$"

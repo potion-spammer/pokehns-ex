@@ -237,6 +237,8 @@ OlivineCity_Gym_EventScript_JasmineVictory::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 6
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_STEELIXITE
+	call Common_EventScript_GiveGymMegaStone
 	giveitem ITEM_TM_IRON_TAIL
 	msgbox OlivineCity_Gym_Text_JasmineIronTailSpeech, MSGBOX_DEFAULT
 	setvar VAR_OLIVINE_CITY_STATE, 8

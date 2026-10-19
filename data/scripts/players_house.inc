@@ -325,7 +325,8 @@ PlayersHouse_1F_EventScript_DontPushYourselfTooHard::
 	end
 
 PlayersHouse_1F_EventScript_TryRegisterMom::
-	goto_if_set FLAG_ENABLE_MOM_MATCH_CALL, PlayersHouse_1F_EventScript_CheckGiveAmuletCoin
+	@ Heart & Soul: the Emerald AMULET COIN gift is dropped (its "already received" flag is not tracked here).
+	goto_if_set FLAG_ENABLE_MOM_MATCH_CALL, PlayersHouse_1F_EventScript_PartnerGifts
 	msgbox PlayersHouse_1F_Text_IsThatAPokenav, MSGBOX_DEFAULT
 	closemessage
 	delay 30
@@ -366,7 +367,7 @@ PlayersHouse_1F_EventScript_MomHealsParty_PokecenterChallenge::
 	end
 
 PlayersHouse_1F_Text_YouShouldRestABit_PokecenterChallenge:
-	.string "MOM: Sorry honey, you are playing\n"
+	.string "PARTNER: Sorry dear, you are playing\n"
 	.string "with the POKéCENTER challenge!$"
 
 PlayersHouse_1F_EventScript_SeeYouHoney::
@@ -693,3 +694,164 @@ PlayersHouse_1F_Movement_PlayerApproachTVForLatiFemale:
 EventScript_RunningShoesManual::
 	msgbox PlayersHouse_1F_Text_RunningShoesManual, MSGBOX_SIGN
 	end
+
+@ Presents from the player's partner, one set per two Hoenn badges. Each set is given once. The flag is set
+@ only after checking the bag has room for everything in the set, so nothing is lost to a full bag.
+PlayersHouse_1F_EventScript_PartnerGifts::
+	goto_if_unset FLAG_BADGE18_GET, PlayersHouse_1F_EventScript_MomHealsParty
+	goto_if_set FLAG_PARTNER_GIFT_STONES_1, PlayersHouse_1F_EventScript_PartnerGifts2
+	goto PlayersHouse_1F_EventScript_PartnerGiftStones1
+	end
+
+PlayersHouse_1F_EventScript_PartnerGifts2::
+	goto_if_unset FLAG_BADGE20_GET, PlayersHouse_1F_EventScript_MomHealsParty
+	goto_if_set FLAG_PARTNER_GIFT_STONES_2, PlayersHouse_1F_EventScript_PartnerGifts3
+	goto PlayersHouse_1F_EventScript_PartnerGiftStones2
+	end
+
+PlayersHouse_1F_EventScript_PartnerGifts3::
+	goto_if_unset FLAG_BADGE22_GET, PlayersHouse_1F_EventScript_MomHealsParty
+	goto_if_set FLAG_PARTNER_GIFT_CANDY, PlayersHouse_1F_EventScript_PartnerGifts4
+	goto PlayersHouse_1F_EventScript_PartnerGiftCandy
+	end
+
+PlayersHouse_1F_EventScript_PartnerGifts4::
+	goto_if_unset FLAG_BADGE24_GET, PlayersHouse_1F_EventScript_MomHealsParty
+	goto_if_set FLAG_PARTNER_GIFT_CAPSULE, PlayersHouse_1F_EventScript_MomHealsParty
+	goto PlayersHouse_1F_EventScript_PartnerGiftCapsule
+	end
+
+PlayersHouse_1F_EventScript_PartnerGiftNoRoom::
+	msgbox PlayersHouse_1F_Text_PartnerGiftNoRoom, MSGBOX_DEFAULT
+	release
+	end
+
+PlayersHouse_1F_EventScript_PartnerGiftStones1::
+	checkitemspace ITEM_FIRE_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_WATER_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_THUNDER_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_LEAF_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_MOON_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	setflag FLAG_PARTNER_GIFT_STONES_1
+	msgbox PlayersHouse_1F_Text_PartnerGiftStones1, MSGBOX_DEFAULT
+	giveitem ITEM_FIRE_STONE
+	giveitem ITEM_WATER_STONE
+	giveitem ITEM_THUNDER_STONE
+	giveitem ITEM_LEAF_STONE
+	giveitem ITEM_MOON_STONE
+	goto PlayersHouse_1F_EventScript_PartnerGifts2
+	end
+
+PlayersHouse_1F_EventScript_PartnerGiftStones2::
+	checkitemspace ITEM_SUN_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_SHINY_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_DUSK_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_DAWN_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_ICE_STONE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	setflag FLAG_PARTNER_GIFT_STONES_2
+	msgbox PlayersHouse_1F_Text_PartnerGiftStones2, MSGBOX_DEFAULT
+	giveitem ITEM_SUN_STONE
+	giveitem ITEM_SHINY_STONE
+	giveitem ITEM_DUSK_STONE
+	giveitem ITEM_DAWN_STONE
+	giveitem ITEM_ICE_STONE
+	goto PlayersHouse_1F_EventScript_PartnerGifts3
+	end
+
+PlayersHouse_1F_EventScript_PartnerGiftCandy::
+	checkitemspace ITEM_RARE_CANDY, 5
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_PP_MAX, 3
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	setflag FLAG_PARTNER_GIFT_CANDY
+	msgbox PlayersHouse_1F_Text_PartnerGiftCandy, MSGBOX_DEFAULT
+	giveitem ITEM_RARE_CANDY, 5
+	giveitem ITEM_PP_MAX, 3
+	goto PlayersHouse_1F_EventScript_PartnerGifts4
+	end
+
+PlayersHouse_1F_EventScript_PartnerGiftCapsule::
+	checkitemspace ITEM_ABILITY_CAPSULE
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	checkitemspace ITEM_GOLD_BOTTLE_CAP
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_PartnerGiftNoRoom
+	setflag FLAG_PARTNER_GIFT_CAPSULE
+	msgbox PlayersHouse_1F_Text_PartnerGiftCapsule, MSGBOX_DEFAULT
+	giveitem ITEM_ABILITY_CAPSULE
+	giveitem ITEM_GOLD_BOTTLE_CAP
+	goto PlayersHouse_1F_EventScript_MomHealsParty
+	end
+
+PlayersHouse_1F_Text_PartnerGiftNoRoom:
+	.string "PARTNER: Oh, your BAG is full.\n"
+	.string "I have a present for you, but there's\l"
+	.string "no room to carry it.\p"
+	.string "Make some space and come see me.$"
+
+PlayersHouse_1F_Text_PartnerGiftStones1:
+	.string "PARTNER: {PLAYER}, wait. I have\n"
+	.string "something for you.\p"
+	.string "I found these at a little shop while\n"
+	.string "you were away. Odd, glowing stones.\p"
+	.string "The shopkeeper said some POKéMON\n"
+	.string "change when they touch them.$"
+
+PlayersHouse_1F_Text_PartnerGiftStones2:
+	.string "PARTNER: More stones!\p"
+	.string "I kept an eye out for them while I\n"
+	.string "was out. I like seeing what\l"
+	.string "surprises you find.\p"
+	.string "Here, these are for you.$"
+
+PlayersHouse_1F_Text_PartnerGiftCandy:
+	.string "PARTNER: Six BADGES. I wanted to do\n"
+	.string "something to help.\p"
+	.string "I saved up. Here, take these.\n"
+	.string "Treat your team well.$"
+
+PlayersHouse_1F_Text_PartnerGiftCapsule:
+	.string "PARTNER: You did it, all of HOENN.\p"
+	.string "I have one last present. I've been\n"
+	.string "holding on to it for a long time.\p"
+	.string "Something rare, for someone rare.$"
+
+@ The partner's pet, chosen during the time skip (VAR_OBJ_GFX_ID_D holds its overworld graphic).
+PlayersHouse_1F_EventScript_Pet::
+	lock
+	faceplayer
+	goto_if_eq VAR_OBJ_GFX_ID_D, OBJ_EVENT_GFX_SPECIES ( PERSIAN ), PlayersHouse_1F_EventScript_PetPersian
+	playmoncry SPECIES_ARCANINE, 0
+	msgbox PlayersHouse_1F_Text_PetArcanine, MSGBOX_DEFAULT
+	waitmoncry
+	release
+	end
+
+PlayersHouse_1F_EventScript_PetPersian::
+	playmoncry SPECIES_PERSIAN, 0
+	msgbox PlayersHouse_1F_Text_PetPersian, MSGBOX_DEFAULT
+	waitmoncry
+	release
+	end
+
+PlayersHouse_1F_Text_PetArcanine:
+	.string "Your partner's ARCANINE trots over\n"
+	.string "and presses against your leg.\p"
+	.string "It looks very pleased that you're\n"
+	.string "home.$"
+
+PlayersHouse_1F_Text_PetPersian:
+	.string "Your partner's PERSIAN circles your\n"
+	.string "legs, then settles down with a smug\l"
+	.string "look.\p"
+	.string "It seems to have decided that you\n"
+	.string "can stay.$"

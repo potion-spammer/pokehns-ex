@@ -1289,14 +1289,25 @@ static void TryUpdateGymLeaderRematchFromTrainer(void)
         UpdateGymLeaderRematch();
 }
 
+// Flag id that records whether a trainer has been beaten. Heart & Soul trainers use the ordinary
+// trainer flag range. Hoenn trainers (ids from HNS_HOENN_TRAINER_ID_BASE) use their own bank.
+u16 GetTrainerFlagId(u16 trainerId)
+{
+#if IS_HNS
+    if (trainerId >= HNS_HOENN_TRAINER_ID_BASE)
+        return HOENN_TRAINER_FLAGS_START + (trainerId - HNS_HOENN_TRAINER_ID_BASE);
+#endif
+    return TRAINER_FLAGS_START + trainerId;
+}
+
 static u16 GetTrainerAFlag(void)
 {
-    return TRAINER_FLAGS_START + TRAINER_BATTLE_PARAM.opponentA;
+    return GetTrainerFlagId(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 static u16 GetTrainerBFlag(void)
 {
-    return TRAINER_FLAGS_START + TRAINER_BATTLE_PARAM.opponentB;
+    return GetTrainerFlagId(TRAINER_BATTLE_PARAM.opponentB);
 }
 
 static bool32 IsPlayerDefeated(u32 battleOutcome)
@@ -1507,7 +1518,7 @@ void SetUpTwoTrainersBattle(void)
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
 {
     TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + OPCODE_OFFSET);
-    return FlagGet(TRAINER_FLAGS_START + temp->params.opponentA);
+    return FlagGet(GetTrainerFlagId(temp->params.opponentA));
 }
 
 bool32 GetRematchFromScriptPointer(const u8 *data)
@@ -1565,17 +1576,17 @@ static void UNUSED SetBattledTrainerFlag(void)
 
 bool8 HasTrainerBeenFought(u16 trainerId)
 {
-    return FlagGet(TRAINER_FLAGS_START + trainerId);
+    return FlagGet(GetTrainerFlagId(trainerId));
 }
 
 void SetTrainerFlag(u16 trainerId)
 {
-    FlagSet(TRAINER_FLAGS_START + trainerId);
+    FlagSet(GetTrainerFlagId(trainerId));
 }
 
 void ClearTrainerFlag(u16 trainerId)
 {
-    FlagClear(TRAINER_FLAGS_START + trainerId);
+    FlagClear(GetTrainerFlagId(trainerId));
 }
 
 void BattleSetup_StartTrainerBattle(void)

@@ -83,6 +83,8 @@ MahoganyTown_Gym_EventScript_PryceVictory::
     addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 7
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_ABOMASITE
+	call Common_EventScript_GiveGymMegaStone
 	giveitem ITEM_TM_HAIL
 	msgbox MahoganyTown_Gym_Text_HailSpeech, MSGBOX_DEFAULT
 	setvar VAR_MAHOGANY_TOWN_STATE, 15

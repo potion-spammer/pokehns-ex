@@ -417,6 +417,14 @@ EventScript_ResetAllMapFlagsHnS::
 	clearflag FLAG_BADGE14_GET
 	clearflag FLAG_BADGE15_GET
 	clearflag FLAG_BADGE16_GET
+	clearflag FLAG_BADGE17_GET
+	clearflag FLAG_BADGE18_GET
+	clearflag FLAG_BADGE19_GET
+	clearflag FLAG_BADGE20_GET
+	clearflag FLAG_BADGE21_GET
+	clearflag FLAG_BADGE22_GET
+	clearflag FLAG_BADGE23_GET
+	clearflag FLAG_BADGE24_GET
 	clearflag FLAG_RECEIVED_TOGEPI_EGG
 
 	setvar VAR_VIOLET_CITY_STATE, 0 @CITY STATES

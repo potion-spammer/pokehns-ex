@@ -445,9 +445,70 @@ DragonsDen_Shrine_EventScript_ElderGiveSpecialDratini::
 	end
 
 DragonsDen_Shrine_EventScript_ElderAlreadyGotDratini::
+	goto_if_set FLAG_RECEIVED_CHARIZARDITE_X, DragonsDen_Shrine_EventScript_ElderGrandfatherOnly
+	checkitem ITEM_MEGA_RING
+	goto_if_eq VAR_RESULT, TRUE, DragonsDen_Shrine_EventScript_ElderMysteryStone
+	msgbox DragonsDen_Shrine_Text_ClairsGrandfather, MSGBOX_DEFAULT
+	msgbox DragonsDen_Shrine_Text_StoneSleeps, MSGBOX_DEFAULT
+	release
+	end
+
+DragonsDen_Shrine_EventScript_ElderGrandfatherOnly::
 	msgbox DragonsDen_Shrine_Text_ClairsGrandfather, MSGBOX_DEFAULT
 	release
 	end
+
+@ The clan's MYSTERY STONE only wakes for a trainer carrying a MEGA RING: it is CHARIZARDITE X.
+DragonsDen_Shrine_EventScript_ElderMysteryStone::
+	checkitemspace ITEM_CHARIZARDITE_X
+	goto_if_eq VAR_RESULT, FALSE, DragonsDen_Shrine_EventScript_ElderStoneNoRoom
+	msgbox DragonsDen_Shrine_Text_StoneAwakens1, MSGBOX_DEFAULT
+	closemessage
+	playfanfare MUS_LEVEL_UP
+	waitfanfare
+	msgbox DragonsDen_Shrine_Text_StoneAwakens2, MSGBOX_DEFAULT
+	giveitem ITEM_CHARIZARDITE_X
+	setflag FLAG_RECEIVED_CHARIZARDITE_X
+	msgbox DragonsDen_Shrine_Text_StoneAwakens3, MSGBOX_DEFAULT
+	release
+	end
+
+DragonsDen_Shrine_EventScript_ElderStoneNoRoom::
+	msgbox DragonsDen_Shrine_Text_StoneNoRoom, MSGBOX_DEFAULT
+	release
+	end
+
+DragonsDen_Shrine_Text_StoneSleeps:
+    .string "There is a stone in our shrine\n"
+    .string "that has slept for generations.\p"
+    .string "Our records call it only the\n"
+    .string "MYSTERY STONE.\p"
+    .string "They say it answers to no one…\p"
+    .string "…except a RING carried by a\n"
+    .string "trainer the dragons trust.$"
+
+DragonsDen_Shrine_Text_StoneAwakens1:
+    .string "That RING you carry…\p"
+    .string "Wait here, {PLAYER}.\p"
+    .string "…\p"
+    .string "This is the MYSTERY STONE our\n"
+    .string "clan has kept for generations.\p"
+    .string "Hold your RING close.$"
+
+DragonsDen_Shrine_Text_StoneAwakens2:
+    .string "The stone is reacting!\p"
+    .string "It is showing its true form!$"
+
+DragonsDen_Shrine_Text_StoneAwakens3:
+    .string "That is CHARIZARDITE X.\p"
+    .string "It has waited for a trainer who\n"
+    .string "has earned the dragons' trust.\p"
+    .string "Care for it well.$"
+
+DragonsDen_Shrine_Text_StoneNoRoom:
+    .string "The stone is ready, but your BAG\n"
+    .string "is full.\p"
+    .string "Make room and speak to me again.$"
 
 DragonsDen_Shrine_Text_TakeThisDratini:
     .string "Hm… Good to see you here.\p"

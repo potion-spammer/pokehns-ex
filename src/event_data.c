@@ -49,11 +49,31 @@ const u16 gBadgeFlags[NUM_BADGES_CAPPED] =
     FLAG_BADGE08_GET,
 };
 
+// Called when a save is loaded. Saves made before the Hoenn flag bank existed carry arbitrary bytes in
+// that part of SaveBlock3 (often 0xFF from erased flash), which would read as "every Hoenn flag set".
+// Anything without the expected magic is treated as a fresh, empty bank.
+void ValidateHoennFlagBank(void)
+{
+#if IS_HNS
+    if (gSaveBlock3Ptr->hoennFlagBankMagic != HOENN_FLAG_BANK_MAGIC)
+    {
+        memset(gSaveBlock3Ptr->hoennFlags, 0, sizeof(gSaveBlock3Ptr->hoennFlags));
+        memset(gSaveBlock3Ptr->hoennTrainerFlags, 0, sizeof(gSaveBlock3Ptr->hoennTrainerFlags));
+        gSaveBlock3Ptr->hoennFlagBankMagic = HOENN_FLAG_BANK_MAGIC;
+    }
+#endif
+}
+
 void InitEventData(void)
 {
     memset(gSaveBlock1Ptr->flags, 0, sizeof(gSaveBlock1Ptr->flags));
     memset(gSaveBlock1Ptr->vars, 0, sizeof(gSaveBlock1Ptr->vars));
     memset(sSpecialFlags, 0, sizeof(sSpecialFlags));
+#if IS_HNS
+    memset(gSaveBlock3Ptr->hoennFlags, 0, sizeof(gSaveBlock3Ptr->hoennFlags));
+    memset(gSaveBlock3Ptr->hoennTrainerFlags, 0, sizeof(gSaveBlock3Ptr->hoennTrainerFlags));
+    gSaveBlock3Ptr->hoennFlagBankMagic = HOENN_FLAG_BANK_MAGIC;
+#endif
 }
 
 void ClearTempFieldEventData(void)
@@ -235,6 +255,12 @@ u8 *GetFlagPointer(u16 id)
 {
     if (id == 0)
         return NULL;
+#if IS_HNS
+    else if (id >= HOENN_FLAGS_START && id < HOENN_FLAGS_START + HOENN_FLAGS_COUNT)
+        return &gSaveBlock3Ptr->hoennFlags[(id - HOENN_FLAGS_START) / 8];
+    else if (id >= HOENN_TRAINER_FLAGS_START && id < HOENN_TRAINER_FLAGS_START + HOENN_TRAINER_FLAGS_COUNT)
+        return &gSaveBlock3Ptr->hoennTrainerFlags[(id - HOENN_TRAINER_FLAGS_START) / 8];
+#endif
     else if (id < SPECIAL_FLAGS_START)
         return &gSaveBlock1Ptr->flags[id / 8];
 #if TESTING

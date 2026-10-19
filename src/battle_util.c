@@ -8627,10 +8627,20 @@ bool32 DoesSpeciesUseHoldItemToChangeForm(u16 species, u16 heldItemId)
     return FALSE;
 }
 
+#if IS_HNS
+static bool32 IsOpposingStoryTrainer(enum BattlerId battler);
+#endif
+
 bool32 CanMegaEvolve(enum BattlerId battler)
 {
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     enum BattlerPosition position = GetBattlerPosition(battler);
+
+#if IS_HNS
+    // Opposing trainers only gain Mega Evolution once the player has the MEGA RING.
+    if (IsOpposingStoryTrainer(battler) && !CheckBagHasItem(ITEM_MEGA_RING, 1))
+        return FALSE;
+#endif
 
     // Check if Player has a Mega Ring.
     if (!TESTING
@@ -8701,10 +8711,18 @@ bool32 CanUltraBurst(enum BattlerId battler)
     return FALSE;
 }
 
+#if IS_HNS
+static enum Item GetOpposingTrainerMegaStone(enum BattlerId battler, u16 species, enum Item heldItem);
+#endif
+
 void ActivateMegaEvolution(enum BattlerId battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     gLastUsedItem = gBattleMons[battler].item;
+#if IS_HNS
+    // The Mega Evolution message names the stone, so show the one this Pokémon is reacting to.
+    gLastUsedItem = GetOpposingTrainerMegaStone(battler, gBattleMons[battler].species, gBattleMons[battler].item);
+#endif
     SetActiveGimmick(battler, GIMMICK_MEGA);
     SetGimmickAsActivated(battler, GIMMICK_MEGA);
 
@@ -8761,19 +8779,62 @@ bool32 IsBattlerInTeraForm(enum BattlerId battler)
     return (gSpeciesInfo[gBattleMons[battler].species].isTeraForm);
 }
 
+#if IS_HNS
+// Opposing side of an ordinary trainer battle (not a Frontier-style facility).
+static bool32 IsOpposingStoryTrainer(enum BattlerId battler)
+{
+    return !TESTING && !IsOnPlayerSide(battler) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_EREADER_TRAINER));
+}
+#endif
+
+#if IS_HNS
+// Once the player owns the MEGA RING, every opposing trainer's Pokémon that has a Mega Evolution may use it without
+// holding a Mega Stone. The usual once-per-trainer limit (HasTrainerUsedGimmick) still applies. Only the opposing side in
+// regular trainer battles is affected; the player still needs the stone, and Frontier-style facilities are left alone.
+static enum Item GetOpposingTrainerMegaStone(enum BattlerId battler, u16 species, enum Item heldItem)
+{
+    const struct FormChange *formChanges;
+
+    if (!IsOpposingStoryTrainer(battler) || !CheckBagHasItem(ITEM_MEGA_RING, 1))
+        return heldItem;
+
+    formChanges = GetSpeciesFormChanges(species);
+    for (u32 i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
+    {
+        if (formChanges[i].method != FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM)
+            continue;
+        if (formChanges[i].param1 == heldItem)
+            return heldItem; // already holds the right stone (e.g. a Mega X/Y choice made in the trainer data)
+    }
+    for (u32 i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
+    {
+        if (formChanges[i].method == FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM)
+            return formChanges[i].param1;
+    }
+    return heldItem;
+}
+#endif
+
 u32 GetBattleFormChangeTargetSpecies(enum BattlerId battler, enum FormChanges method, enum Ability ability)
 {
     u32 species = gBattleMons[battler].species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
+    enum Item heldItem = gBattleMons[battler].item;
 
     if (formChanges == NULL)
         return species;
+
+#if IS_HNS
+    if (method == FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM)
+        heldItem = GetOpposingTrainerMegaStone(battler, species, heldItem);
+#endif
 
     struct FormChangeContext ctx =
     {
         .method = method,
         .currentSpecies = gBattleMons[battler].species,
-        .heldItem = gBattleMons[battler].item,
+        .heldItem = heldItem,
         .ability = ability,
         .status = gBattleMons[battler].status1,
         .gmaxFactor = GetMonData(GetBattlerMon(battler), MON_DATA_GIGANTAMAX_FACTOR),

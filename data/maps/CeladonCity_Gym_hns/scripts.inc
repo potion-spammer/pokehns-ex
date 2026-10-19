@@ -19,6 +19,8 @@ CeladonCity_Gym_EventScript_Erika::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 12
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_VENUSAURITE
+	call Common_EventScript_GiveGymMegaStone
 	clearflag FLAG_HIDE_FOUNTAIN_ERIKA
 	closemessage
 	release

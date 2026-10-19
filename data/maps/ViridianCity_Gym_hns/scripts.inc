@@ -21,6 +21,8 @@ ViridianCity_Gym_EventScript_Blue::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 16
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_GARCHOMPITE
+	call Common_EventScript_GiveGymMegaStone
 	closemessage
 	setflag FLAG_HIDE_LEAGUE_BLACKBELT
 	setflag FLAG_HIDE_SEAFOAM_BLAINE

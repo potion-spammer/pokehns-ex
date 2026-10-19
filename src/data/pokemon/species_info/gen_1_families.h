@@ -11055,7 +11055,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = { ABILITY_SHELL_ARMOR, ABILITY_SHELL_ARMOR, ABILITY_SHELL_ARMOR },
         .bodyColor = BODY_COLOR_PINK,
         .speciesName = _("SLOWBRO"),
+    #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_SLOWBRO_MEGA,
+    #endif
         .natDexNum = NATIONAL_DEX_SLOWBRO,
         .categoryName = _("Hermit Crab"),
         .height = 20,

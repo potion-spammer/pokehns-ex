@@ -24,6 +24,8 @@ SeafoamIslands_Gym_EventScript_Blaine::
 	setvar VAR_0x8008, 15
 	clearflag FLAG_HIDE_SEAFOAM_GYMGUY
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_CHARIZARDITE_Y
+	call Common_EventScript_GiveGymMegaStone
 	closemessage
 	release
 	end

@@ -235,6 +235,7 @@ const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 #include "data/trainers_frlg.h"
 #elif IS_HNS
 #include "data/trainers_hns.h"
+#include "data/trainers.h" // Hoenn trainers, ids shifted by HNS_HOENN_TRAINER_ID_BASE - 1 (see opponents.h)
 #else
 #include "data/trainers.h"
 #endif

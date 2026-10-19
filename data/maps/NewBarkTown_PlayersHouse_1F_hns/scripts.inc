@@ -49,6 +49,8 @@ NewBarkTown_PlayersHouse_1F_MomEventScript_GoodLuck::
 
 
 NewBarkTown_PlayersHouse_1F_EventScript_Mom_Regular::
+	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 10, NewBarkTown_PlayersHouse_1F_EventScript_MomMegaRingCheck
+NewBarkTown_PlayersHouse_1F_EventScript_Mom_RegularRest::
 	playbgm MUS_HG_FOLLOW_ME_1, FALSE
 	specialvar VAR_RESULT, IsPokecenterChallengeActivated
 	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_PlayersHouse_1F_EventScript_Mom_PokecenterChallenge
@@ -356,3 +358,48 @@ NewBarkTown_PlayersHouse_1F_Text_MomLeaving:
 	.string "You need to work as a team.\p"
 	.string "Now, go on!\n"
 	.string "I'm behind you all the way!$"
+
+@ After the Johto League (Elm's call sets VAR_NEWBARKTOWN_LABSTATE to 10), Mom hands down the MEGA RING once.
+@ Ownership of the item itself is the "already received" check, so no flag is needed.
+NewBarkTown_PlayersHouse_1F_EventScript_MomMegaRingCheck::
+	checkitem ITEM_MEGA_RING
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_PlayersHouse_1F_EventScript_Mom_RegularRest
+	playbgm MUS_HG_FOLLOW_ME_1, FALSE
+	msgbox NewBarkTown_PlayersHouse_1F_Text_MomMegaRing1, MSGBOX_DEFAULT
+	closemessage
+	delay 30
+	msgbox NewBarkTown_PlayersHouse_1F_Text_MomMegaRing2, MSGBOX_DEFAULT
+	giveitem ITEM_MEGA_RING
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	msgbox NewBarkTown_PlayersHouse_1F_Text_MomMegaRing3, MSGBOX_DEFAULT
+	closemessage
+	fadedefaultbgm
+	release
+	end
+
+NewBarkTown_PlayersHouse_1F_Text_MomMegaRing1:
+	.string "MOM: {PLAYER}, there you are.\n"
+	.string "Come here a moment.\p"
+	.string "It feels like only yesterday you\n"
+	.string "left with a strange EGG and a\l"
+	.string "handful of POKé BALLS.\p"
+	.string "Now they call you the JOHTO\n"
+	.string "CHAMPION…\p"
+	.string "Time goes by so fast.$"
+
+NewBarkTown_PlayersHouse_1F_Text_MomMegaRing2:
+	.string "I've kept something safe for the\n"
+	.string "day you were ready.\p"
+	.string "This RING has been in our family\n"
+	.string "for a very long time.\p"
+	.string "Now it's yours.$"
+
+NewBarkTown_PlayersHouse_1F_Text_MomMegaRing3:
+	.string "It's called a MEGA RING.\p"
+	.string "When a POKéMON holds the right\n"
+	.string "MEGA STONE, it can answer your\l"
+	.string "bond with a new form in battle.\p"
+	.string "Wherever your journey takes you,\n"
+	.string "remember you can always come\l"
+	.string "home.\p"
+	.string "Be safe, {PLAYER}.$"

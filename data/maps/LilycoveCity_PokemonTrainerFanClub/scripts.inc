@@ -640,14 +640,15 @@ LilycoveCity_PokemonTrainerFanClub_Text_MyFavoriteTrainerIsBrawly:
 	.string "BRAWLY!$"
 
 LilycoveCity_PokemonTrainerFanClub_Text_YouveSurpassedYourFather:
-	.string "You've surpassed your own father in\n"
-	.string "every regard!\p"
+	.string "You've surpassed even NORMAN, the\n"
+	.string "GYM LEADER of PETALBURG, in every\l"
+	.string "regard!\p"
 	.string "I'm telling you, so there's no question\n"
 	.string "about it at all!$"
 
 LilycoveCity_PokemonTrainerFanClub_Text_YourFatherNeverGaveUpSoKeepOnBattling:
 	.string "Even when things turned bleak,\n"
-	.string "your father never gave up.\p"
+	.string "NORMAN never gave up.\p"
 	.string "This I know to be true.\p"
 	.string "You never give up even if you lose!\n"
 	.string "So keep on battling!$"
@@ -658,7 +659,7 @@ LilycoveCity_PokemonTrainerFanClub_Text_LongWayToGoComparedToNorman:
 	.string "Even though people may say that\n"
 	.string "you're strong…\p"
 	.string "You've still got a long way to go\n"
-	.string "compared to your father.$"
+	.string "compared to NORMAN.$"
 
 LilycoveCity_PokemonTrainerFanClub_Text_YouAndNormanAreDifferent:
 	.string "You're beginning to get the same\n"

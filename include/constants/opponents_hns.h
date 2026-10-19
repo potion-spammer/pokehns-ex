@@ -675,7 +675,12 @@
 #define TRAINER_MISTY_POSTOBC_HNS             651
 #define TRAINER_ERIKA_POSTOBC_HNS             652
 
-#define TRAINERS_COUNT_HNS                       653
-#define MAX_TRAINERS_COUNT_HNS                   864
+// 653 Heart & Soul ids (0..652) followed by the 854 Hoenn ids (653..1506) and the 2 extra rival ids (1507, 1508).
+// Two extra Hoenn-side rival trainers (ids 1507 and 1508): the partner's ex, fought outside the player's Littleroot home.
+#define TRAINER_EX_RIVAL_BRENDAN                 1507
+#define TRAINER_EX_RIVAL_MAY                     1508
+#define TRAINERS_COUNT_HNS                       1509
+#define MAX_TRAINERS_COUNT_HNS                   1520
+#define HNS_HOENN_TRAINER_ID_BASE                653
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_HNS_H

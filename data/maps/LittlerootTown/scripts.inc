@@ -38,6 +38,7 @@ LittlerootTown_OnTransition:
 	setflag FLAG_VISITED_LITTLEROOT_TOWN
 	call Common_EventScript_SetupRivalGfxId
 	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 2, LittlerootTown_EventScript_MoveMomToMaysDoor
+	call_if_set FLAG_ENABLE_MOM_MATCH_CALL, LittlerootTown_EventScript_CheckExRival
 	call_if_unset FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_SetTwinPos
 	call_if_eq VAR_LITTLEROOT_TOWN_STATE, 3, LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos
 	call_if_eq VAR_LITTLEROOT_HOUSES_STATE_MAY, 4, LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent
@@ -905,28 +906,23 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	return
 
 LittlerootTown_Text_OurNewHomeLetsGoInside:
-	.string "MOM: {PLAYER}, we're here, honey!\p"
-	.string "It must be tiring riding with our things\n"
-	.string "in the moving truck.\p"
-	.string "Well, this is LITTLEROOT TOWN.\p"
-	.string "How do you like it?\n"
-	.string "This is our new home!\p"
-	.string "It has a quaint feel, but it seems to be\n"
-	.string "an easy place to live, don't you think?\p"
-	.string "And, you get your own room, {PLAYER}!\n"
+	.string "PARTNER: {PLAYER}! You made it!\p"
+	.string "I got here ahead of the truck with\n"
+	.string "the keys, and… well, look at it!\p"
+	.string "This is our place.\n"
+	.string "Ours. It still feels unreal.\p"
+	.string "It's quiet here, but it feels like\n"
+	.string "somewhere we can really live.\p"
+	.string "Come on, {PLAYER}.\n"
 	.string "Let's go inside.$"
 
 LittlerootTown_Text_WaitPlayer:
-	.string "MOM: Wait, {PLAYER}!$"
+	.string "PARTNER: Wait, {PLAYER}!$"
 
 LittlerootTown_Text_WearTheseRunningShoes:
-	.string "MOM: {PLAYER}! {PLAYER}! Did you\n"
-	.string "introduce yourself to PROF. BIRCH?\p"
-	.string "Oh! What an adorable POKéMON!\n"
-	.string "You got it from PROF. BIRCH. How nice!\p"
-	.string "You're your father's child, all right.\n"
-	.string "You look good together with POKéMON!\p"
-	.string "Here, honey! If you're going out on an\n"
+	.string "PARTNER: {PLAYER}! {PLAYER}!\n"
+	.string "Did you stop by to see PROF. BIRCH?\p"
+	.string "Here! If you're heading out on another\n"
 	.string "adventure, wear these RUNNING SHOES.\p"
 	.string "They'll put a zip in your step!$"
 
@@ -935,7 +931,7 @@ LittlerootTown_Text_SwitchShoesWithRunningShoes:
 	.string "RUNNING SHOES.$"
 
 LittlerootTown_Text_ExplainRunningShoes:
-	.string "MOM: {PLAYER}, those shoes came with\n"
+	.string "PARTNER: {PLAYER}, those shoes came with\n"
 	.string "instructions.\p"
 	.string "“Press the B Button while wearing these\n"
 	.string "RUNNING SHOES to run extra-fast!\p"
@@ -945,12 +941,9 @@ LittlerootTown_Text_ExplainRunningShoes:
 LittlerootTown_Text_ComeHomeIfAnythingHappens:
 	.string "… … … … … … … …\n"
 	.string "… … … … … … … …\p"
-	.string "To think that you have your very own\n"
-	.string "POKéMON now…\l"
-	.string "Your father will be overjoyed.\p"
-	.string "…But please be careful.\n"
+	.string "Be careful out there, {PLAYER}.\n"
 	.string "If anything happens, you can come home.\p"
-	.string "Go on, go get them, honey!$"
+	.string "Go on. Go get them!$"
 
 LittlerootTown_Text_CanUsePCToStoreItems:
 	.string "If you use a PC, you can store items\n"
@@ -1014,3 +1007,208 @@ LittlerootTown_Text_BirchSomethingToShowYouAtLab:
 	.string "I have something to show you.\n"
 	.string "Let's go to my LAB.$"
 
+
+@ The partner's ex. Once the player's partner is registered, the rival waits outside the player's new home
+@ (left house for a male player, right house for a female player) until the confrontation has happened.
+LittlerootTown_EventScript_CheckExRival::
+	goto_if_set FLAG_EX_RIVAL_CONFRONTED, LittlerootTown_EventScript_ExRivalDone
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_RIVAL
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_PlaceExRivalMale
+	setobjectxyperm LOCALID_LITTLEROOT_RIVAL, 13, 10
+	return
+
+LittlerootTown_EventScript_PlaceExRivalMale::
+	setobjectxyperm LOCALID_LITTLEROOT_RIVAL, 6, 10
+	return
+
+LittlerootTown_EventScript_ExRivalDone::
+	return
+
+@ Talking to the rival object. Before the partner exists it has no script in practice (the object is hidden).
+LittlerootTown_EventScript_ExRival::
+	lockall
+	goto_if_unset FLAG_ENABLE_MOM_MATCH_CALL, LittlerootTown_EventScript_ExRivalNothing
+	goto_if_set FLAG_EX_RIVAL_CONFRONTED, LittlerootTown_EventScript_ExRivalNothing
+	faceplayer
+	msgbox LittlerootTown_Text_ExRivalIntro, MSGBOX_DEFAULT
+	closemessage
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_ExRivalBattleMay
+	trainerbattle_no_intro TRAINER_EX_RIVAL_BRENDAN, LittlerootTown_Text_ExRivalDefeat
+	goto LittlerootTown_EventScript_ExRivalAfterBattle
+	end
+
+LittlerootTown_EventScript_ExRivalBattleMay::
+	trainerbattle_no_intro TRAINER_EX_RIVAL_MAY, LittlerootTown_Text_ExRivalDefeat
+	goto LittlerootTown_EventScript_ExRivalAfterBattle
+	end
+
+LittlerootTown_EventScript_ExRivalNothing::
+	releaseall
+	end
+
+LittlerootTown_EventScript_ExRivalAfterBattle::
+	msgbox LittlerootTown_Text_ExRivalAfter, MSGBOX_DEFAULT
+	closemessage
+	setflag FLAG_EX_RIVAL_CONFRONTED
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_RIVAL
+	removeobject LOCALID_LITTLEROOT_RIVAL
+	releaseall
+	end
+
+LittlerootTown_Text_ExRivalIntro:
+	.string "{RIVAL}: Oh. It's you, {PLAYER}.\p"
+	.string "So you're the one my ex has been\n"
+	.string "seeing. I heard the rumors.\p"
+	.string "I didn't think they'd be true.\p"
+	.string "Don't give me that look. I'm not\n"
+	.string "jealous. I just don't think you're\l"
+	.string "good enough.\p"
+	.string "You can have the whole LEAGUE\n"
+	.string "bow to you. That doesn't make you\l"
+	.string "right for them.\p"
+	.string "Battle me. Let's see if you can back\n"
+	.string "up that smug face!$"
+
+LittlerootTown_Text_ExRivalDefeat:
+	.string "…Tch.\n"
+	.string "Of course. Of course you won.$"
+
+LittlerootTown_Text_ExRivalAfter:
+	.string "{RIVAL}: Fine. You win.\p"
+	.string "…Take care of them, {PLAYER}.\n"
+	.string "I mean it.\p"
+	.string "And don't think I'll stop trying to\n"
+	.string "beat you. This isn't over!$"
+
+@ The player's Hoenn home stays shut until the family has moved in. VAR_LITTLEROOT_INTRO_STATE is 0 until the
+@ moving-truck scene sets it to 1 (male) or 2 (female), so the door is blocked exactly while it is 0.
+@ The male player lives in BRENDAN's house (left door), the female player in MAY's house (right door).
+LittlerootTown_EventScript_HomeLockedTriggerLeft::
+	lockall
+	checkplayergender
+	goto_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_HomeNotPlayers
+	goto LittlerootTown_EventScript_HomeLocked
+	end
+
+LittlerootTown_EventScript_HomeLockedTriggerRight::
+	lockall
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_HomeNotPlayers
+	goto LittlerootTown_EventScript_HomeLocked
+	end
+
+LittlerootTown_EventScript_HomeNotPlayers::
+	releaseall
+	end
+
+LittlerootTown_EventScript_HomeLocked::
+	goto_if_set FLAG_IS_CHAMPION, LittlerootTown_EventScript_HomeForSale
+	msgbox LittlerootTown_Text_HomeUnderConstruction, MSGBOX_DEFAULT
+	goto LittlerootTown_EventScript_HomeLockedThought
+	end
+
+@ After the Johto League the finished house is for sale. Nothing is bought: the player chooses to let time
+@ pass, and the years go by during a time skip that ends in the moving truck. The truck scene sets
+@ VAR_LITTLEROOT_INTRO_STATE (1 male, 2 female), which unlocks the door. By then the house is the player's own.
+LittlerootTown_EventScript_HomeForSale::
+	msgbox LittlerootTown_Text_HomeForSale, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_HomeOneDay, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_HomeLetTimePass, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, LittlerootTown_EventScript_HomeNotYet
+	closemessage
+	fadescreen FADE_TO_BLACK
+	delay 30
+	@ The player's partner (girlfriend for a male player, boyfriend for a female player) takes Mom's place in
+	@ the Littleroot houses. Their sprite is chosen here, once, through VAR_OBJ_GFX_ID_C.
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_SetPartnerGfxGirlfriend
+	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_SetPartnerGfxBoyfriend
+	msgbox LittlerootTown_Text_TimeSkip1, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_TimeSkip2, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_TimeSkip3, MSGBOX_DEFAULT
+	@ A pet waits at home. YES makes it an ARCANINE, NO a PERSIAN (graphic kept in VAR_OBJ_GFX_ID_D).
+	msgbox LittlerootTown_Text_PetQuestion, MSGBOX_YESNO
+	call_if_eq VAR_RESULT, YES, LittlerootTown_EventScript_SetPetArcanine
+	call_if_eq VAR_RESULT, NO, LittlerootTown_EventScript_SetPetPersian
+	closemessage
+	delay 60
+	warp MAP_INSIDE_OF_TRUCK, 2, 2
+	waitstate
+	releaseall
+	end
+
+LittlerootTown_EventScript_SetPetArcanine::
+	setvar VAR_OBJ_GFX_ID_D, OBJ_EVENT_GFX_SPECIES ( ARCANINE )
+	return
+
+LittlerootTown_EventScript_SetPetPersian::
+	setvar VAR_OBJ_GFX_ID_D, OBJ_EVENT_GFX_SPECIES ( PERSIAN )
+	return
+
+LittlerootTown_Text_PetQuestion:
+	.string "Someone is waiting by the door at\n"
+	.string "home, tail swishing.\p"
+	.string "Is your partner's pet an ARCANINE?\n"
+	.string "(NO means a PERSIAN.)$"
+
+LittlerootTown_EventScript_SetPartnerGfxGirlfriend::
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_BEAUTY
+	return
+
+LittlerootTown_EventScript_SetPartnerGfxBoyfriend::
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_MAN_4
+	return
+
+LittlerootTown_EventScript_HomeNotYet::
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_StepBackFromHome
+	waitmovement 0
+	releaseall
+	end
+
+LittlerootTown_EventScript_HomeLockedThought::
+	msgbox LittlerootTown_Text_HomeOneDay, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, LittlerootTown_Movement_StepBackFromHome
+	waitmovement 0
+	releaseall
+	end
+
+LittlerootTown_Movement_StepBackFromHome:
+	walk_down
+	step_end
+
+@ Before the Johto League: the house is still being built. After it: the finished house is for sale.
+LittlerootTown_Text_HomeUnderConstruction:
+	.string "A sign hangs on the fence:\n"
+	.string "“UNDER CONSTRUCTION.”$"
+
+LittlerootTown_Text_HomeForSale:
+	.string "A sign hangs on the door:\n"
+	.string "“FOR SALE.”$"
+
+LittlerootTown_Text_HomeLetTimePass:
+	.string "Let the years go by?$"
+
+LittlerootTown_Text_TimeSkip1:
+	.string "…Years pass.\p"
+	.string "The journey became a career.\n"
+	.string "The career became a life.$"
+
+LittlerootTown_Text_TimeSkip2:
+	.string "Along the way, someone special\n"
+	.string "walked into that life.\p"
+	.string "Together they saved, planned, and\n"
+	.string "bought the little house in HOENN\l"
+	.string "with the sign on the door.$"
+
+LittlerootTown_Text_TimeSkip3:
+	.string "Mom waved goodbye from the porch in\n"
+	.string "NEW BARK TOWN.\p"
+	.string "And then, one morning…\p"
+	.string "Moving day.$"
+
+LittlerootTown_Text_HomeOneDay:
+	.string "…One day, I will own this place.$"

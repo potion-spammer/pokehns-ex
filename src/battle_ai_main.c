@@ -7,6 +7,7 @@
 #include "battle_ai_items.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_main.h"
+#include "caps.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
@@ -238,7 +239,14 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
         else if (IsSpecialTrainer(trainerId))
             flags = 0; // Link/Union Room/Secret Base opponents have no entry in gTrainers.
         else
+        {
             flags = GetTrainerAIFlagsFromId(trainerId);
+#if IS_HNS
+            // Hoenn trainers get smarter as the player's total badge count rises.
+            if (trainerId >= HNS_HOENN_TRAINER_ID_BASE && trainerId < TRAINERS_COUNT)
+                flags |= GetHoennBadgeAiFlags();
+#endif
+        }
     }
 
     if (IsDoubleBattle() && flags != 0)

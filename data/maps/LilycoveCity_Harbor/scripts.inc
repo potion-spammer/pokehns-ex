@@ -585,3 +585,36 @@ LilycoveCity_Harbor_Text_SailorFerryAvailable:
 	.string "The folks at the SHIPYARD in SLATEPORT\n"
 	.string "must've worked extra hard.\p"
 	.string "Well, it's my turn to get busy now!$"
+
+@ Return ferry to Kanto (Vermilion Port). The outbound sailor is in VermilionCity_PortInside_hns.
+LilycoveCity_Harbor_EventScript_KantoSailor::
+	lock
+	faceplayer
+	msgbox LilycoveCity_Harbor_Text_KantoSailor_AskSail, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, LilycoveCity_Harbor_EventScript_KantoSailor_Declined
+	msgbox LilycoveCity_Harbor_Text_KantoSailor_AllAboard, MSGBOX_DEFAULT
+	closemessage
+	playse SE_EXIT
+	fadescreen FADE_TO_BLACK
+	warpsilent MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 8
+	waitstate
+	release
+	end
+
+LilycoveCity_Harbor_EventScript_KantoSailor_Declined::
+	msgbox LilycoveCity_Harbor_Text_KantoSailor_Declined, MSGBOX_DEFAULT
+	release
+	end
+
+LilycoveCity_Harbor_Text_KantoSailor_AskSail:
+	.string "Heading back to KANTO?\p"
+	.string "My ship sails to VERMILION PORT.\p"
+	.string "Do you want to set sail?$"
+
+LilycoveCity_Harbor_Text_KantoSailor_AllAboard:
+	.string "All aboard!\n"
+	.string "Next stop, VERMILION PORT!$"
+
+LilycoveCity_Harbor_Text_KantoSailor_Declined:
+	.string "Take your time. The tide won't\n"
+	.string "leave without you.$"

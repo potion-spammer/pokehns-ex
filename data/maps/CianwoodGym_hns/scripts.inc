@@ -62,6 +62,8 @@ CianwoodGym_EventScript_ChuckVictory::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 5
 	call Common_EventScript_SetGymTrainers_hns
+	setvar VAR_0x8004, ITEM_LUCARIONITE
+	call Common_EventScript_GiveGymMegaStone
 	giveitem ITEM_TM_FOCUS_PUNCH
 	msgbox CianwoodGym_Text_ChuckTMSpeech, MSGBOX_DEFAULT
 	setvar VAR_GETFLY, 1

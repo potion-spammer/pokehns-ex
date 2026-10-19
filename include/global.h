@@ -358,6 +358,14 @@ struct SaveBlock3
 #endif
     struct ChallengeSettings challengeSettings;
     u16 registeredItemHold;
+#if IS_HNS
+    // Hoenn flag bank (flag ids HOENN_FLAGS_START and up). Appended last so every earlier field keeps
+    // its offset. Older saves have unknown bytes here, so the magic is checked on load and the bank
+    // is cleared when it does not match (see ValidateHoennFlagBank).
+    u16 hoennFlagBankMagic;
+    u8 hoennFlags[HOENN_FLAGS_BYTES];
+    u8 hoennTrainerFlags[HOENN_TRAINER_FLAGS_BYTES];
+#endif
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
