@@ -1522,6 +1522,10 @@
 #define FLAG_HIDE_PARTNER_VERMILION                 (HOENN_FLAGS_START + 781)
 // Set by the moving-truck scene: the partner now lives in the player's Littleroot home.
 #define FLAG_PARTNER_MOVED_IN                       (HOENN_FLAGS_START + 782)
+// Champion rotation for the KANTO LEAGUE rematches: Lance (0) -> Steven (1) -> the partner (2) -> Lance ...
+// state 0 = both flags clear, state 1 = BIT0, state 2 = BIT1. The first KANTO LEAGUE run is always the partner.
+#define FLAG_CHAMPION_ROTATION_BIT0                 (HOENN_FLAGS_START + 783)
+#define FLAG_CHAMPION_ROTATION_BIT1                 (HOENN_FLAGS_START + 784)
 #define FLAG_MET_DIVING_TREASURE_HUNTER             (HOENN_FLAGS_START + 98)
 #define FLAG_MET_WAILMER_TRAINER                    (HOENN_FLAGS_START + 99)
 #define FLAG_EVIL_LEADER_PLEASE_STOP                (HOENN_FLAGS_START + 100)

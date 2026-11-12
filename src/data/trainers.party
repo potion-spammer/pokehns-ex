@@ -16972,3 +16972,352 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Stone Edge
 - Protect
 
+
+=== TRAINER_PARTNER_CHAMPION_MAY_FIRE ===
+Name: MAY
+Class: Champion Hns
+Pic: May
+Gender: Female
+Music: Hg Champion
+Double Battle: No
+AI: Basic Trainer
+Items: Full Restore / Full Restore
+
+Gardevoir @ Leftovers
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Moonblast
+- Psychic
+- Shadow Ball
+- Calm Mind
+
+Manectric @ Sitrus Berry
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thunderbolt
+- Flamethrower
+- Crunch
+- Protect
+
+Altaria @ Silk Scarf
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Dragon Pulse
+- Hurricane
+- Roost
+- Moonblast
+
+Flygon @ Quick Claw
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earthquake
+- Dragon Claw
+- Fire Punch
+- Protect
+
+Milotic @ Leftovers
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Surf
+- Ice Beam
+- Recover
+- Protect
+
+Blaziken
+Level: 72
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Flare Blitz
+- Close Combat
+- Stone Edge
+- Protect
+
+=== TRAINER_PARTNER_CHAMPION_MAY_WATER ===
+Name: MAY
+Class: Champion Hns
+Pic: May
+Gender: Female
+Music: Hg Champion
+Double Battle: No
+AI: Basic Trainer
+Items: Full Restore / Full Restore
+
+Gardevoir @ Leftovers
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Moonblast
+- Psychic
+- Shadow Ball
+- Calm Mind
+
+Manectric @ Sitrus Berry
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thunderbolt
+- Flamethrower
+- Crunch
+- Protect
+
+Altaria @ Silk Scarf
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Dragon Pulse
+- Hurricane
+- Roost
+- Moonblast
+
+Flygon @ Quick Claw
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earthquake
+- Dragon Claw
+- Fire Punch
+- Protect
+
+Absol @ Scope Lens
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Knock Off
+- Close Combat
+- Swords Dance
+- Protect
+
+Swampert
+Level: 72
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Waterfall
+- Earthquake
+- Ice Punch
+- Protect
+
+=== TRAINER_PARTNER_CHAMPION_MAY_GRASS ===
+Name: MAY
+Class: Champion Hns
+Pic: May
+Gender: Female
+Music: Hg Champion
+Double Battle: No
+AI: Basic Trainer
+Items: Full Restore / Full Restore
+
+Gardevoir @ Leftovers
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Moonblast
+- Psychic
+- Shadow Ball
+- Calm Mind
+
+Manectric @ Sitrus Berry
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thunderbolt
+- Flamethrower
+- Crunch
+- Protect
+
+Altaria @ Silk Scarf
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Dragon Pulse
+- Hurricane
+- Roost
+- Moonblast
+
+Flygon @ Quick Claw
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earthquake
+- Dragon Claw
+- Fire Punch
+- Protect
+
+Milotic @ Leftovers
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Surf
+- Ice Beam
+- Recover
+- Protect
+
+Sceptile
+Level: 72
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Leaf Storm
+- Dragon Pulse
+- Earthquake
+- Protect
+
+=== TRAINER_PARTNER_CHAMPION_BRENDAN_FIRE ===
+Name: BRENDAN
+Class: Champion Hns
+Pic: Brendan
+Gender: Male
+Music: Hg Champion
+Double Battle: No
+AI: Basic Trainer
+Items: Full Restore / Full Restore
+
+Gallade @ Leftovers
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- Psychic
+- Leaf Blade
+- Protect
+
+Manectric @ Sitrus Berry
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thunderbolt
+- Flamethrower
+- Crunch
+- Protect
+
+Altaria @ Silk Scarf
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Dragon Pulse
+- Hurricane
+- Roost
+- Moonblast
+
+Flygon @ Quick Claw
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earthquake
+- Dragon Claw
+- Fire Punch
+- Protect
+
+Milotic @ Leftovers
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Surf
+- Ice Beam
+- Recover
+- Protect
+
+Blaziken
+Level: 72
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Flare Blitz
+- Close Combat
+- Stone Edge
+- Protect
+
+=== TRAINER_PARTNER_CHAMPION_BRENDAN_WATER ===
+Name: BRENDAN
+Class: Champion Hns
+Pic: Brendan
+Gender: Male
+Music: Hg Champion
+Double Battle: No
+AI: Basic Trainer
+Items: Full Restore / Full Restore
+
+Gallade @ Leftovers
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- Psychic
+- Leaf Blade
+- Protect
+
+Manectric @ Sitrus Berry
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thunderbolt
+- Flamethrower
+- Crunch
+- Protect
+
+Altaria @ Silk Scarf
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Dragon Pulse
+- Hurricane
+- Roost
+- Moonblast
+
+Flygon @ Quick Claw
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earthquake
+- Dragon Claw
+- Fire Punch
+- Protect
+
+Absol @ Scope Lens
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Knock Off
+- Close Combat
+- Swords Dance
+- Protect
+
+Swampert
+Level: 72
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Waterfall
+- Earthquake
+- Ice Punch
+- Protect
+
+=== TRAINER_PARTNER_CHAMPION_BRENDAN_GRASS ===
+Name: BRENDAN
+Class: Champion Hns
+Pic: Brendan
+Gender: Male
+Music: Hg Champion
+Double Battle: No
+AI: Basic Trainer
+Items: Full Restore / Full Restore
+
+Gallade @ Leftovers
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Close Combat
+- Psychic
+- Leaf Blade
+- Protect
+
+Manectric @ Sitrus Berry
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Thunderbolt
+- Flamethrower
+- Crunch
+- Protect
+
+Altaria @ Silk Scarf
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Dragon Pulse
+- Hurricane
+- Roost
+- Moonblast
+
+Flygon @ Quick Claw
+Level: 70
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Earthquake
+- Dragon Claw
+- Fire Punch
+- Protect
+
+Milotic @ Leftovers
+Level: 69
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Surf
+- Ice Beam
+- Recover
+- Protect
+
+Sceptile
+Level: 72
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Leaf Storm
+- Dragon Pulse
+- Earthquake
+- Protect
+

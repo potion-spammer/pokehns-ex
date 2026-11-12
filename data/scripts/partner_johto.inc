@@ -76,6 +76,22 @@ PartnerJohto_HideVermilion::
 	setflag FLAG_HIDE_PARTNER_VERMILION
 	return
 
+@ The partner's starter matches the type of the player's JOHTO starter: Cyndaquil -> Torchic, Totodile -> Mudkip,
+@ Chikorita -> Treecko. STR_VAR_1 gets that starter's final evolution (the partner's long-time partner POKeMON).
+PartnerJohto_BufferStarter::
+	goto_if_eq PLAYER_STARTER_SPECIES, SPECIES_CYNDAQUIL, PartnerJohto_BufferStarterFire
+	goto_if_eq PLAYER_STARTER_SPECIES, SPECIES_TOTODILE, PartnerJohto_BufferStarterWater
+	bufferspeciesname STR_VAR_1, SPECIES_SCEPTILE
+	return
+
+PartnerJohto_BufferStarterFire::
+	bufferspeciesname STR_VAR_1, SPECIES_BLAZIKEN
+	return
+
+PartnerJohto_BufferStarterWater::
+	bufferspeciesname STR_VAR_1, SPECIES_SWAMPERT
+	return
+
 @ ---- OLIVINE CITY: the first meeting. Registers the POKeGEAR contact. ----
 PartnerJohto_EventScript_Olivine::
 	lock
@@ -102,6 +118,7 @@ PartnerJohto_EventScript_Olivine::
 PartnerJohto_EventScript_Cianwood::
 	lock
 	faceplayer
+	call PartnerJohto_BufferStarter
 	msgbox PartnerJohto_Text_Cianwood, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, PartnerJohto_CianwoodDecline
 	msgbox PartnerJohto_Text_CianwoodYes, MSGBOX_DEFAULT
@@ -210,9 +227,11 @@ PartnerJohto_Text_Olivine:
 PartnerJohto_Text_Cianwood:
 	.string "{PARTNER}: CIANWOOD smells like salt\n"
 	.string "and medicine. I love it here.\p"
-	.string "I tried to surf the shallows and\n"
-	.string "got knocked flat by a wave. I'm\l"
-	.string "still a little soggy.\p"
+	.string "My {STR_VAR_1} has been with me since\n"
+	.string "my very first POKéMON. Today we\l"
+	.string "tried to surf the shallows and got\l"
+	.string "knocked flat by a wave. We're both\l"
+	.string "a little soggy.\p"
 	.string "You look tired, though. Want to sit\n"
 	.string "by the water with me for a bit?$"
 

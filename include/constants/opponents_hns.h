@@ -679,7 +679,13 @@
 // Two extra Hoenn-side rival trainers (ids 1507 and 1508): the partner's ex, fought outside the player's Littleroot home.
 #define TRAINER_EX_RIVAL_BRENDAN                 1507
 #define TRAINER_EX_RIVAL_MAY                     1508
-#define TRAINERS_COUNT_HNS                       1509
+#define TRAINER_PARTNER_CHAMPION_MAY_FIRE        1509
+#define TRAINER_PARTNER_CHAMPION_MAY_WATER       1510
+#define TRAINER_PARTNER_CHAMPION_MAY_GRASS       1511
+#define TRAINER_PARTNER_CHAMPION_BRENDAN_FIRE    1512
+#define TRAINER_PARTNER_CHAMPION_BRENDAN_WATER   1513
+#define TRAINER_PARTNER_CHAMPION_BRENDAN_GRASS   1514
+#define TRAINERS_COUNT_HNS                       1515
 #define MAX_TRAINERS_COUNT_HNS                   1520
 #define HNS_HOENN_TRAINER_ID_BASE                653
 

@@ -1,6 +1,7 @@
 PokemonLeague_ChampionsRoom_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, ChampionRoom_OnFrame
 	map_script MAP_SCRIPT_ON_RESUME, PokemonLeague_ChampionsRoom_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, PokemonLeague_ChampionsRoom_OnTransition
 	.byte 0
 
 PokemonLeague_ChampionsRoom_OnResume::
@@ -52,6 +53,10 @@ PokemonLeague_WillsRoom_EventScript_Lance::
 	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatJohto
 
 PokemonLeague_WillsRoom_EventScript_LanceRematch::
+	@ KANTO LEAGUE rematches rotate the champion: Lance -> Steven -> the partner. The first KANTO LEAGUE run is the partner.
+	call ChampionRotation_Select
+	goto_if_eq VAR_RESULT, 1, ChampionRotation_Steven
+	goto_if_eq VAR_RESULT, 2, ChampionRotation_Partner
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, PokemonLeague_WillsRoom_EventScript_LanceRematchStandard
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, PokemonLeague_WillsRoom_EventScript_LanceRematchPostOBC
 
@@ -71,7 +76,7 @@ PokemonLeague_WillsRoom_EventScript_LanceRematchPostOBC::
 
 PokemonLeague_WillsRoom_EventScript_LanceOnDefeatJohto::
 	clearflag FLAG_TEMP_5
-	msgbox PokemonLeague_ChampionsRoom_Text_BattleAfter, MSGBOX_DEFAULT
+	call ChampionRotation_AfterText
 	closemessage
 	setmetatile 6, 1, 0x3F2, FALSE
 	setmetatile 6, 2, 0x296, FALSE	
@@ -110,7 +115,7 @@ PokemonLeague_WillsRoom_EventScript_LanceOnDefeatJohto::
 	closemessage
 	applymovement LOCALID_LEAGUE_LANCE, PokemonLeague_ChampionsRoom_Movement_LanceAnxious
 	waitmovement 0
-	msgbox PokemonLeague_ChampionsRoom_Text_Noisy, MSGBOX_DEFAULT
+	call ChampionRotation_NoisyText
 	closemessage
 	applymovement LOCALID_LEAGUE_LANCE, PokemonLeague_ChampionsRoom_Movement_LanceLeave
 	delay 30
@@ -141,7 +146,8 @@ PokemonLeague_WillsRoom_EventScript_LanceOnDefeatJohto::
 
 PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto::
 	clearflag FLAG_TEMP_5
-	msgbox PokemonLeague_ChampionsRoom_Text_BattleAfter, MSGBOX_DEFAULT
+	call ChampionRotation_Advance
+	call ChampionRotation_AfterText
 	closemessage
 	setmetatile 6, 1, 0x3F2, FALSE
 	setmetatile 6, 2, 0x296, FALSE	
@@ -180,7 +186,7 @@ PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto::
 	closemessage
 	applymovement LOCALID_LEAGUE_LANCE, PokemonLeague_ChampionsRoom_Movement_LanceAnxious
 	waitmovement 0
-	msgbox PokemonLeague_ChampionsRoom_Text_Noisy, MSGBOX_DEFAULT
+	call ChampionRotation_NoisyText
 	closemessage
 	applymovement LOCALID_LEAGUE_LANCE, PokemonLeague_ChampionsRoom_Movement_LanceLeave
 	delay 30
@@ -429,3 +435,211 @@ PokemonLeague_ChampionsRoom_Text_RematchMaryNoInterview:
     .string "MARY: Come on! You can't blow off\n"
     .string "the interview AGAIN!$"
 
+@ ---- Champion rotation (HnS Extended Legacy) ----
+@ VAR_RESULT after ChampionRotation_Select: 0 = Lance, 1 = Steven, 2 = the partner.
+@ VAR_TEMP_1 remembers the champion of this visit (0/1/2) for the after-battle text.
+PokemonLeague_ChampionsRoom_OnTransition::
+	call ChampionRotation_Select
+	goto_if_eq VAR_RESULT, 1, ChampionRotation_GfxSteven
+	goto_if_eq VAR_RESULT, 2, ChampionRotation_GfxPartner
+	setvar VAR_OBJ_GFX_ID_E, OBJ_EVENT_GFX_LANCE_HNS
+	end
+
+ChampionRotation_GfxSteven::
+	setvar VAR_OBJ_GFX_ID_E, OBJ_EVENT_GFX_STEVEN_HNS
+	end
+
+ChampionRotation_GfxPartner::
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, ChampionRotation_GfxMay
+	setvar VAR_OBJ_GFX_ID_E, OBJ_EVENT_GFX_BRENDAN_NORMAL
+	end
+
+ChampionRotation_GfxMay::
+	setvar VAR_OBJ_GFX_ID_E, OBJ_EVENT_GFX_MAY_NORMAL
+	end
+
+ChampionRotation_Select::
+	goto_if_unset FLAG_IS_CHAMPION, ChampionRotation_SelectLance
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, ChampionRotation_SelectPartner
+	goto_if_set FLAG_CHAMPION_ROTATION_BIT1, ChampionRotation_SelectPartner
+	goto_if_set FLAG_CHAMPION_ROTATION_BIT0, ChampionRotation_SelectSteven
+ChampionRotation_SelectLance::
+	setvar VAR_RESULT, 0
+	return
+
+ChampionRotation_SelectSteven::
+	setvar VAR_RESULT, 1
+	return
+
+ChampionRotation_SelectPartner::
+	setvar VAR_RESULT, 2
+	return
+
+@ Rotation state 0 (Lance) -> 1 (Steven) -> 2 (partner) -> 0. Only advances once the KANTO LEAGUE has been won.
+ChampionRotation_Advance::
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, ChampionRotation_AdvanceDone
+	goto_if_set FLAG_CHAMPION_ROTATION_BIT1, ChampionRotation_AdvanceFrom2
+	goto_if_set FLAG_CHAMPION_ROTATION_BIT0, ChampionRotation_AdvanceFrom1
+	setflag FLAG_CHAMPION_ROTATION_BIT0
+	return
+
+ChampionRotation_AdvanceFrom1::
+	clearflag FLAG_CHAMPION_ROTATION_BIT0
+	setflag FLAG_CHAMPION_ROTATION_BIT1
+	return
+
+ChampionRotation_AdvanceFrom2::
+	clearflag FLAG_CHAMPION_ROTATION_BIT1
+ChampionRotation_AdvanceDone::
+	return
+
+ChampionRotation_Steven::
+	setvar VAR_TEMP_1, 1
+	msgbox ChampionRotation_Text_StevenIntro, MSGBOX_DEFAULT
+	setflag FLAG_TEMP_3
+	setflag FLAG_TEMP_5
+	trainerbattle_no_intro TRAINER_STEVEN_HNS, ChampionRotation_Text_StevenWin
+	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
+
+ChampionRotation_Partner::
+	setvar VAR_TEMP_1, 2
+	call PartnerJohto_BufferStarter
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, ChampionRotation_PartnerFirstIntro
+	msgbox ChampionRotation_Text_PartnerRematchIntro, MSGBOX_DEFAULT
+	goto ChampionRotation_PartnerBattle
+
+ChampionRotation_PartnerFirstIntro::
+	msgbox ChampionRotation_Text_PartnerFirstIntro, MSGBOX_DEFAULT
+	goto ChampionRotation_PartnerBattle
+
+@ The partner's starter matches the player's JOHTO starter's type: Cyndaquil -> Torchic, Totodile -> Mudkip,
+@ Chikorita -> Treecko. Their champion ace is that starter's final evolution.
+ChampionRotation_PartnerBattle::
+	setflag FLAG_TEMP_3
+	setflag FLAG_TEMP_5
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, ChampionRotation_PartnerMay
+	goto_if_eq PLAYER_STARTER_SPECIES, SPECIES_CYNDAQUIL, ChampionRotation_PartnerBrendanFire
+	goto_if_eq PLAYER_STARTER_SPECIES, SPECIES_TOTODILE, ChampionRotation_PartnerBrendanWater
+	trainerbattle_no_intro TRAINER_PARTNER_CHAMPION_BRENDAN_GRASS, ChampionRotation_Text_PartnerWin
+	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
+
+ChampionRotation_PartnerBrendanFire::
+	trainerbattle_no_intro TRAINER_PARTNER_CHAMPION_BRENDAN_FIRE, ChampionRotation_Text_PartnerWin
+	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
+
+ChampionRotation_PartnerBrendanWater::
+	trainerbattle_no_intro TRAINER_PARTNER_CHAMPION_BRENDAN_WATER, ChampionRotation_Text_PartnerWin
+	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
+
+ChampionRotation_PartnerMay::
+	goto_if_eq PLAYER_STARTER_SPECIES, SPECIES_CYNDAQUIL, ChampionRotation_PartnerMayFire
+	goto_if_eq PLAYER_STARTER_SPECIES, SPECIES_TOTODILE, ChampionRotation_PartnerMayWater
+	trainerbattle_no_intro TRAINER_PARTNER_CHAMPION_MAY_GRASS, ChampionRotation_Text_PartnerWin
+	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
+
+ChampionRotation_PartnerMayFire::
+	trainerbattle_no_intro TRAINER_PARTNER_CHAMPION_MAY_FIRE, ChampionRotation_Text_PartnerWin
+	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
+
+ChampionRotation_PartnerMayWater::
+	trainerbattle_no_intro TRAINER_PARTNER_CHAMPION_MAY_WATER, ChampionRotation_Text_PartnerWin
+	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
+
+ChampionRotation_AfterText::
+	goto_if_eq VAR_TEMP_1, 1, ChampionRotation_AfterSteven
+	goto_if_eq VAR_TEMP_1, 2, ChampionRotation_AfterPartner
+	msgbox PokemonLeague_ChampionsRoom_Text_BattleAfter, MSGBOX_DEFAULT
+	return
+
+ChampionRotation_AfterSteven::
+	msgbox ChampionRotation_Text_StevenAfter, MSGBOX_DEFAULT
+	return
+
+ChampionRotation_AfterPartner::
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, ChampionRotation_AfterPartnerFirst
+	msgbox ChampionRotation_Text_PartnerAfterRematch, MSGBOX_DEFAULT
+	return
+
+ChampionRotation_AfterPartnerFirst::
+	msgbox ChampionRotation_Text_PartnerAfterFirst, MSGBOX_DEFAULT
+	return
+
+ChampionRotation_NoisyText::
+	goto_if_eq VAR_TEMP_1, 1, ChampionRotation_NoisySteven
+	goto_if_eq VAR_TEMP_1, 2, ChampionRotation_NoisyPartner
+	msgbox PokemonLeague_ChampionsRoom_Text_Noisy, MSGBOX_DEFAULT
+	return
+
+ChampionRotation_NoisySteven::
+	msgbox ChampionRotation_Text_StevenNoisy, MSGBOX_DEFAULT
+	return
+
+ChampionRotation_NoisyPartner::
+	msgbox ChampionRotation_Text_PartnerNoisy, MSGBOX_DEFAULT
+	return
+
+ChampionRotation_Text_StevenIntro:
+	.string "STEVEN: Welcome to the champion's\n"
+	.string "chair, {PLAYER}.\p"
+	.string "They say a CHAMPION is never done\n"
+	.string "training. I traveled all the way from\l"
+	.string "HOENN to see if that is true of you.\p"
+	.string "Show me the bond you share with your\n"
+	.string "POKéMON. I will not hold back!$"
+
+ChampionRotation_Text_StevenWin:
+	.string "STEVEN: Magnificent.\p"
+	.string "You and your POKéMON move as one.\n"
+	.string "I am glad I came.$"
+
+ChampionRotation_Text_StevenAfter:
+	.string "STEVEN: …A fine battle, {PLAYER}.\p"
+	.string "A bond like yours is rarer than any\n"
+	.string "stone I have ever found.\p"
+	.string "Hold on to it. The HALL OF FAME\n"
+	.string "awaits.$"
+
+ChampionRotation_Text_StevenNoisy:
+	.string "STEVEN: It is rather loud in here.\p"
+	.string "{PLAYER}, would you walk with me?$"
+
+ChampionRotation_Text_PartnerFirstIntro:
+	.string "{PARTNER}: Hi, {PLAYER}. Surprised?\p"
+	.string "I said I'd be competing too, didn't\n"
+	.string "I? While you were climbing the JOHTO\l"
+	.string "LEAGUE, I was climbing the KANTO one.\p"
+	.string "I'm the CHAMPION now. My {STR_VAR_1} and\n"
+	.string "I have waited a long time to stand\l"
+	.string "across from you.\p"
+	.string "You mean far too much to me for me\n"
+	.string "to hold back. Ready, {PLAYER}?$"
+
+ChampionRotation_Text_PartnerWin:
+	.string "{PARTNER}: …Ha. Of course.\p"
+	.string "You really are the best I know.$"
+
+ChampionRotation_Text_PartnerAfterFirst:
+	.string "{PARTNER}: I'm not sad. I'm proud.\p"
+	.string "The title should belong to the person\n"
+	.string "who earned it by being exactly who\l"
+	.string "they are.\p"
+	.string "That's you. Go. The HALL OF FAME is\n"
+	.string "waiting. I'll cheer from the front\l"
+	.string "row.$"
+
+ChampionRotation_Text_PartnerRematchIntro:
+	.string "{PARTNER}: CHAMPION to CHAMPION this\n"
+	.string "time, {PLAYER}.\p"
+	.string "My {STR_VAR_1} has been training for\n"
+	.string "this. No holding back!$"
+
+ChampionRotation_Text_PartnerAfterRematch:
+	.string "{PARTNER}: Every rematch, you get\n"
+	.string "stronger. I love watching it.\p"
+	.string "Go on. I'll see you at home.$"
+
+ChampionRotation_Text_PartnerNoisy:
+	.string "{PARTNER}: It's getting loud in here.\p"
+	.string "Come with me?$"
