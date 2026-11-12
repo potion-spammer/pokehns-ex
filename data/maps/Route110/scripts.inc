@@ -371,8 +371,8 @@ Route110_EventScript_RivalTrigger3::
 Route110_EventScript_RivalScene::
 	lockall
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, Route110_EventScript_PlayMayMusic
-	call_if_eq VAR_RESULT, FEMALE, Route110_EventScript_PlayBrendanMusic
+	call_if_eq VAR_RESULT, FEMALE, Route110_EventScript_PlayMayMusic
+	call_if_eq VAR_RESULT, MALE, Route110_EventScript_PlayBrendanMusic
 	applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_ExclamationMark
@@ -384,8 +384,8 @@ Route110_EventScript_RivalScene::
 	call_if_eq VAR_0x8008, 2, Route110_EventScript_RivalApproachPlayer2
 	call_if_eq VAR_0x8008, 3, Route110_EventScript_RivalApproachPlayer3
 	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, Route110_EventScript_MayBattle
-	goto_if_eq VAR_RESULT, FEMALE, Route110_EventScript_BrendanBattle
+	goto_if_eq VAR_RESULT, FEMALE, Route110_EventScript_MayBattle
+	goto_if_eq VAR_RESULT, MALE, Route110_EventScript_BrendanBattle
 	releaseall
 	end
 
@@ -774,14 +774,13 @@ Route110_EventScript_BrendanIntroTextEx::
 	return
 
 Route110_Text_MayLetsBattleEx:
-	.string "MAY: {PLAYER}{KUN}! I was hoping I'd\n"
-	.string "run into you out here.\p"
-	.string "Dad's research keeps me on these\n"
-	.string "roads, but honestly I keep hoping\l"
-	.string "you'll show up.\p"
-	.string "…Don't tell anyone I said that.\p"
-	.string "But being together doesn't mean I'll\n"
-	.string "go easy on you. Battle me!$"
+	.string "MAY: Oh. {PLAYER}{KUN}.\n"
+	.string "Of all the roads to be on.\p"
+	.string "I heard about you and my ex.\n"
+	.string "Funny how fast you two got close.\p"
+	.string "I'm not bitter. I just want to see\n"
+	.string "if you're really worth it.\p"
+	.string "Battle me!$"
 
 Route110_Text_MayLetsBattle:
 	.string "MAY: Hi, {PLAYER}{KUN}, long time no see!\p"
@@ -810,11 +809,12 @@ Route110_Text_MayExplainItemfinder:
 	.string "harder for the next time.$"
 
 Route110_Text_BrendanLetsBattleEx:
-	.string "BRENDAN: Hey, {PLAYER}.\n"
-	.string "Of all the muddy roads, I find my\l"
-	.string "favorite person on this one.\p"
-	.string "Don't get used to the compliments.\n"
-	.string "I'm still going to beat you.\p"
+	.string "BRENDAN: Well, well. {PLAYER}.\n"
+	.string "Fancy running into you.\p"
+	.string "So you're the one dating my ex.\n"
+	.string "I'd heard. I didn't believe it.\p"
+	.string "I'm not jealous. I just want to see\n"
+	.string "what they see in you.\p"
 	.string "Let's battle!$"
 
 Route110_Text_BrendanLetsBattle:

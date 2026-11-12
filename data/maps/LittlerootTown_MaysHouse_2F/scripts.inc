@@ -237,8 +237,8 @@ RivalsHouse_2F_EventScript_Rival::
 	lockall
 	goto_if_set FLAG_MET_RIVAL_LILYCOVE, RivalsHouse_2F_EventScript_RivalPostLilycove
 	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, RivalsHouse_2F_EventScript_May
-	goto_if_eq VAR_RESULT, FEMALE, RivalsHouse_2F_EventScript_Brendan
+	goto_if_eq VAR_RESULT, FEMALE, RivalsHouse_2F_EventScript_May
+	goto_if_eq VAR_RESULT, MALE, RivalsHouse_2F_EventScript_Brendan
 	end
 
 RivalsHouse_2F_EventScript_May::
@@ -255,8 +255,8 @@ RivalsHouse_2F_EventScript_RivalPostLilycove::
 	applymovement VAR_LAST_TALKED, Common_Movement_FacePlayer
 	waitmovement 0
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, RivalsHouse_2F_EventScript_MayPostLilycove
-	call_if_eq VAR_RESULT, FEMALE, RivalsHouse_2F_EventScript_BrendanPostLilycove
+	call_if_eq VAR_RESULT, FEMALE, RivalsHouse_2F_EventScript_MayPostLilycove
+	call_if_eq VAR_RESULT, MALE, RivalsHouse_2F_EventScript_BrendanPostLilycove
 	setflag FLAG_MET_RIVAL_IN_HOUSE_AFTER_LILYCOVE
 	releaseall
 	end

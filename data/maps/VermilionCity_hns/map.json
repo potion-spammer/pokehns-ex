@@ -622,7 +622,7 @@
     },
     {
       "local_id": "LOCALID_PARTNER_VERMILION",
-      "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+      "graphics_id": "OBJ_EVENT_GFX_VAR_C",
       "x": 24,
       "y": 6,
       "elevation": 3,

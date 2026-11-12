@@ -1,29 +1,20 @@
-@ The player's partner is the HOENN rival: MAY for a male player, BRENDAN for a female player ({PARTNER} text).
-@ They are met on the road in JOHTO / KANTO, one short scene per town. Each scene is order-independent: the first one
-@ the player finds also plays the first-meeting intro and registers the partner in the POKeGEAR.
+@ The player's partner is NORMAN's child, the "new kid in town" of the original HOENN story ({PARTNER}: MAY for a male
+@ player, BRENDAN for a female player). They arrive by ferry in OLIVINE CITY, the only way into JOHTO until the
+@ MAGNET TRAIN is repaired, and are met there after the lighthouse AMPHAROS is healed. Later one-time scenes follow
+@ in Cianwood, Mahogany, Blackthorn and Vermilion. The partner's sprite is VAR_OBJ_GFX_ID_C (the same one the
+@ Littleroot home uses after the time skip).
 @
 @ Visibility (object flag = FLAG_HIDE_PARTNER_x): shown while the town's requirement is met and its scene is not done.
+@ Every scene after OLIVINE also requires FLAG_PARTNER_MET.
 
-@ Called from each town's OnTransition: sets the rival sprite, then shows/hides the partner object.
 PartnerJohto_SetGfx::
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, PartnerJohto_SetGfxMale
-	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_BRENDAN_NORMAL
 	return
 
 PartnerJohto_SetGfxMale::
-	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
-	return
-
-PartnerJohto_UpdateViolet::
-	call PartnerJohto_SetGfx
-	goto_if_set FLAG_PARTNER_SCENE_VIOLET_DONE, PartnerJohto_HideViolet
-	goto_if_unset FLAG_DEFEATED_VIOLET_GYM, PartnerJohto_HideViolet
-	clearflag FLAG_HIDE_PARTNER_VIOLET
-	return
-
-PartnerJohto_HideViolet::
-	setflag FLAG_HIDE_PARTNER_VIOLET
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_MAY_NORMAL
 	return
 
 PartnerJohto_UpdateOlivine::
@@ -37,31 +28,46 @@ PartnerJohto_HideOlivine::
 	setflag FLAG_HIDE_PARTNER_OLIVINE
 	return
 
-PartnerJohto_UpdateEcruteak::
+PartnerJohto_UpdateCianwood::
 	call PartnerJohto_SetGfx
-	goto_if_set FLAG_PARTNER_SCENE_ECRUTEAK_DONE, PartnerJohto_HideEcruteak
-	goto_if_unset FLAG_DEFEATED_ECRUTEAK_CITY_GYM, PartnerJohto_HideEcruteak
-	clearflag FLAG_HIDE_PARTNER_ECRUTEAK
+	goto_if_set FLAG_PARTNER_SCENE_CIANWOOD_DONE, PartnerJohto_HideCianwood
+	goto_if_unset FLAG_PARTNER_MET, PartnerJohto_HideCianwood
+	goto_if_unset FLAG_DEFEATED_CIANWOOD_GYM, PartnerJohto_HideCianwood
+	clearflag FLAG_HIDE_PARTNER_CIANWOOD
 	return
 
-PartnerJohto_HideEcruteak::
-	setflag FLAG_HIDE_PARTNER_ECRUTEAK
+PartnerJohto_HideCianwood::
+	setflag FLAG_HIDE_PARTNER_CIANWOOD
 	return
 
-PartnerJohto_UpdateGoldenrod::
+PartnerJohto_UpdateMahogany::
 	call PartnerJohto_SetGfx
-	goto_if_set FLAG_PARTNER_SCENE_GOLDENROD_DONE, PartnerJohto_HideGoldenrod
-	goto_if_unset FLAG_DEFEATED_GOLDENROD_CITY_GYM, PartnerJohto_HideGoldenrod
-	clearflag FLAG_HIDE_PARTNER_GOLDENROD
+	goto_if_set FLAG_PARTNER_SCENE_MAHOGANY_DONE, PartnerJohto_HideMahogany
+	goto_if_unset FLAG_PARTNER_MET, PartnerJohto_HideMahogany
+	goto_if_unset FLAG_DEFEATED_MAHOGANY_TOWN_GYM, PartnerJohto_HideMahogany
+	clearflag FLAG_HIDE_PARTNER_MAHOGANY
 	return
 
-PartnerJohto_HideGoldenrod::
-	setflag FLAG_HIDE_PARTNER_GOLDENROD
+PartnerJohto_HideMahogany::
+	setflag FLAG_HIDE_PARTNER_MAHOGANY
+	return
+
+PartnerJohto_UpdateBlackthorn::
+	call PartnerJohto_SetGfx
+	goto_if_set FLAG_PARTNER_SCENE_BLACKTHORN_DONE, PartnerJohto_HideBlackthorn
+	goto_if_unset FLAG_PARTNER_MET, PartnerJohto_HideBlackthorn
+	goto_if_unset FLAG_DEFEATED_BLACKTHORN_GYM, PartnerJohto_HideBlackthorn
+	clearflag FLAG_HIDE_PARTNER_BLACKTHORN
+	return
+
+PartnerJohto_HideBlackthorn::
+	setflag FLAG_HIDE_PARTNER_BLACKTHORN
 	return
 
 PartnerJohto_UpdateVermilion::
 	call PartnerJohto_SetGfx
 	goto_if_set FLAG_PARTNER_SCENE_VERMILION_DONE, PartnerJohto_HideVermilion
+	goto_if_unset FLAG_PARTNER_MET, PartnerJohto_HideVermilion
 	goto_if_unset FLAG_DEFEATED_VERMILION_GYM, PartnerJohto_HideVermilion
 	clearflag FLAG_HIDE_PARTNER_VERMILION
 	return
@@ -70,18 +76,11 @@ PartnerJohto_HideVermilion::
 	setflag FLAG_HIDE_PARTNER_VERMILION
 	return
 
-@ First meeting (or reunion, if the player has already been to Littleroot). Registers the POKeGEAR contact.
-PartnerJohto_FirstMeetIfNeeded::
-	goto_if_set FLAG_PARTNER_MET, PartnerJohto_ReturnOnly
-	goto_if_set FLAG_VISITED_LITTLEROOT_TOWN, PartnerJohto_Reunion
+@ ---- OLIVINE CITY: the first meeting. Registers the POKeGEAR contact. ----
+PartnerJohto_EventScript_Olivine::
+	lock
+	faceplayer
 	msgbox PartnerJohto_Text_FirstMeet, MSGBOX_DEFAULT
-	goto PartnerJohto_Register
-
-PartnerJohto_Reunion::
-	msgbox PartnerJohto_Text_Reunion, MSGBOX_DEFAULT
-	goto PartnerJohto_Register
-
-PartnerJohto_Register::
 	closemessage
 	playfanfare MUS_REGISTER_MATCH_CALL
 	msgbox PartnerJohto_Text_Registered, MSGBOX_DEFAULT
@@ -89,31 +88,6 @@ PartnerJohto_Register::
 	closemessage
 	setflag FLAG_PARTNER_MET
 	setflag FLAG_ENABLE_MOM_MATCH_CALL
-	return
-
-PartnerJohto_ReturnOnly::
-	return
-
-@ ---- VIOLET CITY (after the Violet GYM) ----
-PartnerJohto_EventScript_Violet::
-	lock
-	faceplayer
-	call PartnerJohto_FirstMeetIfNeeded
-	msgbox PartnerJohto_Text_Violet, MSGBOX_DEFAULT
-	closemessage
-	setflag FLAG_PARTNER_SCENE_VIOLET_DONE
-	setflag FLAG_HIDE_PARTNER_VIOLET
-	fadescreen FADE_TO_BLACK
-	removeobject LOCALID_PARTNER_VIOLET
-	fadescreen FADE_FROM_BLACK
-	release
-	end
-
-@ ---- OLIVINE CITY (after the lighthouse AMPHAROS is healed) ----
-PartnerJohto_EventScript_Olivine::
-	lock
-	faceplayer
-	call PartnerJohto_FirstMeetIfNeeded
 	msgbox PartnerJohto_Text_Olivine, MSGBOX_DEFAULT
 	closemessage
 	setflag FLAG_PARTNER_SCENE_OLIVINE_DONE
@@ -124,45 +98,57 @@ PartnerJohto_EventScript_Olivine::
 	release
 	end
 
-@ ---- ECRUTEAK CITY (after the Ecruteak GYM): a rest together heals the party ----
-PartnerJohto_EventScript_Ecruteak::
+@ ---- CIANWOOD CITY (after the Cianwood GYM): a rest by the sea heals the party ----
+PartnerJohto_EventScript_Cianwood::
 	lock
 	faceplayer
-	call PartnerJohto_FirstMeetIfNeeded
-	msgbox PartnerJohto_Text_Ecruteak, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, PartnerJohto_EcruteakDecline
-	msgbox PartnerJohto_Text_EcruteakYes, MSGBOX_DEFAULT
+	msgbox PartnerJohto_Text_Cianwood, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, PartnerJohto_CianwoodDecline
+	msgbox PartnerJohto_Text_CianwoodYes, MSGBOX_DEFAULT
 	closemessage
 	call Common_EventScript_OutOfCenterPartyHeal
-	msgbox PartnerJohto_Text_EcruteakAfter, MSGBOX_DEFAULT
+	msgbox PartnerJohto_Text_CianwoodAfter, MSGBOX_DEFAULT
 	closemessage
-	setflag FLAG_PARTNER_SCENE_ECRUTEAK_DONE
-	setflag FLAG_HIDE_PARTNER_ECRUTEAK
+	setflag FLAG_PARTNER_SCENE_CIANWOOD_DONE
+	setflag FLAG_HIDE_PARTNER_CIANWOOD
 	fadescreen FADE_TO_BLACK
-	removeobject LOCALID_PARTNER_ECRUTEAK
+	removeobject LOCALID_PARTNER_CIANWOOD
 	fadescreen FADE_FROM_BLACK
 	release
 	end
 
-PartnerJohto_EcruteakDecline::
-	msgbox PartnerJohto_Text_EcruteakNo, MSGBOX_DEFAULT
+PartnerJohto_CianwoodDecline::
+	msgbox PartnerJohto_Text_CianwoodNo, MSGBOX_DEFAULT
 	release
 	end
 
-@ ---- GOLDENROD CITY (after the Goldenrod GYM): a small present ----
-PartnerJohto_EventScript_Goldenrod::
+@ ---- MAHOGANY TOWN (after the Mahogany GYM): TEAM ROCKET and SILVER ----
+PartnerJohto_EventScript_Mahogany::
 	lock
 	faceplayer
-	call PartnerJohto_FirstMeetIfNeeded
-	msgbox PartnerJohto_Text_Goldenrod, MSGBOX_DEFAULT
+	msgbox PartnerJohto_Text_Mahogany, MSGBOX_DEFAULT
+	closemessage
+	setflag FLAG_PARTNER_SCENE_MAHOGANY_DONE
+	setflag FLAG_HIDE_PARTNER_MAHOGANY
+	fadescreen FADE_TO_BLACK
+	removeobject LOCALID_PARTNER_MAHOGANY
+	fadescreen FADE_FROM_BLACK
+	release
+	end
+
+@ ---- BLACKTHORN CITY (after the Blackthorn GYM): a small present ----
+PartnerJohto_EventScript_Blackthorn::
+	lock
+	faceplayer
+	msgbox PartnerJohto_Text_Blackthorn, MSGBOX_DEFAULT
 	giveitem ITEM_SWEET_HEART
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	msgbox PartnerJohto_Text_GoldenrodAfter, MSGBOX_DEFAULT
+	msgbox PartnerJohto_Text_BlackthornAfter, MSGBOX_DEFAULT
 	closemessage
-	setflag FLAG_PARTNER_SCENE_GOLDENROD_DONE
-	setflag FLAG_HIDE_PARTNER_GOLDENROD
+	setflag FLAG_PARTNER_SCENE_BLACKTHORN_DONE
+	setflag FLAG_HIDE_PARTNER_BLACKTHORN
 	fadescreen FADE_TO_BLACK
-	removeobject LOCALID_PARTNER_GOLDENROD
+	removeobject LOCALID_PARTNER_BLACKTHORN
 	fadescreen FADE_FROM_BLACK
 	release
 	end
@@ -171,7 +157,6 @@ PartnerJohto_EventScript_Goldenrod::
 PartnerJohto_EventScript_Vermilion::
 	lock
 	faceplayer
-	call PartnerJohto_FirstMeetIfNeeded
 	msgbox PartnerJohto_Text_Vermilion, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, PartnerJohto_VermilionNo
 	msgbox PartnerJohto_Text_VermilionYes, MSGBOX_DEFAULT
@@ -192,112 +177,105 @@ PartnerJohto_VermilionEnd::
 	end
 
 PartnerJohto_Text_FirstMeet:
-	.string "{PARTNER}: Oh! You're {PLAYER}, aren't\n"
-	.string "you? I saw your battle at the GYM.\p"
-	.string "That was really something.\p"
-	.string "I'm {PARTNER}. My dad is PROF. BIRCH,\n"
-	.string "back in HOENN.\p"
-	.string "I came to JOHTO to study POKéMON\n"
-	.string "on my own for once.\p"
-	.string "…Mind if I run into you every now\n"
-	.string "and then? Let's swap POKéGEAR\l"
-	.string "numbers.$"
-
-PartnerJohto_Text_Reunion:
-	.string "{PARTNER}: {PLAYER}! I knew it was you.\p"
-	.string "HOENN felt a lot smaller after you\n"
-	.string "left. Then I heard about a trainer\l"
-	.string "beating GYM LEADERS out here.\p"
-	.string "It's just a coincidence that we\n"
-	.string "keep running into each other.\n"
-	.string "Honest.\p"
-	.string "Let's swap POKéGEAR numbers, so\n"
-	.string "I'm not just guessing next time.$"
+	.string "{PARTNER}: Excuse me! Were you the one\n"
+	.string "who helped that AMPHAROS in the\l"
+	.string "lighthouse?\p"
+	.string "I watched from the street. You\n"
+	.string "went up there without a second\l"
+	.string "thought.\p"
+	.string "Sorry, I should introduce myself.\n"
+	.string "I'm {PARTNER}, from PETALBURG CITY\l"
+	.string "in HOENN.\p"
+	.string "My dad is NORMAN, the GYM LEADER\n"
+	.string "there. We came to visit old friends.\l"
+	.string "OLIVINE's port is the only way in\l"
+	.string "until the MAGNET TRAIN is repaired.\p"
+	.string "I'll be around JOHTO for a while.\n"
+	.string "Let's swap POKéGEAR numbers.$"
 
 PartnerJohto_Text_Registered:
 	.string "Registered {PARTNER} in the\n"
 	.string "POKéGEAR.$"
 
-PartnerJohto_Text_Violet:
-	.string "{PARTNER}: SPROUT TOWER is right\n"
-	.string "there. Have you been to the top?\p"
-	.string "The sages say the swaying pillar\n"
-	.string "teaches you to stay steady in a\l"
-	.string "storm.\p"
-	.string "I think I need a lot of practice.\n"
-	.string "But with someone like you around,\l"
-	.string "it feels easier.\p"
-	.string "Anyway! See you down the road,\n"
-	.string "{PLAYER}.$"
-
 PartnerJohto_Text_Olivine:
-	.string "{PARTNER}: {PLAYER}! I was hoping to see\n"
-	.string "you here.\p"
-	.string "The whole city is talking about the\n"
-	.string "lighthouse. JASMINE says the\l"
-	.string "AMPHAROS is shining again.\p"
-	.string "She was so happy she nearly cried.\n"
+	.string "{PARTNER}: JASMINE says the AMPHAROS\n"
+	.string "is shining again. She was so happy\l"
+	.string "she nearly cried.\p"
 	.string "So was I, a little.\p"
 	.string "Come on. Look at the sea with me\n"
 	.string "for a minute.\p"
 	.string "…Okay, that's enough of that.\n"
 	.string "I need to look less pleased. See you!$"
 
-PartnerJohto_Text_Ecruteak:
-	.string "{PARTNER}: The dancers here are\n"
-	.string "wonderful. I watched a show\l"
-	.string "yesterday and couldn't stop smiling.\p"
-	.string "The old towers, the quiet streets…\n"
-	.string "HOENN has the ocean, but this\l"
-	.string "place has history.\p"
-	.string "You look tired. Want to rest with\n"
-	.string "me for a bit?$"
+PartnerJohto_Text_Cianwood:
+	.string "{PARTNER}: CIANWOOD smells like salt\n"
+	.string "and medicine. I love it here.\p"
+	.string "I tried to surf the shallows and\n"
+	.string "got knocked flat by a wave. I'm\l"
+	.string "still a little soggy.\p"
+	.string "You look tired, though. Want to sit\n"
+	.string "by the water with me for a bit?$"
 
-PartnerJohto_Text_EcruteakYes:
-	.string "{PARTNER}: Come on, there's a bench\n"
-	.string "by the water.$"
+PartnerJohto_Text_CianwoodYes:
+	.string "{PARTNER}: Come on, there's a quiet\n"
+	.string "spot by the rocks.$"
 
-PartnerJohto_Text_EcruteakAfter:
+PartnerJohto_Text_CianwoodAfter:
 	.string "{PARTNER}: Better? Good.\p"
 	.string "Don't push yourself too hard out\n"
 	.string "there. I'd worry.\p"
 	.string "See you soon, {PLAYER}!$"
 
-PartnerJohto_Text_EcruteakNo:
+PartnerJohto_Text_CianwoodNo:
 	.string "{PARTNER}: Okay. Maybe next time.\p"
 	.string "Be careful out there, {PLAYER}.$"
 
-PartnerJohto_Text_Goldenrod:
-	.string "{PARTNER}: GOLDENROD is huge! I tried\n"
-	.string "to shop at the DEPT. STORE and got\l"
-	.string "lost on the escalators.\p"
-	.string "I did find something, though. It\n"
-	.string "isn't much, but it made me think\l"
-	.string "of you.$"
+PartnerJohto_Text_Mahogany:
+	.string "{PARTNER}: {PLAYER}! I heard about the\n"
+	.string "RADIO TOWER and the hideout. TEAM\l"
+	.string "ROCKET is back, and you went\l"
+	.string "straight in.\p"
+	.string "I was scared for you. And a little\n"
+	.string "in awe.\p"
+	.string "I ran into that red-haired boy on\n"
+	.string "the road. SILVER. He said he's the\l"
+	.string "strongest, then walked off\l"
+	.string "muttering your name.\p"
+	.string "I told him to say it to your face.\n"
+	.string "…Was that okay?\p"
+	.string "Be careful, {PLAYER}. I mean it.$"
 
-PartnerJohto_Text_GoldenrodAfter:
+PartnerJohto_Text_Blackthorn:
+	.string "{PARTNER}: Dragons! Dad would love\n"
+	.string "it up here. He'd pretend he wasn't\l"
+	.string "excited.\p"
+	.string "I found something for you in a\n"
+	.string "shop. It isn't much, but it made\l"
+	.string "me think of you.$"
+
+PartnerJohto_Text_BlackthornAfter:
 	.string "{PARTNER}: It's a little embarrassing\n"
 	.string "to hand over, so just take it, okay?\p"
-	.string "Good luck at the next GYM, {PLAYER}!$"
+	.string "Good luck at the LEAGUE, {PLAYER}!$"
 
 PartnerJohto_Text_Vermilion:
 	.string "{PARTNER}: The harbor smells like salt\n"
 	.string "and engine oil. It reminds me of\l"
 	.string "HOENN.\p"
+	.string "You beat the JOHTO LEAGUE, and now\n"
+	.string "you're taking on KANTO. I'm so\l"
+	.string "proud of you.\p"
 	.string "I'll be taking the boat home soon.\n"
-	.string "Dad's lab won't run itself.\p"
-	.string "{PLAYER}… when you come to HOENN, look\n"
-	.string "me up. LITTLEROOT is the little town\l"
-	.string "with a lot of grass.\p"
+	.string "{PLAYER}… when you come to HOENN, look\l"
+	.string "me up in PETALBURG.\p"
 	.string "I'd really like to show you around.\n"
 	.string "Will you come? Promise?$"
 
 PartnerJohto_Text_VermilionYes:
 	.string "{PARTNER}: …Thank you. I'll be\n"
 	.string "waiting.\p"
-	.string "Good luck out there, {PLAYER}.\n"
-	.string "Call me if you get homesick for a\l"
-	.string "place that isn't yours yet.$"
+	.string "Dad will want to meet you, too.\n"
+	.string "Try not to be nervous.$"
 
 PartnerJohto_Text_VermilionNo:
 	.string "{PARTNER}: Oh. That's okay.\p"

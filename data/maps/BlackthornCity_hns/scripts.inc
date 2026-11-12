@@ -20,6 +20,7 @@ BlackthornCity_OnFrame::
 	.2byte 0
 
 BlackthornCity_EventScript_CityEnter:: 
+	call PartnerJohto_UpdateBlackthorn
 	setflag FLAG_VISITED_BLACKTHORN_CITY
 	callnative SetTimeBasedEncounters
 	end

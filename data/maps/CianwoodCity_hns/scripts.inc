@@ -14,6 +14,7 @@ CianwoodCity_OnFrame::
 	.2byte 0
 
 CianwoodCity_EventScript_CityEnter::
+	call PartnerJohto_UpdateCianwood
 	setflag FLAG_VISITED_CIANWOOD_CITY
 	callnative SetTimeBasedEncounters
 	goto_if_ge VAR_OLIVINE_CITY_STATE, 5, OlivineCity_MapScript_ClearWeather

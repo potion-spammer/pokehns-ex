@@ -1745,7 +1745,6 @@ extern const u8 MatchCall_Text_PartnerJ3[];
 extern const u8 MatchCall_Text_PartnerJ4[];
 extern const u8 MatchCall_Text_PartnerJ5[];
 extern const u8 MatchCall_Text_PartnerJ6[];
-extern const u8 MatchCall_Text_PartnerJ7[];
 extern const u8 MatchCall_Text_PartnerHns1[];
 extern const u8 MatchCall_Text_PartnerHns2[];
 extern const u8 MatchCall_Text_PartnerHns3[];

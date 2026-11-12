@@ -38,7 +38,7 @@ LittlerootTown_OnTransition:
 	setflag FLAG_VISITED_LITTLEROOT_TOWN
 	call Common_EventScript_SetupRivalGfxId
 	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 2, LittlerootTown_EventScript_MoveMomToMaysDoor
-	@ The old "partner's ex" confrontation is retired: the partner is the HOENN rival (MAY / BRENDAN).
+	call_if_set FLAG_PARTNER_MOVED_IN, LittlerootTown_EventScript_CheckExRival
 	call_if_unset FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_SetTwinPos
 	call_if_eq VAR_LITTLEROOT_TOWN_STATE, 3, LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos
 	call_if_eq VAR_LITTLEROOT_HOUSES_STATE_MAY, 4, LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent
@@ -1034,7 +1034,7 @@ LittlerootTown_EventScript_ExRival::
 	msgbox LittlerootTown_Text_ExRivalIntro, MSGBOX_DEFAULT
 	closemessage
 	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_ExRivalBattleMay
+	goto_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_ExRivalBattleMay
 	trainerbattle_no_intro TRAINER_EX_RIVAL_BRENDAN, LittlerootTown_Text_ExRivalDefeat
 	goto LittlerootTown_EventScript_ExRivalAfterBattle
 	end
@@ -1058,7 +1058,7 @@ LittlerootTown_EventScript_ExRivalAfterBattle::
 	end
 
 LittlerootTown_Text_ExRivalIntro:
-	.string "{RIVAL}: Oh. It's you, {PLAYER}.\p"
+	.string "{EXRIVAL}: Oh. It's you, {PLAYER}.\p"
 	.string "So you're the one my ex has been\n"
 	.string "seeing. I heard the rumors.\p"
 	.string "I didn't think they'd be true.\p"
@@ -1076,7 +1076,7 @@ LittlerootTown_Text_ExRivalDefeat:
 	.string "Of course. Of course you won.$"
 
 LittlerootTown_Text_ExRivalAfter:
-	.string "{RIVAL}: Fine. You win.\p"
+	.string "{EXRIVAL}: Fine. You win.\p"
 	.string "…Take care of them, {PLAYER}.\n"
 	.string "I mean it.\p"
 	.string "And don't think I'll stop trying to\n"
@@ -1120,7 +1120,7 @@ LittlerootTown_EventScript_HomeForSale::
 	closemessage
 	fadescreen FADE_TO_BLACK
 	delay 30
-	@ The player's partner (girlfriend for a male player, boyfriend for a female player) takes Mom's place in
+	@ The player's partner (NORMAN's child: girlfriend for a male player, boyfriend for a female player) takes Mom's place in
 	@ the Littleroot houses. Their sprite is chosen here, once, through VAR_OBJ_GFX_ID_C.
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_SetPartnerGfxGirlfriend
@@ -1154,11 +1154,11 @@ LittlerootTown_Text_PetQuestion:
 	.string "(NO means a PERSIAN.)$"
 
 LittlerootTown_EventScript_SetPartnerGfxGirlfriend::
-	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_MAY_NORMAL
 	return
 
 LittlerootTown_EventScript_SetPartnerGfxBoyfriend::
-	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_BRENDAN_NORMAL
 	return
 
 LittlerootTown_EventScript_HomeNotYet::

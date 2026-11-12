@@ -2779,13 +2779,13 @@ MatchCall_Text_Norman8::
 
 MatchCall_Text_Norman10::
 	.string "NORMAN: Hm? {PLAYER}?\p"
-	.string "{PARTNER} tells me you two are doing\n"
+	.string "My kid tells me you two are doing\n"
 	.string "well. Good.\p"
 	.string "Don't think that means you can\n"
 	.string "skip your training.\p"
 	.string "The next time you come by the GYM,\n"
 	.string "I'll be waiting.\p"
-	.string "Take care of {PARTNER}.$"
+	.string "Take care of my kid.$"
 
 MatchCall_Text_Norman9::
 	.string "NORMAN: …You amaze me, {PLAYER}.\n"
@@ -3014,57 +3014,48 @@ MatchCall_Text_MomHns5::
 
 MatchCall_Text_PartnerJ1::
 	.string "{PARTNER}: Hi, {PLAYER}! It's me.\p"
-	.string "I just wanted to check that my\n"
-	.string "POKéGEAR number works.\p"
+	.string "Dad and I are staying at an inn in\n"
+	.string "OLIVINE. I just wanted to check that\l"
+	.string "my POKéGEAR number works.\p"
 	.string "…That's not the only reason.\n"
 	.string "Call me whenever you like.$"
 
 MatchCall_Text_PartnerJ2::
-	.string "{PARTNER}: I told Dad about the\n"
-	.string "trainer who beat FALKNER.\p"
-	.string "He said to bring them to HOENN\n"
-	.string "one day. I said I'd think about it.\p"
-	.string "…I'm thinking about it a lot.$"
+	.string "{PARTNER}: I tried surfing again in\n"
+	.string "CIANWOOD. I lasted four seconds.\p"
+	.string "You'd have laughed. Please do not\n"
+	.string "tell anyone. Dad would never let it\l"
+	.string "go.$"
 
 MatchCall_Text_PartnerJ3::
-	.string "{PARTNER}: JASMINE couldn't stop\n"
-	.string "talking about you and the lighthouse.\p"
-	.string "She said you were gentle with the\n"
-	.string "AMPHAROS. I wasn't surprised.\p"
-	.string "Somebody being kind isn't rare.\n"
-	.string "Somebody being kind to you was a\l"
-	.string "nice thing to hear.$"
+	.string "{PARTNER}: Dad heard about TEAM\n"
+	.string "ROCKET coming back. He went quiet\l"
+	.string "for a long time.\p"
+	.string "Then he said that trainer of yours\n"
+	.string "has good instincts. I did not\l"
+	.string "mention that I agree.$"
 
 MatchCall_Text_PartnerJ4::
-	.string "{PARTNER}: I walked past the TIN\n"
-	.string "TOWER at dusk and thought of you.\p"
-	.string "The old stories say it only opens\n"
-	.string "its doors for those who are ready.\p"
-	.string "I think it would open for you.$"
+	.string "{PARTNER}: Dad wants to see the DRAGON\n"
+	.string "gym someday. He says he's only\l"
+	.string "going for research.\p"
+	.string "He definitely wants to battle.$"
 
 MatchCall_Text_PartnerJ5::
-	.string "{PARTNER}: I got lost in the\n"
-	.string "GOLDENROD underground again.\p"
-	.string "I only found my way out because I\n"
-	.string "kept saying your name out loud\l"
-	.string "like a spell. Don't laugh!$"
+	.string "{PARTNER}: You won the JOHTO LEAGUE!\p"
+	.string "I watched on a TV in a cafe. I\n"
+	.string "yelled. A stranger gave me a free\l"
+	.string "muffin.\p"
+	.string "Now rest. You earned it.$"
 
 MatchCall_Text_PartnerJ6::
-	.string "{PARTNER}: Eight JOHTO BADGES.\n"
-	.string "I watched the whole LEAGUE\l"
-	.string "countdown on a TV in a CAFE.\p"
-	.string "I yelled. A stranger gave me\n"
-	.string "a free muffin.\p"
-	.string "Now go win it all!$"
-
-MatchCall_Text_PartnerJ7::
-	.string "{PARTNER}: The boat to HOENN is\n"
-	.string "leaving soon.\p"
+	.string "{PARTNER}: The boat to HOENN leaves\n"
+	.string "soon.\p"
 	.string "The sea air always reminds me of\n"
-	.string "home. Lately it reminds me of\l"
-	.string "you, too.\p"
-	.string "Come visit LITTLEROOT. I'll show\n"
-	.string "you everything. Promise?$"
+	.string "home. Lately it reminds me of you,\l"
+	.string "too.\p"
+	.string "Come visit PETALBURG. Dad is already\n"
+	.string "practicing his serious face.$"
 
 MatchCall_Text_PartnerHns1::
 	.string "{PARTNER}: Hey, {PLAYER}. It's me.\p"

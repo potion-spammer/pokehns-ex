@@ -1,10 +1,5 @@
 GoldenrodCity_hns_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, GoldenrodCity_OnTransition_Partner
 	.byte 0
-
-GoldenrodCity_OnTransition_Partner::
-	call PartnerJohto_UpdateGoldenrod
-	end
 
 GoldenrodCity_EventScript_Trigger:: @flagheap
 	call_if_unset FLAG_SHOWN_ELM_TOGEPI, GoldenrodCity_Elm_Togepi_Call

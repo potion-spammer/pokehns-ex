@@ -1291,12 +1291,12 @@ PetalburgCity_Gym_Text_NormanIntroInLaw:
 	.string "Fine, as I promised, we will have\n"
 	.string "a POKéMON battle.\p"
 	.string "…And I'll be honest with you, {PLAYER}.\p"
-	.string "You're the one {PARTNER} has been\n"
+	.string "You're the one my kid has been\n"
 	.string "seeing, aren't you?\p"
 	.string "I'm not going to go easy on you for\n"
 	.string "that. If anything, I'll go harder.\p"
 	.string "If you can't beat a GYM LEADER, how\n"
-	.string "will you ever stand beside {PARTNER}?\p"
+	.string "will you ever stand beside my kid?\p"
 	.string "{PLAYER}, show me what you've got!$"
 
 PetalburgCity_Gym_Text_NormanDefeat:
@@ -1354,7 +1354,7 @@ PetalburgCity_Gym_Text_NormanPostBattleInLaw:
 	.string "That was a good battle, {PLAYER}.\p"
 	.string "Don't think this means I've stopped\n"
 	.string "watching you.\p"
-	.string "{PARTNER} doesn't pick just anyone.\n"
+	.string "My kid doesn't pick just anyone.\n"
 	.string "You have my attention.\p"
 	.string "Now go on. I have training to do,\n"
 	.string "and a loss to avenge!$"
@@ -1607,10 +1607,10 @@ PetalburgCity_Gym_Text_NormanPreRematch:
 PetalburgCity_Gym_Text_NormanPreRematchInLaw:
 	.string "NORMAN: {PLAYER}…\n"
 	.string "I had a feeling that you would come.\p"
-	.string "You're dating {PARTNER}. That doesn't\n"
+	.string "You're dating my kid. That doesn't\n"
 	.string "buy you an easy match.\p"
 	.string "Inside a GYM, family doesn't matter.\p"
-	.string "…No. Because you matter to {PARTNER},\n"
+	.string "…No. Because you matter to my kid,\n"
 	.string "we owe it to each other to do the best\l"
 	.string "we can. Isn't that right, {PLAYER}?$"
 
@@ -1627,9 +1627,7 @@ PetalburgCity_Gym_Text_NormanPostRematch:
 
 PetalburgCity_Gym_Text_NormanPostRematchInLaw:
 	.string "NORMAN: {PLAYER}…\n"
-	.string "What are your intentions with\n"
-	.string "{PARTNER}? I've known them since\n"
-	.string "they were tiny.\p"
+	.string "What are your intentions with my kid?\p"
 	.string "…Hahaha! I'm only kidding.\n"
 	.string "Mostly.\p"
 	.string "Keep making them happy, and keep\n"

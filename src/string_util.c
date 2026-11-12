@@ -539,9 +539,17 @@ static const u8 *ExpandPlaceholder_Region(void)
         return gText_Hoenn;
 }
 
+static const u8 *ExpandPlaceholder_ExRivalName(void)
+{
+    // The Hoenn rival (PROF. BIRCH's child) is the partner's ex: Brendan for a male player, May for a female player.
+    if (gSaveBlock2Ptr->playerGender == MALE)
+        return gText_ExpandedPlaceholder_Brendan;
+    return gText_ExpandedPlaceholder_May;
+}
+
 static const u8 *ExpandPlaceholder_PartnerName(void)
 {
-    // The partner is the Hoenn rival: May for a male player, Brendan for a female player.
+    // The partner is NORMAN's child (the Emerald "new kid in town"): May for a male player, Brendan for a female player.
     if (gSaveBlock2Ptr->playerGender == MALE)
         return gText_ExpandedPlaceholder_May;
     return gText_ExpandedPlaceholder_Brendan;
@@ -569,6 +577,7 @@ const u8 *GetExpandedPlaceholder(u32 id)
         [PLACEHOLDER_ID_GROUDON]      = ExpandPlaceholder_Groudon,
         [PLACEHOLDER_ID_REGION]       = ExpandPlaceholder_Region,
         [PLACEHOLDER_ID_PARTNER]      = ExpandPlaceholder_PartnerName,
+        [PLACEHOLDER_ID_EXRIVAL]      = ExpandPlaceholder_ExRivalName,
     };
 
     if (id >= ARRAY_COUNT(funcs))

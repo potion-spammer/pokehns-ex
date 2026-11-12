@@ -10,7 +10,6 @@ VioletCity_OnFrame::
 	.2byte 0
 
 VioletCity_OnTransition::
-	call PartnerJohto_UpdateViolet
 	callnative SetTimeBasedEncounters
 	end
 

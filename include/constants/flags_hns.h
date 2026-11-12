@@ -1505,18 +1505,20 @@
 // Set once the partner's ex (the rival) has had their confrontation with the player outside the Littleroot home.
 #define FLAG_EX_RIVAL_CONFRONTED                    (HOENN_FLAGS_START + 770)
 
-// The partner is the HOENN rival (MAY for a male player, BRENDAN for a female player). They are met on the road in
-// JOHTO / KANTO; each town scene plays once, then the partner moves on (the HIDE flag is set).
+// The partner is NORMAN's child, the "new kid in town" from the original HOENN story (MAY for a male player,
+// BRENDAN for a female player). They arrive in Olivine by ferry (the only way into JOHTO until the Magnet Train is
+// repaired) and are met there; each later town scene plays once, then the partner moves on (the HIDE flag is set).
+// The HOENN rival (PROF. BIRCH's child) is the other name: BRENDAN for a male player, MAY for a female player.
 #define FLAG_PARTNER_MET                            (HOENN_FLAGS_START + 771)
-#define FLAG_PARTNER_SCENE_VIOLET_DONE              (HOENN_FLAGS_START + 772)
+#define FLAG_PARTNER_SCENE_CIANWOOD_DONE              (HOENN_FLAGS_START + 772)
 #define FLAG_PARTNER_SCENE_OLIVINE_DONE             (HOENN_FLAGS_START + 773)
-#define FLAG_PARTNER_SCENE_ECRUTEAK_DONE            (HOENN_FLAGS_START + 774)
-#define FLAG_PARTNER_SCENE_GOLDENROD_DONE           (HOENN_FLAGS_START + 775)
+#define FLAG_PARTNER_SCENE_MAHOGANY_DONE            (HOENN_FLAGS_START + 774)
+#define FLAG_PARTNER_SCENE_BLACKTHORN_DONE           (HOENN_FLAGS_START + 775)
 #define FLAG_PARTNER_SCENE_VERMILION_DONE           (HOENN_FLAGS_START + 776)
-#define FLAG_HIDE_PARTNER_VIOLET                    (HOENN_FLAGS_START + 777)
+#define FLAG_HIDE_PARTNER_CIANWOOD                    (HOENN_FLAGS_START + 777)
 #define FLAG_HIDE_PARTNER_OLIVINE                   (HOENN_FLAGS_START + 778)
-#define FLAG_HIDE_PARTNER_ECRUTEAK                  (HOENN_FLAGS_START + 779)
-#define FLAG_HIDE_PARTNER_GOLDENROD                 (HOENN_FLAGS_START + 780)
+#define FLAG_HIDE_PARTNER_MAHOGANY                  (HOENN_FLAGS_START + 779)
+#define FLAG_HIDE_PARTNER_BLACKTHORN                 (HOENN_FLAGS_START + 780)
 #define FLAG_HIDE_PARTNER_VERMILION                 (HOENN_FLAGS_START + 781)
 // Set by the moving-truck scene: the partner now lives in the player's Littleroot home.
 #define FLAG_PARTNER_MOVED_IN                       (HOENN_FLAGS_START + 782)
