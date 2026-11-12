@@ -4,6 +4,7 @@ VermilionCity_hns_MapScripts::
 	.byte 0
 
 VermilionCity_MapScript_OnTransition::
+	call PartnerJohto_UpdateVermilion
 	setflag FLAG_VISITED_VERMILION_CITY
 	goto_if_eq VAR_SUICUNE_ENCOUNTERS, 3, VermilionCity_EventScript_SetSuicuneScene
 	setflag FLAG_HIDE_VERMILION_EUSINE_SUICUNE

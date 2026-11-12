@@ -352,6 +352,7 @@ MAXIE          = FD 0B
 KYOGRE         = FD 0C
 GROUDON        = FD 0D
 REGION         = FD 0E
+PARTNER        = FD 0F @ HnS Extended Legacy: MAY for a male player, BRENDAN for a female player
 
 @ battle string placeholders
 

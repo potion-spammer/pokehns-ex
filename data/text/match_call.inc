@@ -2779,13 +2779,13 @@ MatchCall_Text_Norman8::
 
 MatchCall_Text_Norman10::
 	.string "NORMAN: Hm? {PLAYER}?\p"
-	.string "My kid tells me you two are doing\n"
+	.string "{PARTNER} tells me you two are doing\n"
 	.string "well. Good.\p"
 	.string "Don't think that means you can\n"
 	.string "skip your training.\p"
 	.string "The next time you come by the GYM,\n"
 	.string "I'll be waiting.\p"
-	.string "Take care of my kid.$"
+	.string "Take care of {PARTNER}.$"
 
 MatchCall_Text_Norman9::
 	.string "NORMAN: …You amaze me, {PLAYER}.\n"
@@ -3012,8 +3012,62 @@ MatchCall_Text_MomHns5::
 	.string "Don't push yourself too hard.\n"
 	.string "Home is always here for you.$"
 
+MatchCall_Text_PartnerJ1::
+	.string "{PARTNER}: Hi, {PLAYER}! It's me.\p"
+	.string "I just wanted to check that my\n"
+	.string "POKéGEAR number works.\p"
+	.string "…That's not the only reason.\n"
+	.string "Call me whenever you like.$"
+
+MatchCall_Text_PartnerJ2::
+	.string "{PARTNER}: I told Dad about the\n"
+	.string "trainer who beat FALKNER.\p"
+	.string "He said to bring them to HOENN\n"
+	.string "one day. I said I'd think about it.\p"
+	.string "…I'm thinking about it a lot.$"
+
+MatchCall_Text_PartnerJ3::
+	.string "{PARTNER}: JASMINE couldn't stop\n"
+	.string "talking about you and the lighthouse.\p"
+	.string "She said you were gentle with the\n"
+	.string "AMPHAROS. I wasn't surprised.\p"
+	.string "Somebody being kind isn't rare.\n"
+	.string "Somebody being kind to you was a\l"
+	.string "nice thing to hear.$"
+
+MatchCall_Text_PartnerJ4::
+	.string "{PARTNER}: I walked past the TIN\n"
+	.string "TOWER at dusk and thought of you.\p"
+	.string "The old stories say it only opens\n"
+	.string "its doors for those who are ready.\p"
+	.string "I think it would open for you.$"
+
+MatchCall_Text_PartnerJ5::
+	.string "{PARTNER}: I got lost in the\n"
+	.string "GOLDENROD underground again.\p"
+	.string "I only found my way out because I\n"
+	.string "kept saying your name out loud\l"
+	.string "like a spell. Don't laugh!$"
+
+MatchCall_Text_PartnerJ6::
+	.string "{PARTNER}: Eight JOHTO BADGES.\n"
+	.string "I watched the whole LEAGUE\l"
+	.string "countdown on a TV in a CAFE.\p"
+	.string "I yelled. A stranger gave me\n"
+	.string "a free muffin.\p"
+	.string "Now go win it all!$"
+
+MatchCall_Text_PartnerJ7::
+	.string "{PARTNER}: The boat to HOENN is\n"
+	.string "leaving soon.\p"
+	.string "The sea air always reminds me of\n"
+	.string "home. Lately it reminds me of\l"
+	.string "you, too.\p"
+	.string "Come visit LITTLEROOT. I'll show\n"
+	.string "you everything. Promise?$"
+
 MatchCall_Text_PartnerHns1::
-	.string "PARTNER: Hey, {PLAYER}. It's me.\p"
+	.string "{PARTNER}: Hey, {PLAYER}. It's me.\p"
 	.string "I just wanted to hear your voice.\p"
 	.string "The house is quiet without you, but\n"
 	.string "I'm keeping your side of the couch\l"
@@ -3021,26 +3075,25 @@ MatchCall_Text_PartnerHns1::
 	.string "Call me whenever you like.$"
 
 MatchCall_Text_PartnerHns2::
-	.string "PARTNER: Three BADGES from HOENN\n"
+	.string "{PARTNER}: Three BADGES from HOENN\n"
 	.string "already? I knew you could do it.\p"
-	.string "Don't forget to eat something that\n"
-	.string "isn't from a vending machine.\p"
-	.string "I saved some dinner for you.\n"
-	.string "Hurry home!$"
+	.string "Eat something that isn't from a\n"
+	.string "vending machine, okay?\p"
+	.string "I'm cheering for you!$"
 
 MatchCall_Text_PartnerHns3::
-	.string "PARTNER: Six BADGES…\p"
+	.string "{PARTNER}: Six BADGES…\p"
 	.string "I used to worry every time you left\n"
 	.string "on a long trip.\p"
 	.string "Now I mostly worry that you'll forget\n"
 	.string "to call.\p"
 	.string "I'm so proud of you.\n"
-	.string "Come home soon, okay?$"
+	.string "Don't be a stranger, okay?$"
 
 MatchCall_Text_PartnerHns4::
-	.string "PARTNER: You did it, didn't you?\n"
+	.string "{PARTNER}: You did it, didn't you?\n"
 	.string "All eight BADGES in HOENN.\p"
 	.string "I'm not surprised. I'm just really,\n"
 	.string "really happy.\p"
-	.string "Come home. Let's celebrate somewhere\n"
-	.string "quiet, just the two of us.$"
+	.string "Let's celebrate somewhere quiet,\n"
+	.string "just the two of us.$"

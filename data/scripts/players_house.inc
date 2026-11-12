@@ -367,7 +367,7 @@ PlayersHouse_1F_EventScript_MomHealsParty_PokecenterChallenge::
 	end
 
 PlayersHouse_1F_Text_YouShouldRestABit_PokecenterChallenge:
-	.string "PARTNER: Sorry dear, you are playing\n"
+	.string "{PARTNER}: Sorry dear, you are playing\n"
 	.string "with the POKéCENTER challenge!$"
 
 PlayersHouse_1F_EventScript_SeeYouHoney::
@@ -793,13 +793,13 @@ PlayersHouse_1F_EventScript_PartnerGiftCapsule::
 	end
 
 PlayersHouse_1F_Text_PartnerGiftNoRoom:
-	.string "PARTNER: Oh, your BAG is full.\n"
+	.string "{PARTNER}: Oh, your BAG is full.\n"
 	.string "I have a present for you, but there's\l"
 	.string "no room to carry it.\p"
 	.string "Make some space and come see me.$"
 
 PlayersHouse_1F_Text_PartnerGiftStones1:
-	.string "PARTNER: {PLAYER}, wait. I have\n"
+	.string "{PARTNER}: {PLAYER}, wait. I have\n"
 	.string "something for you.\p"
 	.string "I found these at a little shop while\n"
 	.string "you were away. Odd, glowing stones.\p"
@@ -807,20 +807,20 @@ PlayersHouse_1F_Text_PartnerGiftStones1:
 	.string "change when they touch them.$"
 
 PlayersHouse_1F_Text_PartnerGiftStones2:
-	.string "PARTNER: More stones!\p"
+	.string "{PARTNER}: More stones!\p"
 	.string "I kept an eye out for them while I\n"
 	.string "was out. I like seeing what\l"
 	.string "surprises you find.\p"
 	.string "Here, these are for you.$"
 
 PlayersHouse_1F_Text_PartnerGiftCandy:
-	.string "PARTNER: Six BADGES. I wanted to do\n"
+	.string "{PARTNER}: Six BADGES. I wanted to do\n"
 	.string "something to help.\p"
 	.string "I saved up. Here, take these.\n"
 	.string "Treat your team well.$"
 
 PlayersHouse_1F_Text_PartnerGiftCapsule:
-	.string "PARTNER: You did it, all of HOENN.\p"
+	.string "{PARTNER}: You did it, all of HOENN.\p"
 	.string "I have one last present. I've been\n"
 	.string "holding on to it for a long time.\p"
 	.string "Something rare, for someone rare.$"

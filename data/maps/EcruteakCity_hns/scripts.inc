@@ -4,6 +4,7 @@ EcruteakCity_hns_MapScripts::
 	.byte 0
 
 EcruteakCity_OnTransition::
+	call PartnerJohto_UpdateEcruteak
 	callnative SetTimeBasedEncounters
 	end
 

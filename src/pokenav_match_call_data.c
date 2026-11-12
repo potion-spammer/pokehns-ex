@@ -248,13 +248,21 @@ static const struct MatchCallStructNPC sMomMatchCallHeader =
     .textData = sMomTextScripts
 };
 
-// The player's girlfriend/boyfriend in Littleroot Town. Registered by talking to them in the house
-// (FLAG_ENABLE_MOM_MATCH_CALL, a Hoenn bank flag in this fork).
+// The player's girlfriend/boyfriend: the Hoenn rival (MAY / BRENDAN). Registered when they first meet on the road
+// in Johto/Kanto, or by talking to them in the Littleroot house (FLAG_ENABLE_MOM_MATCH_CALL, a Hoenn bank flag).
+// The call shown is the LAST entry above whose flag is set, so the list runs in story order.
 static const match_call_text_data_t sPartnerTextScripts[] = {
-    { MatchCall_Text_PartnerHns1, ALWAYS_AVAILABLE,       NO_FLAG_TO_SET },
-    { MatchCall_Text_PartnerHns2, FLAG_BADGE19_GET,       NO_FLAG_TO_SET },
-    { MatchCall_Text_PartnerHns3, FLAG_BADGE22_GET,       NO_FLAG_TO_SET },
-    { MatchCall_Text_PartnerHns4, FLAG_BADGE24_GET,       NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerJ1,   ALWAYS_AVAILABLE,                      NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerJ2,   FLAG_PARTNER_SCENE_VIOLET_DONE,        NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerJ3,   FLAG_PARTNER_SCENE_OLIVINE_DONE,       NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerJ4,   FLAG_PARTNER_SCENE_ECRUTEAK_DONE,      NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerJ5,   FLAG_PARTNER_SCENE_GOLDENROD_DONE,     NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerJ6,   FLAG_DEFEATED_BLACKTHORN_GYM,          NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerJ7,   FLAG_PARTNER_SCENE_VERMILION_DONE,     NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerHns2, FLAG_BADGE19_GET,                      NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerHns3, FLAG_BADGE22_GET,                      NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerHns4, FLAG_BADGE24_GET,                      NO_FLAG_TO_SET },
+    { MatchCall_Text_PartnerHns1, FLAG_PARTNER_MOVED_IN,                 NO_FLAG_TO_SET },
     MATCH_CALL_TEXT_END
 };
 

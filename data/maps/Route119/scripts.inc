@@ -495,10 +495,12 @@ Route119_EventScript_BrendanIntroTextEx::
 
 Route119_Text_MayIntroEx:
 	.string "MAY: {PLAYER}{KUN}! There you are.\p"
-	.string "I keep hearing how happy my ex is\n"
-	.string "with you. It's getting old.\p"
-	.string "So let's settle it.\n"
-	.string "Show me what you've really got!$"
+	.string "Everyone in town keeps telling me\n"
+	.string "how well we're doing. It's sweet,\l"
+	.string "and a little embarrassing.\p"
+	.string "So let's give them something to\n"
+	.string "talk about. Show me what you've\l"
+	.string "really got!$"
 
 Route119_Text_MayIntro:
 	.string "MAY: {PLAYER}{KUN}!\n"
@@ -535,9 +537,9 @@ Route119_Text_MayExplainFly:
 Route119_Text_BrendanIntroEx:
 	.string "BRENDAN: {PLAYER}. Finally.\p"
 	.string "Everyone keeps telling me how well\n"
-	.string "you and my ex are doing.\p"
-	.string "So let's see if you can back it up.\n"
-	.string "No holding back!$"
+	.string "we're doing. I told them I'd make\l"
+	.string "sure you earned it.\p"
+	.string "No holding back, even for you!$"
 
 Route119_Text_BrendanIntro:
 	.string "BRENDAN: {PLAYER}! So this is where\n"

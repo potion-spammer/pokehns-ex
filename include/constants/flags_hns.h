@@ -1504,6 +1504,22 @@
 #define FLAG_PARTNER_GIFT_CAPSULE                   (HOENN_FLAGS_START + 769)
 // Set once the partner's ex (the rival) has had their confrontation with the player outside the Littleroot home.
 #define FLAG_EX_RIVAL_CONFRONTED                    (HOENN_FLAGS_START + 770)
+
+// The partner is the HOENN rival (MAY for a male player, BRENDAN for a female player). They are met on the road in
+// JOHTO / KANTO; each town scene plays once, then the partner moves on (the HIDE flag is set).
+#define FLAG_PARTNER_MET                            (HOENN_FLAGS_START + 771)
+#define FLAG_PARTNER_SCENE_VIOLET_DONE              (HOENN_FLAGS_START + 772)
+#define FLAG_PARTNER_SCENE_OLIVINE_DONE             (HOENN_FLAGS_START + 773)
+#define FLAG_PARTNER_SCENE_ECRUTEAK_DONE            (HOENN_FLAGS_START + 774)
+#define FLAG_PARTNER_SCENE_GOLDENROD_DONE           (HOENN_FLAGS_START + 775)
+#define FLAG_PARTNER_SCENE_VERMILION_DONE           (HOENN_FLAGS_START + 776)
+#define FLAG_HIDE_PARTNER_VIOLET                    (HOENN_FLAGS_START + 777)
+#define FLAG_HIDE_PARTNER_OLIVINE                   (HOENN_FLAGS_START + 778)
+#define FLAG_HIDE_PARTNER_ECRUTEAK                  (HOENN_FLAGS_START + 779)
+#define FLAG_HIDE_PARTNER_GOLDENROD                 (HOENN_FLAGS_START + 780)
+#define FLAG_HIDE_PARTNER_VERMILION                 (HOENN_FLAGS_START + 781)
+// Set by the moving-truck scene: the partner now lives in the player's Littleroot home.
+#define FLAG_PARTNER_MOVED_IN                       (HOENN_FLAGS_START + 782)
 #define FLAG_MET_DIVING_TREASURE_HUNTER             (HOENN_FLAGS_START + 98)
 #define FLAG_MET_WAILMER_TRAINER                    (HOENN_FLAGS_START + 99)
 #define FLAG_EVIL_LEADER_PLEASE_STOP                (HOENN_FLAGS_START + 100)

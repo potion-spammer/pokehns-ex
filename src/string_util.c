@@ -539,6 +539,14 @@ static const u8 *ExpandPlaceholder_Region(void)
         return gText_Hoenn;
 }
 
+static const u8 *ExpandPlaceholder_PartnerName(void)
+{
+    // The partner is the Hoenn rival: May for a male player, Brendan for a female player.
+    if (gSaveBlock2Ptr->playerGender == MALE)
+        return gText_ExpandedPlaceholder_May;
+    return gText_ExpandedPlaceholder_Brendan;
+}
+
 const u8 *GetExpandedPlaceholder(u32 id)
 {
     typedef const u8 *(*ExpandPlaceholderFunc)(void);
@@ -560,6 +568,7 @@ const u8 *GetExpandedPlaceholder(u32 id)
         [PLACEHOLDER_ID_KYOGRE]       = ExpandPlaceholder_Kyogre,
         [PLACEHOLDER_ID_GROUDON]      = ExpandPlaceholder_Groudon,
         [PLACEHOLDER_ID_REGION]       = ExpandPlaceholder_Region,
+        [PLACEHOLDER_ID_PARTNER]      = ExpandPlaceholder_PartnerName,
     };
 
     if (id >= ARRAY_COUNT(funcs))

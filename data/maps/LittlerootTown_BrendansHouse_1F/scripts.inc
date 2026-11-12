@@ -284,11 +284,11 @@ LittlerootTown_BrendansHouse_1F_Movement_BrendanGoUpstairs2:
 	step_end
 
 PlayersHouse_1F_Text_IsntItNiceInHere:
-	.string "PARTNER: Welcome home, {PLAYER}.\n"
+	.string "{PARTNER}: Welcome home, {PLAYER}.\n"
 	.string "It still feels new, doesn't it?$"
 
 PlayersHouse_1F_Text_MoversPokemonGoSetClock:
-	.string "PARTNER: The movers' POKéMON do all the\n"
+	.string "{PARTNER}: The movers' POKéMON do all the\n"
 	.string "work of moving us in and cleaning up.\l"
 	.string "This is so convenient!\p"
 	.string "{PLAYER}, our room is upstairs.\n"
@@ -298,50 +298,50 @@ PlayersHouse_1F_Text_MoversPokemonGoSetClock:
 	.string "Don't forget to set it!$"
 
 PlayersHouse_1F_Text_ArentYouInterestedInRoom:
-	.string "PARTNER: Well, {PLAYER}?\p"
+	.string "{PARTNER}: Well, {PLAYER}?\p"
 	.string "Aren't you curious to see our\n"
 	.string "room upstairs?$"
 
 PlayersHouse_1F_Text_GoSetTheClock:
-	.string "PARTNER: {PLAYER}.\p"
+	.string "{PARTNER}: {PLAYER}.\p"
 	.string "Go set the clock in our room, dear.$"
 
 PlayersHouse_1F_Text_OhComeQuickly:
-	.string "PARTNER: Oh! {PLAYER}, {PLAYER}!\n"
+	.string "{PARTNER}: Oh! {PLAYER}, {PLAYER}!\n"
 	.string "Quick! Come quickly!$"
 
 PlayersHouse_1F_Text_MaybeDadWillBeOn:
-	.string "PARTNER: Look! It's PETALBURG GYM!\n"
+	.string "{PARTNER}: Look! It's PETALBURG GYM!\n"
 	.string "Maybe my dad will be on!$"
 
 PlayersHouse_1F_Text_ItsOverWeMissedHim:
-	.string "PARTNER: Oh… It's over.\p"
+	.string "{PARTNER}: Oh… It's over.\p"
 	.string "I think my dad was on, but we\n"
 	.string "missed him. Too bad.$"
 
 PlayersHouse_1F_Text_GoIntroduceYourselfNextDoor:
-	.string "PARTNER: Oh, yes.\n"
+	.string "{PARTNER}: Oh, yes.\n"
 	.string "PROF. BIRCH next door was asking about\l"
 	.string "you.\p"
 	.string "You should stop by and say hello.$"
 
 PlayersHouse_1F_Text_SeeYouHoney:
-	.string "PARTNER: See you, dear!$"
+	.string "{PARTNER}: See you, dear!$"
 
 PlayersHouse_1F_Text_DidYouMeetProfBirch:
-	.string "PARTNER: Did you stop by to see\n"
+	.string "{PARTNER}: Did you stop by to see\n"
 	.string "PROF. BIRCH?$"
 
 PlayersHouse_1F_Text_YouShouldRestABit:
-	.string "PARTNER: How are you doing, {PLAYER}?\n"
+	.string "{PARTNER}: How are you doing, {PLAYER}?\n"
 	.string "You look a little tired.\p"
 	.string "I think you should rest a bit.$"
 
 PlayersHouse_1F_Text_TakeCareHoney:
-	.string "PARTNER: Take care, dear!$"
+	.string "{PARTNER}: Take care, dear!$"
 
 PlayersHouse_1F_Text_GotDadsBadgeHeresSomethingFromMom:
-	.string "PARTNER: Oh? Did a GYM LEADER give you\n"
+	.string "{PARTNER}: Oh? Did a GYM LEADER give you\n"
 	.string "that BADGE?\p"
 	.string "Then here's something from me!$"
 
@@ -351,7 +351,7 @@ PlayersHouse_1F_Text_DontPushYourselfTooHard:
 	.string "Go for it!$"
 
 PlayersHouse_1F_Text_IsThatAPokenav:
-	.string "PARTNER: What is that, dear? A POKéNAV?\n"
+	.string "{PARTNER}: What is that, dear? A POKéNAV?\n"
 	.string "Someone from DEVON gave it to you?\p"
 	.string "Well, how about registering me?\p"
 	.string "… … …$"
@@ -409,14 +409,14 @@ PlayersHouse_1F_Text_BetterGetBackToGym:
 	.string "And {PLAYER}… don't let me down.$"
 
 PlayersHouse_1F_Text_DadShouldStayLonger:
-	.string "PARTNER: Sorry about my dad. He means\n"
+	.string "{PARTNER}: Sorry about my dad. He means\n"
 	.string "well. He just brings the GYM home.\p"
 	.string "You and your POKéMON… you finally come\n"
 	.string "home, and all you talk about is POKéMON.\p"
 	.string "Relax, stay a little longer, okay?$"
 
 PlayersHouse_1F_Text_IsThatABreakingStory:
-	.string "PARTNER: Is that a breaking news story?$"
+	.string "{PARTNER}: Is that a breaking news story?$"
 
 PlayersHouse_1F_Text_LatiEmergencyNewsFlash:
 	.string "We bring you this emergency\n"
@@ -430,10 +430,10 @@ PlayersHouse_1F_Text_LatiEmergencyNewsFlash:
 	.string "movie program.$"
 
 PlayersHouse_1F_Text_WhatColorDidTheySay:
-	.string "PARTNER: {PLAYER}, did you catch that?\p"
+	.string "{PARTNER}: {PLAYER}, did you catch that?\p"
 	.string "What color did the announcer say\n"
 	.string "that POKéMON was?$"
 
 PlayersHouse_1F_Text_StillUnknownPokemon:
-	.string "PARTNER: Well, isn't that something!\n"
+	.string "{PARTNER}: Well, isn't that something!\n"
 	.string "There are still unknown POKéMON.$"

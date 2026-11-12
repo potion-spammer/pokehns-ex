@@ -38,7 +38,7 @@ LittlerootTown_OnTransition:
 	setflag FLAG_VISITED_LITTLEROOT_TOWN
 	call Common_EventScript_SetupRivalGfxId
 	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 2, LittlerootTown_EventScript_MoveMomToMaysDoor
-	call_if_set FLAG_ENABLE_MOM_MATCH_CALL, LittlerootTown_EventScript_CheckExRival
+	@ The old "partner's ex" confrontation is retired: the partner is the HOENN rival (MAY / BRENDAN).
 	call_if_unset FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_SetTwinPos
 	call_if_eq VAR_LITTLEROOT_TOWN_STATE, 3, LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos
 	call_if_eq VAR_LITTLEROOT_HOUSES_STATE_MAY, 4, LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent
@@ -906,7 +906,7 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	return
 
 LittlerootTown_Text_OurNewHomeLetsGoInside:
-	.string "PARTNER: {PLAYER}! You made it!\p"
+	.string "{PARTNER}: {PLAYER}! You made it!\p"
 	.string "I got here ahead of the truck with\n"
 	.string "the keys, and… well, look at it!\p"
 	.string "This is our place.\n"
@@ -917,10 +917,10 @@ LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "Let's go inside.$"
 
 LittlerootTown_Text_WaitPlayer:
-	.string "PARTNER: Wait, {PLAYER}!$"
+	.string "{PARTNER}: Wait, {PLAYER}!$"
 
 LittlerootTown_Text_WearTheseRunningShoes:
-	.string "PARTNER: {PLAYER}! {PLAYER}!\n"
+	.string "{PARTNER}: {PLAYER}! {PLAYER}!\n"
 	.string "Did you stop by to see PROF. BIRCH?\p"
 	.string "Here! If you're heading out on another\n"
 	.string "adventure, wear these RUNNING SHOES.\p"
@@ -931,7 +931,7 @@ LittlerootTown_Text_SwitchShoesWithRunningShoes:
 	.string "RUNNING SHOES.$"
 
 LittlerootTown_Text_ExplainRunningShoes:
-	.string "PARTNER: {PLAYER}, those shoes came with\n"
+	.string "{PARTNER}: {PLAYER}, those shoes came with\n"
 	.string "instructions.\p"
 	.string "“Press the B Button while wearing these\n"
 	.string "RUNNING SHOES to run extra-fast!\p"
@@ -1154,11 +1154,11 @@ LittlerootTown_Text_PetQuestion:
 	.string "(NO means a PERSIAN.)$"
 
 LittlerootTown_EventScript_SetPartnerGfxGirlfriend::
-	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_BEAUTY
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
 	return
 
 LittlerootTown_EventScript_SetPartnerGfxBoyfriend::
-	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_MAN_4
+	setvar VAR_OBJ_GFX_ID_C, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
 	return
 
 LittlerootTown_EventScript_HomeNotYet::
